@@ -227,6 +227,40 @@ void InputClass::ProcessInput()
 	return;
 }
 
+void InputClass::GetMouseOffset(int &x, int &y)
+{
+	x = m_mouseState.lX;
+	y = m_mouseState.lY;
+}
+
+void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
+{
+	mouseX = m_mouseX;
+	mouseY = m_mouseY;
+	return;
+}
+
+bool InputClass::IsLMouseDown()
+{
+	if (m_mouseState.rgbButtons[0] & 0x80)
+		return true;
+	return false;
+}
+
+bool InputClass::IsRMouseDown()
+{
+	if (m_mouseState.rgbButtons[1] & 0x80)
+		return true;
+	return false;
+}
+
+bool InputClass::IsMMouseDown()
+{
+	if (m_mouseState.rgbButtons[2] & 0x80)
+		return true;
+	return false;
+}
+
 
 bool InputClass::IsEscapePressed()
 {
@@ -248,12 +282,7 @@ bool InputClass::IsKeyPressed(int key)
 	return false;
 }
 
-void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
-{
-	mouseX = m_mouseX;
-	mouseY = m_mouseY;
-	return;
-}
+
 
 /*
 InputClass::InputClass()

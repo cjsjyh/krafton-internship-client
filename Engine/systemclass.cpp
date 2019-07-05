@@ -142,6 +142,7 @@ bool SystemClass::Frame()
 {
 	bool result;
 	int mouseX, mouseY;
+	int offsetX, offsetY;
 
 	char keyInput[5];
 
@@ -152,8 +153,13 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	//----------------------
+	//  check key input
+	//----------------------
+
 	// Get the location of the mouse from the input object,
 	m_Input->GetMouseLocation(mouseX, mouseY);
+	m_Input->GetMouseOffset(offsetX, offsetY);
 
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < ARR_SIZE; i++) {
@@ -161,10 +167,20 @@ bool SystemClass::Frame()
 			keyInput[0] = keyChar[i];
 	}
 	
+	if (m_Input->IsLMouseDown()) {
+		std::cout << "left mouse down" << endl;
+	}
 
+	if (m_Input->IsRMouseDown()) {
+		std::cout << "right mouse down" << endl;
+	}
+
+	if (m_Input->IsMMouseDown()) {
+		std::cout << "wheel down" << endl;
+	}
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, keyInput);
+	result = m_Graphics->Frame(mouseX, mouseY, offsetX, offsetY, keyInput);
 	if (!result)
 	{
 		return false;
@@ -272,8 +288,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	else
 	{
 		// If windowed then set it to 800x600 resolution.
-		screenWidth  = 800;
-		screenHeight = 600;
+		screenWidth  = 1200;
+		screenHeight = 800;
 
 		// Place the window in the middle of the screen.
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;

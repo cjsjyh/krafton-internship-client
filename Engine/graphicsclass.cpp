@@ -17,6 +17,7 @@ GraphicsClass::GraphicsClass()
 	cube_rot1 = cube_rot2 = 0;
 
 	cubes.assign(2, gameObject());
+	local_offsetX = local_offsetY = 0;
 	frame = 0;
 }
 
@@ -125,8 +126,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the light object.
+	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -179,7 +181,6 @@ void GraphicsClass::Shutdown()
 bool GraphicsClass::Frame(int mouseX, int mouseY, char* key)
 {
 	bool result;
-
 	//-------------
 	//   UI
 	//-------------
@@ -190,6 +191,9 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, char* key)
 	{
 		return false;
 	}
+
+	local_offsetX = mouseX;
+	local_offsetY = mouseY;
 
 	// Set the Keyboard Input.
 	if (key[0])
@@ -204,21 +208,24 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, char* key)
 	//-------------
 	//  camera
 	//-------------
+	
+	
 
 	switch (key[0]) {
 	case 'A':
 		m_Camera->AdjustPosition(-1, 0, 0);
 		break;
 	case 'S':
-		m_Camera->AdjustPosition(0, -1, 0);
+		m_Camera->AdjustPosition(0, 0, -1);
 		break;
 	case 'D' :
 		m_Camera->AdjustPosition(1, 0, 0);
 		break;
 	case 'W':
-		m_Camera->AdjustPosition(0, 1, 0);
+		m_Camera->AdjustPosition(0, 0, 1);
 		break;
 	}
+	
 
 	//-------------
 	//  object
@@ -234,9 +241,11 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, char* key)
 }
 
 
+
 bool GraphicsClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
+	D3DXMATRIX cam_rotY, cam_rotX;
 	D3DXMATRIX temp_rot, temp_mov;
 	bool result;
 	float rot, x,y,z;
@@ -248,8 +257,20 @@ bool GraphicsClass::Render()
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 
+	D3DXMatrixIdentity(&temp_rot);
+	D3DXMatrixIdentity(&temp_mov);
+	if (local_offsetX)
+	{
+		D3DXMatrixRotationY(&cam_rotY, -local_offsetX * CAM_SENSITIVITY * D3DX_PI);
+	}
+	if (local_offsetY)
+	{
+		D3DXMatrixRotationX(&cam_rotX, -local_offsetY * CAM_SENSITIVITY * D3DX_PI);
+	}
+
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
+	viewMatrix = cam_rotX * cam_rotY * viewMatrix;
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	m_D3D->GetOrthoMatrix(orthoMatrix);
@@ -268,8 +289,10 @@ bool GraphicsClass::Render()
 
 	for (int i = 0; i < 2; i++)
 	{
+
 		//adjust
 		cubes[i].SetPosition(5, 0, 0);
+		
 		cubes[i].AdjustRotation((float)D3DX_PI * 0.01 * (i + 1));
 		
 		//retrieve
@@ -281,7 +304,9 @@ bool GraphicsClass::Render()
 		D3DXMatrixTranslation(&temp_mov, x, y, z);
 		
 		//render
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, 
+									viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(),
+									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 	
 		if (!result)
 		{

@@ -16,6 +16,8 @@
 //////////////
 #include <windows.h>
 
+#include "iostream"
+using namespace std;
 
 ///////////////////////
 // MY CLASS INCLUDES //

@@ -17,13 +17,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		return 0;
 	}
 
+	AllocConsole();
+	freopen("CONOUT$", "wb", stdout);
+
 	// Initialize and run the system object.
 	result = System->Initialize();
 	if(result)
 	{
-		AllocConsole();
-		freopen("CONOUT$", "wb", stdout);
-
 		System->Run();
 	}
 

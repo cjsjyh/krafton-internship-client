@@ -19,6 +19,7 @@
 #include "gameObject.h"
 
 #include "iostream"
+#include <string>
 #include <vector>
 using namespace std;
 
@@ -29,6 +30,7 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
+const float CAM_SENSITIVITY = 0.002;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,6 +61,7 @@ private:
 	vector <gameObject> cubes;
 	float cube_rot1, cube_rot2;
 	int frame;
+	int local_offsetX, local_offsetY;
 };
 
 #endif

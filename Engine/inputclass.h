@@ -23,7 +23,7 @@
 // INCLUDES //
 //////////////
 #include <dinput.h>
-
+#include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: InputClass
@@ -40,9 +40,14 @@ public:
 	void Shutdown();
 	bool Frame();
 
+	bool IsLMouseDown(); // 왼쪽 클릭
+	bool IsRMouseDown(); // 오른쪽 클릭
+	bool IsMMouseDown(); // 휠 클릭
+
 	bool IsEscapePressed();
 	bool IsKeyPressed(int);
 	void GetMouseLocation(int&, int&);
+	void GetMouseOffset(int&, int&);
 
 private:
 	bool ReadKeyboard();
