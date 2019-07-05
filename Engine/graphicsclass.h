@@ -45,7 +45,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, int, char*);
+	bool Frame(int, int, int, int, int, char*);
 	bool Render(D3DXMATRIX, D3DXMATRIX);
 
 private:
@@ -59,6 +59,7 @@ private:
 	LightClass* m_Light;
 
 	vector <gameObject> cubes;
+	D3DXMATRIX cam_rotY, cam_rotX;
 	float cube_rot1, cube_rot2;
 	int frame;
 };

@@ -142,6 +142,7 @@ bool SystemClass::Frame()
 {
 	bool result;
 	int mouseX, mouseY, mousePress = -1;
+	int offsetX, offsetY;
 
 	char keyInput[5];
 
@@ -158,6 +159,7 @@ bool SystemClass::Frame()
 
 	// Get the location of the mouse from the input object,
 	m_Input->GetMouseLocation(mouseX, mouseY);
+	m_Input->GetMouseOffset(offsetX, offsetY);
 
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < ARR_SIZE; i++) {
@@ -178,7 +180,7 @@ bool SystemClass::Frame()
 	}
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, mousePress, keyInput);
+	result = m_Graphics->Frame(mouseX, mouseY, offsetX, offsetY, mousePress, keyInput);
 	if (!result)
 	{
 		return false;

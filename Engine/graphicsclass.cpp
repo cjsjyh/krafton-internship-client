@@ -17,6 +17,8 @@ GraphicsClass::GraphicsClass()
 	cube_rot1 = cube_rot2 = 0;
 
 	cubes.assign(2, gameObject());
+	D3DXMatrixIdentity(&cam_rotX);
+	D3DXMatrixIdentity(&cam_rotY);
 	frame = 0;
 }
 
@@ -180,10 +182,8 @@ void GraphicsClass::Shutdown()
 //mousePress = 0 left click
 //mousePress = 1 right click
 //mousePress = 2 wheel click
-bool GraphicsClass::Frame(int mouseX, int mouseY, int mousePress, char* key)
+bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, int mousePress, char* key)
 {
-	D3DXMATRIX cam_rotY, cam_rotX;
-
 	bool result;
 	//-------------
 	//   UI
@@ -227,14 +227,14 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int mousePress, char* key)
 		}
 	}
 
-	D3DXMatrixIdentity(&cam_rotX);
-	D3DXMatrixIdentity(&cam_rotY);
-	if (mouseX)
+	if (offsetX)
 	{
+		cout << "X: " + to_string(offsetX) << endl;
 		D3DXMatrixRotationY(&cam_rotY, -mouseX * CAM_SENSITIVITY * D3DX_PI);
 	}
-	if (mouseY)
+	if (offsetY)
 	{
+		cout << "Y: " + to_string(offsetY) << endl;
 		D3DXMatrixRotationX(&cam_rotX, -mouseY * CAM_SENSITIVITY * D3DX_PI);
 	}
 
@@ -292,7 +292,7 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 
 		//adjust
 		cubes[i].SetPosition(5, 0, 0);
-		
+		/*
 		cubes[i].AdjustRotation((float)D3DX_PI * 0.01 * (i + 1));
 		
 		//retrieve
@@ -302,7 +302,9 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 		//set
 		D3DXMatrixRotationY(&temp_rot, rot);
 		D3DXMatrixTranslation(&temp_mov, x, y, z);
-		
+		*/
+		D3DXMatrixIdentity(&temp_rot);
+		D3DXMatrixIdentity(&temp_mov);
 		//render
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, 
 									viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(),
@@ -313,42 +315,6 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 			return false;
 		}
 	}
-	
-	/*
-	cube_rot1 += (float)D3DX_PI * 0.01;
-	if (cube_rot1 > 360) {
-		cube_rot1 = -360;
-	}
-	
-	D3DXMatrixRotationY(&temp_rot, cube_rot1);
-	D3DXMatrixTranslation(&temp_mov, 5, 0, 0);
-	*/
-	// Render the model using the texture shader.
-	//result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov *temp_rot, viewMatrix, projectionMatrix, 
-	//								 m_Model->GetTexture());
-	
-	
-
-
-
-	
-
-	/*
-	cube_rot2 -= 0.1;
-	if (cube_rot2 < -360) {
-		cube_rot2 = 0;
-	}
-	D3DXMatrixRotationY(&temp_rot, cube_rot2);
-	D3DXMatrixTranslation(&temp_mov, 5, 0, 0);
-	// Render the model using the texture shader.
-	result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, viewMatrix, projectionMatrix,
-		m_Model->GetTexture());
-	
-	if(!result)
-	{
-		return false;
-	}
-	*/
 	//---------------------
 	//   TEXT
 	//---------------------
