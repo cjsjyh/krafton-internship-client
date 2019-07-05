@@ -17,7 +17,6 @@ GraphicsClass::GraphicsClass()
 	cube_rot1 = cube_rot2 = 0;
 
 	cubes.assign(2, gameObject());
-	local_offsetX = local_offsetY = 0;
 	frame = 0;
 }
 
@@ -177,9 +176,14 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-
-bool GraphicsClass::Frame(int mouseX, int mouseY, char* key)
+//mousePress = -1 not clicked
+//mousePress = 0 left click
+//mousePress = 1 right click
+//mousePress = 2 wheel click
+bool GraphicsClass::Frame(int mouseX, int mouseY, int mousePress, char* key)
 {
+	D3DXMATRIX cam_rotY, cam_rotX;
+
 	bool result;
 	//-------------
 	//   UI
@@ -191,9 +195,6 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, char* key)
 	{
 		return false;
 	}
-
-	local_offsetX = mouseX;
-	local_offsetY = mouseY;
 
 	// Set the Keyboard Input.
 	if (key[0])
@@ -208,44 +209,54 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, char* key)
 	//-------------
 	//  camera
 	//-------------
-	
-	
-
-	switch (key[0]) {
-	case 'A':
-		m_Camera->AdjustPosition(-1, 0, 0);
-		break;
-	case 'S':
-		m_Camera->AdjustPosition(0, 0, -1);
-		break;
-	case 'D' :
-		m_Camera->AdjustPosition(1, 0, 0);
-		break;
-	case 'W':
-		m_Camera->AdjustPosition(0, 0, 1);
-		break;
+	if (mousePress == 1)
+	{
+		switch (key[0]) {
+		case 'A':
+			m_Camera->AdjustPosition(-3, 0, 0);
+			break;
+		case 'S':
+			m_Camera->AdjustPosition(0, 0, -3);
+			break;
+		case 'D':
+			m_Camera->AdjustPosition(3, 0, 0);
+			break;
+		case 'W':
+			m_Camera->AdjustPosition(0, 0, 3);
+			break;
+		}
 	}
-	
+
+	D3DXMatrixIdentity(&cam_rotX);
+	D3DXMatrixIdentity(&cam_rotY);
+	if (mouseX)
+	{
+		D3DXMatrixRotationY(&cam_rotY, -mouseX * CAM_SENSITIVITY * D3DX_PI);
+	}
+	if (mouseY)
+	{
+		D3DXMatrixRotationX(&cam_rotX, -mouseY * CAM_SENSITIVITY * D3DX_PI);
+	}
 
 	//-------------
 	//  object
 	//-------------
+	
 	// Render the graphics scene.
-	result = Render();
+	result = Render(cam_rotX, cam_rotY);
 	if(!result)
 	{
 		return false;
 	}
-
+	
 	return true;
 }
 
 
 
-bool GraphicsClass::Render()
+bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	D3DXMATRIX cam_rotY, cam_rotX;
 	D3DXMATRIX temp_rot, temp_mov;
 	bool result;
 	float rot, x,y,z;
@@ -256,17 +267,6 @@ bool GraphicsClass::Render()
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
-
-	D3DXMatrixIdentity(&temp_rot);
-	D3DXMatrixIdentity(&temp_mov);
-	if (local_offsetX)
-	{
-		D3DXMatrixRotationY(&cam_rotY, -local_offsetX * CAM_SENSITIVITY * D3DX_PI);
-	}
-	if (local_offsetY)
-	{
-		D3DXMatrixRotationX(&cam_rotX, -local_offsetY * CAM_SENSITIVITY * D3DX_PI);
-	}
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);

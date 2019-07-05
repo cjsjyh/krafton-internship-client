@@ -141,8 +141,7 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
-	int mouseX, mouseY;
-	int offsetX, offsetY;
+	int mouseX, mouseY, mousePress = -1;
 
 	char keyInput[5];
 
@@ -159,7 +158,6 @@ bool SystemClass::Frame()
 
 	// Get the location of the mouse from the input object,
 	m_Input->GetMouseLocation(mouseX, mouseY);
-	m_Input->GetMouseOffset(offsetX, offsetY);
 
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < ARR_SIZE; i++) {
@@ -168,31 +166,32 @@ bool SystemClass::Frame()
 	}
 	
 	if (m_Input->IsLMouseDown()) {
-		std::cout << "left mouse down" << endl;
+		mousePress = 0;
 	}
 
 	if (m_Input->IsRMouseDown()) {
-		std::cout << "right mouse down" << endl;
+		mousePress = 1;
 	}
 
 	if (m_Input->IsMMouseDown()) {
-		std::cout << "wheel down" << endl;
+		mousePress = 2;
 	}
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, offsetX, offsetY, keyInput);
+	result = m_Graphics->Frame(mouseX, mouseY, mousePress, keyInput);
 	if (!result)
 	{
 		return false;
 	}
 
 	// Finally render the graphics to the screen.
+	/*
 	result = m_Graphics->Render();
 	if (!result)
 	{
 		return false;
 	}
-
+	*/
 	return true;
 }
 

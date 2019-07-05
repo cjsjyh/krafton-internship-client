@@ -45,8 +45,8 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, char*);
-	bool Render();
+	bool Frame(int, int, int, char*);
+	bool Render(D3DXMATRIX, D3DXMATRIX);
 
 private:
 	D3DClass* m_D3D;
@@ -61,7 +61,6 @@ private:
 	vector <gameObject> cubes;
 	float cube_rot1, cube_rot2;
 	int frame;
-	int local_offsetX, local_offsetY;
 };
 
 #endif
