@@ -15,6 +15,8 @@ GraphicsClass::GraphicsClass()
 	m_TextureShader = 0;
 
 	cube_rot1 = cube_rot2 = 0;
+
+	cubes.assign(2, gameObject());
 	frame = 0;
 }
 
@@ -125,36 +127,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Initialize the light object.
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-
-	//// Create the model object.
-	//m_Model = new ModelClass;
-	//if(!m_Model)
-	//{
-	//	return false;
-	//}
-
-	//// Initialize the model object.
-	//result = m_Model->Initialize(m_D3D->GetDevice(), L"../Engine/data/seafloor.dds");
-	//if(!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//	return false;
-	//}
-
-	//// Create the texture shader object.
-	//m_TextureShader = new TextureShaderClass;
-	//if(!m_TextureShader)
-	//{
-	//	return false;
-	//}
-
-	//// Initialize the texture shader object.
-	//result = m_TextureShader->Initialize(m_D3D->GetDevice(), hwnd);
-	//if(!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-	//	return false;
-	//}
 
 	return true;
 }
@@ -267,6 +239,7 @@ bool GraphicsClass::Render()
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX temp_rot, temp_mov;
 	bool result;
+	float rot, x,y,z;
 
 
 	// Clear the buffers to begin the scene.
@@ -293,24 +266,47 @@ bool GraphicsClass::Render()
 		frame = 0;
 	}
 
+	for (int i = 0; i < 2; i++)
+	{
+		//adjust
+		cubes[i].SetPosition(5, 0, 0);
+		cubes[i].AdjustRotation((float)D3DX_PI * 0.01 * (i + 1));
+		
+		//retrieve
+		cubes[i].GetRotation(rot);
+		cubes[i].GetPosition(x,y,z);
+		
+		//set
+		D3DXMatrixRotationY(&temp_rot, rot);
+		D3DXMatrixTranslation(&temp_mov, x, y, z);
+		
+		//render
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	
+		if (!result)
+		{
+			return false;
+		}
+	}
+	
+	/*
 	cube_rot1 += (float)D3DX_PI * 0.01;
 	if (cube_rot1 > 360) {
 		cube_rot1 = -360;
 	}
+	
 	D3DXMatrixRotationY(&temp_rot, cube_rot1);
 	D3DXMatrixTranslation(&temp_mov, 5, 0, 0);
+	*/
 	// Render the model using the texture shader.
 	//result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov *temp_rot, viewMatrix, projectionMatrix, 
 	//								 m_Model->GetTexture());
 	
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	
 
 
 
-	if (!result)
-	{
-		return false;
-	}
+	
 
 	/*
 	cube_rot2 -= 0.1;

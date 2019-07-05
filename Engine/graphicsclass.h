@@ -9,14 +9,18 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "d3dclass.h"
+
 #include "cameraclass.h"
 #include "modelclass.h"
 #include "textureshaderclass.h"
 #include "textclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+#include "gameObject.h"
 
 #include "iostream"
+#include <vector>
+using namespace std;
 
 /////////////
 // GLOBALS //
@@ -52,6 +56,7 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 
+	vector <gameObject> cubes;
 	float cube_rot1, cube_rot2;
 	int frame;
 };
