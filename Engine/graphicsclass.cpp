@@ -305,7 +305,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	D3DXMATRIX temp_rot, temp_mov;
+	D3DXMATRIX temp;
 	bool result;
 	float rotx, roty, rotz;
 	float x,y,z;
@@ -337,25 +337,10 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	}
 
 	for (int i = 0; i < 1; i++)
-	{
-
-		//adjust
-		//cubes[i].SetPosition(5, 0, 0);
-		
-		//cubes[i].AdjustRotation((float)D3DX_PI * 0.01 * (i + 1));
-		
-		//retrieve
-		cubes[i].GetRotation(rotx,roty,rotz);
-		cubes[i].GetPosition(x,y,z);
-		
-		//set
-		D3DXMatrixRotationY(&temp_rot, roty);
-		D3DXMatrixTranslation(&temp_mov, x, y, z);
-		
-		//D3DXMatrixIdentity(&temp_rot);
-		//D3DXMatrixIdentity(&temp_mov);
+	{	
+		cubes[i].GetWorldMatrix(temp);
 		//render
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, 
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp, 
 									viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(),
 									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 	

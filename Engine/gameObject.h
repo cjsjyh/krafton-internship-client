@@ -2,6 +2,7 @@
 #ifndef _GAMEOBJECT_H_
 #define _GAMEOBJECT_H_
 
+#include "d3dclass.h"
 #include <d3dx10math.h>
 #include "iostream"
 
@@ -27,11 +28,12 @@ public:
 	void AdjustRotation(float, float, float);
 	void AdjustScale(float, float, float);
 
+	void gameObject::GetWorldMatrix(D3DXMATRIX&);
+
 private:
 	float pos_x, pos_y, pos_z;
 	float scale_x, scale_y, scale_z;
 	float rot_x,rot_y,rot_z;
-	float height, width;
 };
 
 #endif
