@@ -7,6 +7,7 @@ gameObject::gameObject(string objname, ModelClass* model)
 	scale_x = scale_y = scale_z = 1;
 	rot_x = rot_y = rot_z = 0;
 	w = h = l = 1;
+	collider_size = 0.5;
 
 	name = objname;
 	m_model = model;
@@ -113,6 +114,7 @@ void gameObject::SetScale(float x, float y, float z)
 	scale_z = z;
 	l *= z;
 	
+	collider_size = min(min(x, y), z) * 0.75;
 	return;
 }
 

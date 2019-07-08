@@ -8,6 +8,7 @@
 
 #include <d3dx10math.h>
 #include <string>
+#include <math.h>
 using namespace std;
 
 #define CAM_SPEED 3
@@ -37,12 +38,16 @@ public:
 	string GetName();
 
 	ModelClass* GetModel();
+
+	float collider_size;
+
 private:
 	string name;
 	float pos_x, pos_y, pos_z;
 	float scale_x, scale_y, scale_z;
 	float rot_x,rot_y,rot_z;
 
+	
 	float w, h, l;
 	ModelClass* m_model;
 };

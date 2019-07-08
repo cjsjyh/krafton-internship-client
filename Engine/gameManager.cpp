@@ -1,7 +1,7 @@
 #include "gameManager.h"
 gameManager::gameManager()
 {
-	return;
+	collider_size = 0.5f;
 }
 
 gameManager::~gameManager()
@@ -49,7 +49,8 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 		vector<gameManager::coord> obj1CollPts = GetColliderCenter(gameobjects[i]);
 		for (int j = i + 1; j < size; j++) {
 			vector<gameManager::coord> obj2CollPts = GetColliderCenter(gameobjects[j]);
-			if (DetectCollision(obj1CollPts, obj2CollPts))
+			float min_distance = gameobjects[i]->collider_size + gameobjects[j]->collider_size;
+			if (DetectCollision(obj1CollPts, obj2CollPts, min_distance))
 			{
 				item1.push_back(gameobjects[i]);
 				item2.push_back(gameobjects[j]);
@@ -63,7 +64,7 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 		return true;
 }
 
-bool gameManager::DetectCollision(vector<gameManager::coord> obj1, vector<gameManager::coord> obj2)
+bool gameManager::DetectCollision(vector<gameManager::coord> obj1, vector<gameManager::coord> obj2, float distance)
 {
 	vector<gameManager::coord>::iterator iter1, iter2;
 	for (iter1 = obj1.begin(); iter1 < obj1.end(); iter1++)
@@ -71,7 +72,7 @@ bool gameManager::DetectCollision(vector<gameManager::coord> obj1, vector<gameMa
 		for (iter2 = obj2.begin(); iter2 < obj2.end(); iter2++)
 		{
 			float result = pow(iter1->x - iter2->x,2) + pow(iter1->y - iter2->y,2) + pow(iter1->z - iter2->z,2);
-			if (result <= pow(COLLIDER_SIZE * 2, 2)) {
+			if (result <= pow(distance, 2)) {
 				cout << "HIT!!" << endl;
 				return true;
 			}
@@ -88,13 +89,13 @@ vector <gameManager::coord> gameManager::GetColliderCenter(gameObject* obj)
 	obj->GetPosition(x, y, z);
 	obj->GetScale(w, h, l);
 	
-	for (int i = 1; i < (w/COLLIDER_SIZE)*2; i+=2) {
-		for (int j = 1; j < (h/COLLIDER_SIZE)*2; j+=2) {
-			for (int k = 1; k < (l/COLLIDER_SIZE)*2; k+=2) {
+	for (int i = 1; i < (w/collider_size)*2; i+=2) {
+		for (int j = 1; j < (h/ collider_size)*2; j+=2) {
+			for (int k = 1; k < (l/ collider_size)*2; k+=2) {
 				coord temp;
-				temp.x = x - w + i * COLLIDER_SIZE;
-				temp.y = y - h + j * COLLIDER_SIZE;
-				temp.z = z - l + k * COLLIDER_SIZE;
+				temp.x = x - w + i * collider_size;
+				temp.y = y - h + j * collider_size;
+				temp.z = z - l + k * collider_size;
 				points.push_back(temp);
 			}
 		}

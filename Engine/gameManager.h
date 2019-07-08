@@ -9,7 +9,6 @@
 #include <vector>
 using namespace std;
 
-#define COLLIDER_SIZE 0.5
 
 class gameManager
 {
@@ -35,11 +34,11 @@ public:
 private:
 	
 
-	bool DetectCollision(vector<gameManager::coord>, vector<gameManager::coord>);
+	bool DetectCollision(vector<gameManager::coord>, vector<gameManager::coord>, float);
 	vector <coord> GetColliderCenter(gameObject*);
 	vector <gameObject*> gameobjects;
 
-
+	float collider_size;
 };
 
 #endif
