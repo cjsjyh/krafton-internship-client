@@ -4,16 +4,18 @@
 gameObject::gameObject()
 {
 	pos_x = pos_y = pos_z = 0;
-	rot = 0;
-	height = width = 0;
+	scale_x = scale_y = scale_z = 0;
+	rot_x = rot_y = rot_z = 0;
 }
 
-gameObject::gameObject(float w, float h)
+gameObject::gameObject(float x, float y, float z)
 {
-	width = w;
-	height = h;
-	pos_x = pos_y = pos_z = 0;
-	rot = 0;
+	pos_z = x;
+	pos_y = y;
+	pos_z = z;
+
+	scale_x = scale_y = scale_z = 0;
+	rot_x = rot_y = rot_z = 0;
 }
 
 gameObject::~gameObject()
@@ -29,9 +31,21 @@ void gameObject::GetPosition(float& x, float& y, float& z)
 	return;
 }
 
-void gameObject::GetRotation(float& r)
+void gameObject::GetRotation(float& x, float& y, float& z)
 {
-	r = rot;
+	x = rot_x;
+	y = rot_y;
+	z = rot_z;
+
+	return;
+}
+
+void gameObject::GetScale (float& x, float& y, float& z)
+{
+	x = scale_x;
+	y = scale_y;
+	z = scale_z;
+
 	return;
 }
 
@@ -43,11 +57,27 @@ void gameObject::SetPosition(float x, float y, float z)
 	return;
 }
 
-void gameObject::SetRotation(float r)
+void gameObject::SetRotation(float x, float y, float z)
 {
-	rot = r;
-	if (rot > 360)
-		rot = 0;
+	rot_x = x;
+	while (rot_x > 360)
+		rot_x = rot_x - 360;
+
+	rot_y = y;
+	while (rot_y > 360)
+		rot_y = rot_y - 360;
+
+	rot_z = z;
+	while (rot_z > 360)
+		rot_z = rot_z - 360;
+	return;
+}
+
+void gameObject::SetScale(float x, float y, float z)
+{
+	scale_x = x;
+	scale_y = y;
+	scale_z = z;
 	return;
 }
 
@@ -58,9 +88,18 @@ void gameObject::AdjustPosition(float x, float y, float z)
 	pos_z += z;
 }
 
-void gameObject::AdjustRotation(float r)
+void gameObject::AdjustRotation(float x, float y, float z)
 {
-	rot += r;
-	if (rot + r > 360)
-		rot = 0;
+	rot_x += x;
+	while (rot_x > 360)
+		rot_x = rot_x - 360;
+
+	rot_y += y;
+	while (rot_y > 360)
+		rot_y = rot_y - 360;
+
+	rot_z += z;
+	while (rot_z > 360)
+		rot_z = rot_z - 360;
+	return;
 }

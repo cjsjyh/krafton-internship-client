@@ -17,6 +17,9 @@ GraphicsClass::GraphicsClass()
 	cube_rot1 = cube_rot2 = 0;
 
 	cubes.assign(2, gameObject());
+	cubes[0].SetPosition(5, 0, 0);
+	cubes[1].SetPosition(5, 0, 0);
+
 	D3DXMatrixIdentity(&cam_rotX);
 	D3DXMatrixIdentity(&cam_rotY);
 	frame = 0;
@@ -38,6 +41,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	bool result;
 	D3DXMATRIX baseViewMatrix;
 
+	screenW = screenWidth;
+	screenH = screenHeight;
 
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
@@ -97,7 +102,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/kraftonjpg.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -127,7 +132,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the light object.
-	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+	m_Light->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
@@ -178,12 +183,32 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-//mousePress = -1 not clicked
-//mousePress = 0 left click
-//mousePress = 1 right click
-//mousePress = 2 wheel click
-bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, int mousePress, char* key)
+
+bool GraphicsClass::MouseNotClicked(bool* mousePress)
 {
+	if (!mousePress[0] && !mousePress[1] && !mousePress[2])
+		return true;
+	return false;
+}
+
+bool GraphicsClass::RightMouseClicked(bool* mousePress)
+{
+	if (mousePress[1])
+		return true;
+	return false;
+}
+
+bool GraphicsClass::LeftMouseClicked(bool* mousePress)
+{
+	if (mousePress[0])
+		return true;
+	return false;
+}
+
+
+bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool* mousePress, char* key)
+{
+	D3DXMATRIX temp_rotY, temp_rotX;
 	bool result;
 	//-------------
 	//   UI
@@ -196,7 +221,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, int 
 		return false;
 	}
 
-	// Set the Keyboard Input.
+	// Set the Keyboard Input as UI.
 	if (key[0])
 		result = m_Text->SetKeyInput(key, m_D3D->GetDeviceContext());
 	else
@@ -206,36 +231,59 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, int 
 		return false;
 	}
 
-	//-------------
-	//  camera
-	//-------------
-	if (mousePress == 1)
+	//rightclick
+	if (RightMouseClicked(mousePress))
 	{
+		//-------------
+		//  camera
+		//-------------
 		switch (key[0]) {
 		case 'A':
-			m_Camera->AdjustPosition(-3, 0, 0);
+			m_Camera->AdjustPosition(-CAM_SPEED, 0, 0);
 			break;
 		case 'S':
-			m_Camera->AdjustPosition(0, 0, -3);
+			m_Camera->AdjustPosition(0, 0, -CAM_SPEED);
 			break;
 		case 'D':
-			m_Camera->AdjustPosition(3, 0, 0);
+			m_Camera->AdjustPosition(CAM_SPEED, 0, 0);
 			break;
 		case 'W':
-			m_Camera->AdjustPosition(0, 0, 3);
+			m_Camera->AdjustPosition(0, 0, CAM_SPEED);
+			break;
+		}
+	}
+	else if(MouseNotClicked(mousePress))
+	{
+		//-------------
+		//  player
+		//-------------
+		switch (key[0]) {
+		case 'A':
+			cubes[0].AdjustPosition(-PLAYER_SPEED, 0, 0);
+			break;
+		case 'S':
+			cubes[0].AdjustPosition(0, 0, -PLAYER_SPEED);
+			break;
+		case 'D':
+			cubes[0].AdjustPosition(PLAYER_SPEED, 0, 0);
+			break;
+		case 'W':
+			cubes[0].AdjustPosition(0, 0, PLAYER_SPEED);
 			break;
 		}
 	}
 
 	if (offsetX)
 	{
-		cout << "X: " + to_string(offsetX) << endl;
-		D3DXMatrixRotationY(&cam_rotY, -mouseX * CAM_SENSITIVITY * D3DX_PI);
+		float temp = -((float)offsetX/screenW) * 360 * D3DX_PI *CAM_SENSITIVITY;
+		D3DXMatrixRotationY(&temp_rotY, temp);
+		cam_rotY = cam_rotY * temp_rotY;
 	}
 	if (offsetY)
 	{
-		cout << "Y: " + to_string(offsetY) << endl;
-		D3DXMatrixRotationX(&cam_rotX, -mouseY * CAM_SENSITIVITY * D3DX_PI);
+		float temp = -((float)offsetY/screenH) * 360 * D3DX_PI *CAM_SENSITIVITY;
+		D3DXMatrixRotationX(&temp_rotX, temp);
+		cam_rotX = cam_rotX * temp_rotX;
 	}
 
 	//-------------
@@ -259,7 +307,8 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX temp_rot, temp_mov;
 	bool result;
-	float rot, x,y,z;
+	float rotx, roty, rotz;
+	float x,y,z;
 
 
 	// Clear the buffers to begin the scene.
@@ -287,24 +336,24 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 		frame = 0;
 	}
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 1; i++)
 	{
 
 		//adjust
-		cubes[i].SetPosition(5, 0, 0);
-		/*
-		cubes[i].AdjustRotation((float)D3DX_PI * 0.01 * (i + 1));
+		//cubes[i].SetPosition(5, 0, 0);
+		
+		//cubes[i].AdjustRotation((float)D3DX_PI * 0.01 * (i + 1));
 		
 		//retrieve
-		cubes[i].GetRotation(rot);
+		cubes[i].GetRotation(rotx,roty,rotz);
 		cubes[i].GetPosition(x,y,z);
 		
 		//set
-		D3DXMatrixRotationY(&temp_rot, rot);
+		D3DXMatrixRotationY(&temp_rot, roty);
 		D3DXMatrixTranslation(&temp_mov, x, y, z);
-		*/
-		D3DXMatrixIdentity(&temp_rot);
-		D3DXMatrixIdentity(&temp_mov);
+		
+		//D3DXMatrixIdentity(&temp_rot);
+		//D3DXMatrixIdentity(&temp_mov);
 		//render
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp_mov * temp_rot, 
 									viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(),

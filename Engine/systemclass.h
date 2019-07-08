@@ -58,6 +58,11 @@ private:
 	GraphicsClass* m_Graphics;
 	const int keyCode[ARR_SIZE] = { DIK_W, DIK_A,DIK_S,DIK_D };
 	const char keyChar[ARR_SIZE] = { 'W','A','S','D' };
+	
+	int mouseX, mouseY;
+	int offsetX, offsetY;
+	int initialX, initialY;
+	bool initialClick[3];
 };
 
 

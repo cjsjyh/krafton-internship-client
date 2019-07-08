@@ -8,6 +8,11 @@ SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Graphics = 0;
+	
+	mouseX = mouseY = offsetX = offsetY = 0;
+	initialX = initialY = 0;
+	for (int i = 0; i < 3; i++)
+		initialClick[i] = false;
 }
 
 
@@ -141,8 +146,10 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
-	int mouseX, mouseY, mousePress = -1;
-	int offsetX, offsetY;
+	bool mousePress[3];
+	
+	//int mouseX, mouseY;
+	//int offsetX, offsetY;
 
 	char keyInput[5];
 
@@ -156,31 +163,46 @@ bool SystemClass::Frame()
 	//----------------------
 	//  check key input
 	//----------------------
-
-	// Get the location of the mouse from the input object,
-	m_Input->GetMouseLocation(mouseX, mouseY);
-	m_Input->GetMouseOffset(offsetX, offsetY);
-
+	//keyboard
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < ARR_SIZE; i++) {
 		if (m_Input->IsKeyPressed(keyCode[i]))
 			keyInput[0] = keyChar[i];
 	}
 	
-	if (m_Input->IsLMouseDown()) {
-		mousePress = 0;
+	//mouse
+	if (mousePress[0] = m_Input->IsLMouseDown()) {
+		if (!initialClick[0]) {
+			initialClick[0] = true;
+		}
+	}
+	else {
+		initialClick[0] = false;
 	}
 
-	if (m_Input->IsRMouseDown()) {
-		mousePress = 1;
+	if (mousePress[1] = m_Input->IsRMouseDown()) {
+		if (!initialClick[1]) {
+			initialClick[1] = true;
+			m_Input->GetMouseLocation(initialX, initialY);
+		}
+		m_Input->GetMouseLocation(mouseX, mouseY);
+		m_Input->GetMouseOffset(offsetX, offsetY);
+	}
+	else {
+		initialClick[1] = false;
 	}
 
-	if (m_Input->IsMMouseDown()) {
-		mousePress = 2;
+	if (mousePress[2] = m_Input->IsMMouseDown()) {
+		if (!initialClick[2]) {
+			initialClick[2] = true;
+		}
+	}
+	else {
+		initialClick[2] = false;
 	}
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, offsetX, offsetY, mousePress, keyInput);
+	result = m_Graphics->Frame(mouseX-initialX, mouseY-initialY, offsetX, offsetY, mousePress, keyInput);
 	if (!result)
 	{
 		return false;

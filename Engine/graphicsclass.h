@@ -30,7 +30,7 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
-const float CAM_SENSITIVITY = 0.002;
+const float CAM_SENSITIVITY = 0.01f;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,10 +45,14 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, int, int, int, char*);
+	bool Frame(int, int, int, int, bool*, char*);
 	bool Render(D3DXMATRIX, D3DXMATRIX);
 
 private:
+	bool MouseNotClicked(bool*);
+	bool RightMouseClicked(bool*);
+	bool LeftMouseClicked(bool*);
+
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
@@ -62,6 +66,8 @@ private:
 	D3DXMATRIX cam_rotY, cam_rotX;
 	float cube_rot1, cube_rot2;
 	int frame;
+
+	int screenW, screenH;
 };
 
 #endif
