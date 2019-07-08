@@ -86,16 +86,26 @@ vector <gameManager::coord> gameManager::GetColliderCenter(gameObject* obj)
 	vector <gameManager::coord> points;
 	float x, y, z;
 	float w, h, l;
+	//from object
+	float minVertex;
 	obj->GetPosition(x, y, z);
 	obj->GetScale(w, h, l);
-	
+	minVertex = min(min(w, h), l);
+	minVertex -= collider_size;
+
 	for (int i = 1; i < (w/collider_size)*2; i+=2) {
 		for (int j = 1; j < (h/ collider_size)*2; j+=2) {
 			for (int k = 1; k < (l/ collider_size)*2; k+=2) {
 				coord temp;
+				float maxVertex;
 				temp.x = x - w + i * collider_size;
 				temp.y = y - h + j * collider_size;
 				temp.z = z - l + k * collider_size;
+				maxVertex = max(max(abs(temp.x), abs(temp.y)), abs(temp.z));
+				if (maxVertex < minVertex) {
+					cout << "skip" << endl;
+					continue;
+				}
 				points.push_back(temp);
 			}
 		}

@@ -168,7 +168,7 @@ void GraphicsClass::InitializeMap()
 	gameObject* temp;
 
 	player = new gameObject("player",m_Model);
-	player->SetScale(2, 2, 2);
+	player->SetScale(5, 5, 5);
 	m_GM->RegisterObject(player);
 
 	temp = new gameObject("floor",m_Model2);
