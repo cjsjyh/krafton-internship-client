@@ -15,11 +15,13 @@ GraphicsClass::GraphicsClass()
 	m_Model2 = 0;
 	m_TextureShader = 0;
 
-	gameObjects.assign(2, gameObject());
+	m_GM = 0;
+
+	gameObjects.assign(2, gameObject("object",m_Model));
 	gameObjects[0].SetPosition(5, 0, 0);
 	gameObjects[1].SetPosition(5, 0, 0);
 
-	floor = new gameObject();
+	floor = new gameObject("floor",m_Model2);
 
 	D3DXMatrixIdentity(&cam_rotX);
 	D3DXMatrixIdentity(&cam_rotY);
@@ -43,6 +45,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
 	D3DXMATRIX baseViewMatrix;
+
 
 	screenW = screenWidth;
 	screenH = screenHeight;
@@ -126,6 +129,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create gameManager object
+	
+	m_GM = new gameManager;
+	if (!m_GM)
+	{
+		return false;
+	}
+	
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
 	if (!m_LightShader)
@@ -153,7 +164,21 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
+	InitializeMap();
+
 	return true;
+}
+
+void GraphicsClass::InitializeMap() 
+{
+	gameObject* temp;
+	temp = new gameObject("player",m_Model);
+	m_GM->RegisterObject(temp);
+
+	temp = new gameObject("floor",m_Model2);
+	temp->SetScale(10, 0.5, 10);
+	temp->SetPosition(0, -5, 0);
+	m_GM->RegisterObject(temp);
 }
 
 
@@ -194,6 +219,12 @@ void GraphicsClass::Shutdown()
 	{
 		delete m_Camera;
 		m_Camera = 0;
+	}
+
+	if (m_GM)
+	{
+		delete m_GM;
+		m_GM = 0;
 	}
 
 	// Release the D3D object.
@@ -281,6 +312,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		//-------------
 		//  player
 		//-------------
+		
 		switch (key[0]) {
 		case 'A':
 			gameObjects[0].AdjustPosition(-PLAYER_SPEED, 0, 0);
@@ -295,6 +327,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 			gameObjects[0].AdjustPosition(0, 0, PLAYER_SPEED);
 			break;
 		}
+		
 	}
 
 	if (offsetX)
@@ -360,18 +393,14 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 		frame = 0;
 	}
 
-	floor->SetScale(10, 0.5, 10);
-	floor->SetPosition(0, -5, 0);
-	floor->GetWorldMatrix(worldMatrix);
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix,
-		viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(),
-		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
-
-	for (int i = 0; i < 1; i++)
+	int size = m_GM->GetObjectCount();
+	for (int i = 0; i < size; i++)
 	{	
-		gameObjects[i].GetWorldMatrix(worldMatrix);
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, 
-									viewMatrix, projectionMatrix, m_Model2->GetTexture(), m_Light->GetDirection(),
+		gameObject* temp = m_GM->GetGameObject(i);
+		cout << temp->GetName() << endl;
+		temp->GetWorldMatrix(worldMatrix);
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix, 
+									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
 									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 	
 		if (!result)
@@ -379,6 +408,7 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 			return false;
 		}
 	}
+	
 	//---------------------
 	//   TEXT
 	//---------------------

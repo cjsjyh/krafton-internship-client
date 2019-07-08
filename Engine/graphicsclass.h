@@ -11,12 +11,14 @@
 #include "d3dclass.h"
 
 #include "cameraclass.h"
-#include "modelclass.h"
 #include "textureshaderclass.h"
 #include "textclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+
+#include "modelclass.h"
 #include "gameObject.h"
+#include "gameManager.h"
 
 #include "iostream"
 #include <string>
@@ -53,6 +55,8 @@ private:
 	bool RightMouseClicked(bool*);
 	bool LeftMouseClicked(bool*);
 
+	void InitializeMap();
+
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model, *m_Model2;
@@ -62,6 +66,7 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 
+	gameManager* m_GM;
 	vector <gameObject> gameObjects;
 	gameObject* floor;
 

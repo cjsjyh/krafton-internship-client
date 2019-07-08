@@ -1,14 +1,17 @@
 #include "gameObject.h"
 
 
-gameObject::gameObject()
+gameObject::gameObject(string objname, ModelClass* model)
 {
 	pos_x = pos_y = pos_z = 0;
 	scale_x = scale_y = scale_z = 1;
 	rot_x = rot_y = rot_z = 0;
+	name = objname;
+	
+	m_model = model;
 }
 
-gameObject::gameObject(float x, float y, float z)
+gameObject::gameObject(string objname,  ModelClass* model, float x, float y, float z)
 {
 	pos_z = x;
 	pos_y = y;
@@ -16,11 +19,24 @@ gameObject::gameObject(float x, float y, float z)
 
 	scale_x = scale_y = scale_z = 1;
 	rot_x = rot_y = rot_z = 0;
+	name = objname;
+
+	m_model = model;
 }
 
 gameObject::~gameObject()
 {
 
+}
+
+ModelClass* gameObject::GetModel()
+{
+	return m_model;
+}
+
+string gameObject::GetName()
+{
+	return name;
 }
 
 void gameObject::GetPosition(float& x, float& y, float& z)
