@@ -55,16 +55,17 @@ private:
 
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model;
+	ModelClass* m_Model, *m_Model2;
 	TextClass* m_Text;
 	TextureShaderClass* m_TextureShader;
 
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 
-	vector <gameObject> cubes;
+	vector <gameObject> gameObjects;
+	gameObject* floor;
+
 	D3DXMATRIX cam_rotY, cam_rotX;
-	float cube_rot1, cube_rot2;
 	int frame;
 
 	int screenW, screenH;

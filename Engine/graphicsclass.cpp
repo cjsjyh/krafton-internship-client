@@ -12,17 +12,20 @@ GraphicsClass::GraphicsClass()
 	m_Text = 0;
 	
 	m_Model = 0;
+	m_Model2 = 0;
 	m_TextureShader = 0;
 
-	cube_rot1 = cube_rot2 = 0;
+	gameObjects.assign(2, gameObject());
+	gameObjects[0].SetPosition(5, 0, 0);
+	gameObjects[1].SetPosition(5, 0, 0);
 
-	cubes.assign(2, gameObject());
-	cubes[0].SetPosition(5, 0, 0);
-	cubes[1].SetPosition(5, 0, 0);
+	floor = new gameObject();
 
 	D3DXMatrixIdentity(&cam_rotX);
 	D3DXMatrixIdentity(&cam_rotY);
 	frame = 0;
+
+
 }
 
 
@@ -102,7 +105,21 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/kraftonjpg.dds");
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_Model2 = new ModelClass;
+	if (!m_Model2)
+	{
+		return false;
+	}
+
+	// Initialize the model object.
+	result = m_Model2->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/kraftonjpg.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -163,6 +180,13 @@ void GraphicsClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+	}
+
+	if (m_Model2)
+	{
+		m_Model2->Shutdown();
+		delete m_Model2;
+		m_Model2 = 0;
 	}
 
 	// Release the camera object.
@@ -259,16 +283,16 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		//-------------
 		switch (key[0]) {
 		case 'A':
-			cubes[0].AdjustPosition(-PLAYER_SPEED, 0, 0);
+			gameObjects[0].AdjustPosition(-PLAYER_SPEED, 0, 0);
 			break;
 		case 'S':
-			cubes[0].AdjustPosition(0, 0, -PLAYER_SPEED);
+			gameObjects[0].AdjustPosition(0, 0, -PLAYER_SPEED);
 			break;
 		case 'D':
-			cubes[0].AdjustPosition(PLAYER_SPEED, 0, 0);
+			gameObjects[0].AdjustPosition(PLAYER_SPEED, 0, 0);
 			break;
 		case 'W':
-			cubes[0].AdjustPosition(0, 0, PLAYER_SPEED);
+			gameObjects[0].AdjustPosition(0, 0, PLAYER_SPEED);
 			break;
 		}
 	}
@@ -320,12 +344,12 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
 	viewMatrix = cam_rotX * cam_rotY * viewMatrix;
-	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	m_D3D->GetOrthoMatrix(orthoMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_D3D->GetDeviceContext());
+	m_Model2->Render(m_D3D->GetDeviceContext());
 
 	//-----------------
 	// Transformation
@@ -336,12 +360,18 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 		frame = 0;
 	}
 
+	floor->SetScale(10, 0.5, 10);
+	floor->SetPosition(0, -5, 0);
+	floor->GetWorldMatrix(worldMatrix);
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix,
+		viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(),
+		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+
 	for (int i = 0; i < 1; i++)
 	{	
-		cubes[i].GetWorldMatrix(temp);
-		//render
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix * temp, 
-									viewMatrix, projectionMatrix, m_Model->GetTexture(), m_Light->GetDirection(),
+		gameObjects[i].GetWorldMatrix(worldMatrix);
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, 
+									viewMatrix, projectionMatrix, m_Model2->GetTexture(), m_Light->GetDirection(),
 									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 	
 		if (!result)
