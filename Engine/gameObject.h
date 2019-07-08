@@ -33,6 +33,7 @@ public:
 	void AdjustScale(float, float, float);
 
 	void GetWorldMatrix(D3DXMATRIX&);
+	void GetSize(float& , float& , float& );
 	string GetName();
 
 	ModelClass* GetModel();
@@ -41,6 +42,8 @@ private:
 	float pos_x, pos_y, pos_z;
 	float scale_x, scale_y, scale_z;
 	float rot_x,rot_y,rot_z;
+
+	float w, h, l;
 	ModelClass* m_model;
 };
 

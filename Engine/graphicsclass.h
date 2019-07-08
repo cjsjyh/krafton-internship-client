@@ -67,12 +67,10 @@ private:
 	LightClass* m_Light;
 
 	gameManager* m_GM;
-	vector <gameObject> gameObjects;
-	gameObject* floor;
+	gameObject* player;
 
 	D3DXMATRIX cam_rotY, cam_rotX;
 	int frame;
-
 	int screenW, screenH;
 };
 

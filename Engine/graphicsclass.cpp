@@ -17,12 +17,6 @@ GraphicsClass::GraphicsClass()
 
 	m_GM = 0;
 
-	gameObjects.assign(2, gameObject("object",m_Model));
-	gameObjects[0].SetPosition(5, 0, 0);
-	gameObjects[1].SetPosition(5, 0, 0);
-
-	floor = new gameObject("floor",m_Model2);
-
 	D3DXMatrixIdentity(&cam_rotX);
 	D3DXMatrixIdentity(&cam_rotY);
 	frame = 0;
@@ -172,8 +166,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void GraphicsClass::InitializeMap() 
 {
 	gameObject* temp;
-	temp = new gameObject("player",m_Model);
-	m_GM->RegisterObject(temp);
+
+	player = new gameObject("player",m_Model);
+	m_GM->RegisterObject(player);
 
 	temp = new gameObject("floor",m_Model2);
 	temp->SetScale(10, 0.5, 10);
@@ -315,16 +310,16 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		
 		switch (key[0]) {
 		case 'A':
-			gameObjects[0].AdjustPosition(-PLAYER_SPEED, 0, 0);
+			player->AdjustPosition(-PLAYER_SPEED, 0, 0);
 			break;
 		case 'S':
-			gameObjects[0].AdjustPosition(0, 0, -PLAYER_SPEED);
+			player->AdjustPosition(0, -PLAYER_SPEED,0);
 			break;
 		case 'D':
-			gameObjects[0].AdjustPosition(PLAYER_SPEED, 0, 0);
+			player->AdjustPosition(PLAYER_SPEED, 0, 0);
 			break;
 		case 'W':
-			gameObjects[0].AdjustPosition(0, 0, PLAYER_SPEED);
+			player->AdjustPosition(0, PLAYER_SPEED, 0);
 			break;
 		}
 		
@@ -363,6 +358,8 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX temp;
+
+	vector<gameObject*> coll1, coll2;
 	bool result;
 	float rotx, roty, rotz;
 	float x,y,z;
@@ -388,16 +385,17 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	// Transformation
 	//-----------------
 
-	if (frame++ > 3)
+	if (frame++ < 3)
 	{
 		frame = 0;
+		cout << m_GM->CollisionManager(coll1, coll2) << endl;
 	}
 
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)
 	{	
 		gameObject* temp = m_GM->GetGameObject(i);
-		cout << temp->GetName() << endl;
+		//cout << temp->GetName() << endl;
 		temp->GetWorldMatrix(worldMatrix);
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix, 
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
@@ -408,7 +406,11 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 			return false;
 		}
 	}
+
+	//
 	
+
+
 	//---------------------
 	//   TEXT
 	//---------------------

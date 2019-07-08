@@ -6,8 +6,9 @@ gameObject::gameObject(string objname, ModelClass* model)
 	pos_x = pos_y = pos_z = 0;
 	scale_x = scale_y = scale_z = 1;
 	rot_x = rot_y = rot_z = 0;
+	w = h = l = 1;
+
 	name = objname;
-	
 	m_model = model;
 }
 
@@ -19,8 +20,9 @@ gameObject::gameObject(string objname,  ModelClass* model, float x, float y, flo
 
 	scale_x = scale_y = scale_z = 1;
 	rot_x = rot_y = rot_z = 0;
-	name = objname;
+	w = h = l = 1;
 
+	name = objname;
 	m_model = model;
 }
 
@@ -37,6 +39,14 @@ ModelClass* gameObject::GetModel()
 string gameObject::GetName()
 {
 	return name;
+}
+
+void gameObject::GetSize(float& width, float& height, float& length)
+{
+	width = w;
+	height = h;
+	length = l;
+	return;
 }
 
 void gameObject::GetPosition(float& x, float& y, float& z)
@@ -91,9 +101,18 @@ void gameObject::SetRotation(float x, float y, float z)
 
 void gameObject::SetScale(float x, float y, float z)
 {
+	//width
 	scale_x = x;
+	w *= x;
+
+	//height
 	scale_y = y;
+	h *= y;
+
+	//length
 	scale_z = z;
+	l *= z;
+	
 	return;
 }
 
@@ -124,8 +143,13 @@ void gameObject::AdjustRotation(float x, float y, float z)
 void gameObject::AdjustScale(float x, float y, float z)
 {
 	scale_x += x;
+	w += x * 2;
+
 	scale_y += y;
+	h += y * 2;
+
 	scale_z += z;
+	l += z * 2;
 }
 
 void gameObject::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
