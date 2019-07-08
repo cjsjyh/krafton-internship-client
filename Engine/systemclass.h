@@ -61,8 +61,6 @@ private:
 	
 	int mouseX, mouseY;
 	int offsetX, offsetY;
-	int initialX, initialY;
-	bool initialClick[3];
 };
 
 

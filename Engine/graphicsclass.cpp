@@ -326,13 +326,13 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		
 	}
 
-	if (offsetX)
+	if (RightMouseClicked(mousePress) && offsetX)
 	{
 		float temp = -((float)offsetX/screenW) * 360 * D3DX_PI *CAM_SENSITIVITY;
 		D3DXMatrixRotationY(&temp_rotY, temp);
 		cam_rotY = cam_rotY * temp_rotY;
 	}
-	if (offsetY)
+	if (RightMouseClicked(mousePress) && offsetY)
 	{
 		float temp = -((float)offsetY/screenH) * 360 * D3DX_PI *CAM_SENSITIVITY;
 		D3DXMatrixRotationX(&temp_rotX, temp);

@@ -10,9 +10,6 @@ SystemClass::SystemClass()
 	m_Graphics = 0;
 	
 	mouseX = mouseY = offsetX = offsetY = 0;
-	initialX = initialY = 0;
-	for (int i = 0; i < 3; i++)
-		initialClick[i] = false;
 }
 
 
@@ -172,50 +169,28 @@ bool SystemClass::Frame()
 	
 	//mouse
 	if (mousePress[0] = m_Input->IsLMouseDown()) {
-		if (!initialClick[0]) {
-			initialClick[0] = true;
-		}
-	}
-	else {
-		initialClick[0] = false;
+
 	}
 
+
 	if (mousePress[1] = m_Input->IsRMouseDown()) {
-		if (!initialClick[1]) {
-			initialClick[1] = true;
-			m_Input->GetMouseLocation(initialX, initialY);
-		}
 		m_Input->GetMouseLocation(mouseX, mouseY);
 		m_Input->GetMouseOffset(offsetX, offsetY);
 	}
-	else {
-		initialClick[1] = false;
-	}
+
 
 	if (mousePress[2] = m_Input->IsMMouseDown()) {
-		if (!initialClick[2]) {
-			initialClick[2] = true;
-		}
+
 	}
-	else {
-		initialClick[2] = false;
-	}
+
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX-initialX, mouseY-initialY, offsetX, offsetY, mousePress, keyInput);
+	result = m_Graphics->Frame(mouseX, mouseY, offsetX, offsetY, mousePress, keyInput);
 	if (!result)
 	{
 		return false;
 	}
 
-	// Finally render the graphics to the screen.
-	/*
-	result = m_Graphics->Render();
-	if (!result)
-	{
-		return false;
-	}
-	*/
 	return true;
 }
 
