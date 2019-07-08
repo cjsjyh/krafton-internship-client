@@ -168,6 +168,7 @@ void GraphicsClass::InitializeMap()
 	gameObject* temp;
 
 	player = new gameObject("player",m_Model);
+	player->SetScale(1, 2, 1);
 	m_GM->RegisterObject(player);
 
 	temp = new gameObject("floor",m_Model2);
@@ -385,17 +386,16 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	// Transformation
 	//-----------------
 
-	if (frame++ < 3)
+	if (frame++ > 3)
 	{
 		frame = 0;
-		cout << m_GM->CollisionManager(coll1, coll2) << endl;
+		m_GM->CollisionManager(coll1, coll2);
 	}
 
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)
 	{	
 		gameObject* temp = m_GM->GetGameObject(i);
-		//cout << temp->GetName() << endl;
 		temp->GetWorldMatrix(worldMatrix);
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix, 
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),

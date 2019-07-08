@@ -88,10 +88,10 @@ vector <gameManager::coord> gameManager::GetColliderCenter(gameObject* obj)
 	obj->GetPosition(x, y, z);
 	obj->GetScale(w, h, l);
 	
-	for (int i = 1; i < (w/COLLIDER_SIZE)*2; i++) {
-		for (int j = 1; j < (h/COLLIDER_SIZE)*2; j++) {
-			for (int k = 1; k < (l/COLLIDER_SIZE)*2; k++) {
-				coord temp, temp2;
+	for (int i = 1; i < (w/COLLIDER_SIZE)*2; i+=2) {
+		for (int j = 1; j < (h/COLLIDER_SIZE)*2; j+=2) {
+			for (int k = 1; k < (l/COLLIDER_SIZE)*2; k+=2) {
+				coord temp;
 				temp.x = x - w + i * COLLIDER_SIZE;
 				temp.y = y - h + j * COLLIDER_SIZE;
 				temp.z = z - l + k * COLLIDER_SIZE;
