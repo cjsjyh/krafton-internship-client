@@ -60,7 +60,7 @@ private:
 
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model, *m_Model2;
+	ModelClass* m_Model, *m_Model2, *m_Model3;
 	TextClass* m_Text;
 	TextureShaderClass* m_TextureShader;
 

@@ -60,7 +60,10 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 				if (srcType == gameObject::COLLIDER_BOX)
 				{
 					if (SimpleBoxCollision(gameobjects[i], gameobjects[j]))
+					{
 						flag = true;
+						cout << "2 Box Hit!" << endl;
+					}
 				}
 				else if (srcType == gameObject::COLLIDER_COMPLEX)
 				{

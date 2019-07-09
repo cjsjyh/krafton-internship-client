@@ -13,6 +13,7 @@ GraphicsClass::GraphicsClass()
 	
 	m_Model = 0;
 	m_Model2 = 0;
+	m_Model3 = 0;
 	m_TextureShader = 0;
 
 	m_GM = 0;
@@ -101,17 +102,23 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_Model2 = new ModelClass;
+	if (!m_Model2)
+	{
+		return false;
+	}
+
+	m_Model3 = new ModelClass;
+	if (!m_Model3)
+	{
+		return false;
+	}
+
 	// Initialize the model object.
 	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	m_Model2 = new ModelClass;
-	if (!m_Model2)
-	{
 		return false;
 	}
 
@@ -123,8 +130,15 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create gameManager object
+	// Initialize the model object.
+	result = m_Model3->Initialize(m_D3D->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/seafloor.dds");
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
 	
+	// Create gameManager object
 	m_GM = new gameManager;
 	if (!m_GM)
 	{
@@ -167,26 +181,24 @@ void GraphicsClass::InitializeMap()
 {
 	gameObject* temp;
 
-	player = new gameObject("player",m_Model,gameObject::COLLIDER_BOX);
-	player->SetScale(1, 1, 1);
-	m_GM->RegisterObject(player);
-
-	temp = new gameObject("floor",m_Model2, gameObject::COLLIDER_BOX);
+	temp = new gameObject("floor",m_Model, gameObject::COLLIDER_BOX);
 	temp->SetScale(10, 0.5, 10);
 	temp->SetPosition(0, -5, 0);
 	m_GM->RegisterObject(temp);
 	
-	/*
-	temp = new gameObject("floor", m_Model2);
+	temp = new gameObject("floor", m_Model2, gameObject::COLLIDER_BOX);
 	temp->SetScale(10, 0.5, 10);
 	temp->SetPosition(0, -10, 0);
 	m_GM->RegisterObject(temp);
 	
-	temp = new gameObject("floor", m_Model2);
+	temp = new gameObject("floor", m_Model2, gameObject::COLLIDER_BOX);
 	temp->SetScale(10, 0.5, 10);
 	temp->SetPosition(0, -15, 0);
 	m_GM->RegisterObject(temp);
-	*/
+	
+	player = new gameObject("player", m_Model3, gameObject::COLLIDER_BOX);
+	player->SetScale(1, 1, 1);
+	m_GM->RegisterObject(player);
 }
 
 
@@ -221,7 +233,14 @@ void GraphicsClass::Shutdown()
 		delete m_Model2;
 		m_Model2 = 0;
 	}
-
+	
+	if (m_Model3)
+	{
+		m_Model3->Shutdown();
+		delete m_Model3;
+		m_Model3 = 0;
+	}
+	
 	// Release the camera object.
 	if (m_Camera)
 	{
@@ -353,13 +372,13 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 				player->AdjustPosition(-PLAYER_SPEED, 0, 0);
 				break;
 			case 'S':
-				player->AdjustPosition(0, 0, -PLAYER_SPEED);
+				player->AdjustPosition(0, -PLAYER_SPEED, 0);
 				break;
 			case 'D':
 				player->AdjustPosition(PLAYER_SPEED, 0, 0);
 				break;
 			case 'W':
-				player->AdjustPosition(0, 0, PLAYER_SPEED);
+				player->AdjustPosition(0, PLAYER_SPEED, 0);
 				break;
 			}
 		}
@@ -406,8 +425,7 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	m_D3D->GetOrthoMatrix(orthoMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_D3D->GetDeviceContext());
-	m_Model2->Render(m_D3D->GetDeviceContext());
+	
 
 	//-----------------
 	// Transformation
@@ -424,20 +442,19 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	for (int i = 0; i < size; i++)
 	{	
 		gameObject* temp = m_GM->GetGameObject(i);
+		//¹Ù²Þ
+		temp->GetModel()->Render(m_D3D->GetDeviceContext());
+
 		temp->GetWorldMatrix(worldMatrix);
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix, 
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
 									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
-	
+		
 		if (!result)
 		{
 			return false;
 		}
 	}
-
-	//
-	
-
 
 	//---------------------
 	//   TEXT
