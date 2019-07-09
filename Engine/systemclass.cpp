@@ -148,7 +148,7 @@ bool SystemClass::Frame()
 	//int mouseX, mouseY;
 	//int offsetX, offsetY;
 
-	char keyInput[5];
+	char keyInput[10];
 
 	// Do the input frame processing.
 	result = m_Input->Frame();
@@ -161,10 +161,12 @@ bool SystemClass::Frame()
 	//  check key input
 	//----------------------
 	//keyboard
+	
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < ARR_SIZE; i++) {
-		if (m_Input->IsKeyPressed(keyCode[i]))
-			keyInput[0] = keyChar[i];
+		if (m_Input->IsKeyPressed(keyCode[i])) {
+			keyInput[i] = keyChar[i];
+		}
 	}
 	
 	//mouse

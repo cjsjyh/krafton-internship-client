@@ -54,6 +54,7 @@ private:
 	bool MouseNotClicked(bool*);
 	bool RightMouseClicked(bool*);
 	bool LeftMouseClicked(bool*);
+	bool IsKeyPressed(char*);
 
 	void InitializeMap();
 

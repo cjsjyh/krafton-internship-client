@@ -268,6 +268,13 @@ bool GraphicsClass::LeftMouseClicked(bool* mousePress)
 	return false;
 }
 
+bool GraphicsClass::IsKeyPressed(char* arr)
+{
+	for (int i = 0; i < sizeof(arr); i++)
+		if (arr[i] != 0)
+			return true;
+	return false;
+}
 
 bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool* mousePress, char* key)
 {
@@ -281,37 +288,40 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		return false;
 	}
 
+	
 	// Set the Keyboard Input as UI.
-	if (key[0])
-		result = m_Text->SetKeyInput(key, m_D3D->GetDeviceContext());
+	if (IsKeyPressed(key))
+		result = m_Text->SetKeyInput("P", m_D3D->GetDeviceContext());
 	else
 		result = m_Text->SetKeyInput("", m_D3D->GetDeviceContext());
 	if (!result)
 	{
 		return false;
 	}
-
+	
 	//rightclick
 	if (RightMouseClicked(mousePress))
 	{
 		//-------------------
 		//  camera movement
 		//-------------------
-		switch (key[0]) {
-		case 'A':
-			m_Camera->AdjustPosition(-CAM_SPEED, 0, 0);
-			break;
-		case 'S':
-			m_Camera->AdjustPosition(0, 0, -CAM_SPEED);
-			break;
-		case 'D':
-			m_Camera->AdjustPosition(CAM_SPEED, 0, 0);
-			break;
-		case 'W':
-			m_Camera->AdjustPosition(0, 0, CAM_SPEED);
-			break;
+		for (int i = 0; i < sizeof(key); i++)
+		{
+			switch (key[i]) {
+			case 'A':
+				m_Camera->AdjustPosition(-CAM_SPEED, 0, 0);
+				break;
+			case 'S':
+				m_Camera->AdjustPosition(0, 0, -CAM_SPEED);
+				break;
+			case 'D':
+				m_Camera->AdjustPosition(CAM_SPEED, 0, 0);
+				break;
+			case 'W':
+				m_Camera->AdjustPosition(0, 0, CAM_SPEED);
+				break;
+			}
 		}
-
 		//-------------------
 		//  camera rotation
 		//-------------------
@@ -336,19 +346,22 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		//  player
 		//-------------
 		
-		switch (key[0]) {
-		case 'A':
-			player->AdjustPosition(-PLAYER_SPEED, 0, 0);
-			break;
-		case 'S':
-			player->AdjustPosition(0, -PLAYER_SPEED,0);
-			break;
-		case 'D':
-			player->AdjustPosition(PLAYER_SPEED, 0, 0);
-			break;
-		case 'W':
-			player->AdjustPosition(0, PLAYER_SPEED, 0);
-			break;
+		for (int i = 0; i < sizeof(key); i++)
+		{
+			switch (key[i]) {
+			case 'A':
+				player->AdjustPosition(-PLAYER_SPEED, 0, 0);
+				break;
+			case 'S':
+				player->AdjustPosition(0, 0, -PLAYER_SPEED);
+				break;
+			case 'D':
+				player->AdjustPosition(PLAYER_SPEED, 0, 0);
+				break;
+			case 'W':
+				player->AdjustPosition(0, 0, PLAYER_SPEED);
+				break;
+			}
 		}
 		
 	}
@@ -456,3 +469,4 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 
 	return true;
 }
+
