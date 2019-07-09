@@ -32,11 +32,15 @@ public:
 	};
 
 private:
-	
-
-	bool DetectCollision(vector<gameManager::coord>, vector<gameManager::coord>, float);
-	vector <coord> GetColliderCenter(gameObject*);
 	vector <gameObject*> gameobjects;
+	
+	bool SimpleComplexCollision(gameObject*, gameObject*);
+	bool SimpleBoxCollision(gameObject*, gameObject*);
+	bool ComplexCollision(gameObject*, gameObject*);
+
+	bool SimpleDetection(gameObject*, vector<gameManager::coord>::iterator, float);
+	vector <coord> ComplexCollisionInitialize(gameObject*);
+	
 
 	float collider_size;
 };

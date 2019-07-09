@@ -17,8 +17,15 @@ using namespace std;
 class gameObject
 {
 public:
-	gameObject(string, ModelClass*);
-	gameObject(string, ModelClass*, float, float, float);
+	enum ColliderType
+	{
+		COLLIDER_BOX,
+		COLLIDER_COMPLEX,
+	};
+
+
+	gameObject(string, ModelClass*, ColliderType);
+	gameObject(string, ModelClass*, ColliderType, float, float, float);
 	~gameObject();
 
 	void GetPosition(float&, float&, float&);
@@ -34,22 +41,22 @@ public:
 	void AdjustScale(float, float, float);
 
 	void GetWorldMatrix(D3DXMATRIX&);
-	void GetSize(float& , float& , float& );
+	void GetSize(float&, float&, float&);
 	string GetName();
+	ColliderType GetColliderType();
 
 	ModelClass* GetModel();
 
 	float collider_size;
-
 private:
 	string name;
 	float pos_x, pos_y, pos_z;
 	float scale_x, scale_y, scale_z;
 	float rot_x,rot_y,rot_z;
-
-	
 	float w, h, l;
+
 	ModelClass* m_model;
+	ColliderType collider;
 };
 
 #endif

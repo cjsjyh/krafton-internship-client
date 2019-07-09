@@ -1,7 +1,7 @@
 #include "gameManager.h"
 gameManager::gameManager()
 {
-	collider_size = 0.5f;
+	collider_size = 1.0f;
 }
 
 gameManager::~gameManager()
@@ -45,17 +45,49 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 	//check all objects if they collide and return true or false.
 	//if there are objects colliding, add them to the vector
 	int size = GetObjectCount();
+	bool flag;
+
 	for (int i = 0; i < size-1; i++) {
-		vector<gameManager::coord> obj1CollPts = GetColliderCenter(gameobjects[i]);
+		gameObject::ColliderType srcType = gameobjects[i]->GetColliderType();
+
 		for (int j = i + 1; j < size; j++) {
-			vector<gameManager::coord> obj2CollPts = GetColliderCenter(gameobjects[j]);
-			float min_distance = gameobjects[i]->collider_size + gameobjects[j]->collider_size;
-			if (DetectCollision(obj1CollPts, obj2CollPts, min_distance))
+			flag = false;
+			gameObject::ColliderType destType = gameobjects[j]->GetColliderType();
+			
+			//서로 타입이 같은 2물체
+			if (srcType == destType)
 			{
+				if (srcType == gameObject::COLLIDER_BOX)
+				{
+					if (SimpleBoxCollision(gameobjects[i], gameobjects[j]))
+						flag = true;
+				}
+				else if (srcType == gameObject::COLLIDER_COMPLEX)
+				{
+					if (ComplexCollision(gameobjects[i], gameobjects[j]))
+						flag = true;
+				}
+			}
+			//서로 타입이 다른 2물체
+			else
+			{
+				if (srcType == gameObject::COLLIDER_BOX)
+				{
+					if (SimpleComplexCollision(gameobjects[i], gameobjects[j]))
+						flag = true;
+				}
+				else
+				{
+					if (SimpleComplexCollision(gameobjects[j], gameobjects[i]))
+						flag = true;
+				}
+			}
+			if (flag) {
 				item1.push_back(gameobjects[i]);
 				item2.push_back(gameobjects[j]);
 			}
 		}
+		
 	}
 	
 	if (item1.size() == 0)
@@ -64,24 +96,76 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 		return true;
 }
 
-bool gameManager::DetectCollision(vector<gameManager::coord> obj1, vector<gameManager::coord> obj2, float distance)
+bool gameManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 {
+	gameManager::coord pos, len;
+	src->GetPosition(pos.x, pos.y, pos.z);
+	src->GetSize(len.x, len.y, len.z);
+	gameManager::coord pos2, len2;
+	dest->GetPosition(pos2.x, pos2.y, pos2.z);
+	dest->GetSize(len2.x, len2.y, len2.z);
+
+	if ((pos2.x - len2.x <= pos.x + len.x && pos2.x + len2.x >= pos.x - len.x) &&
+		(pos2.y - len2.y <= pos.y + len.y && pos2.y + len2.y >= pos.y - len.y) &&
+		(pos2.z - len2.z <= pos.z + len.z && pos2.z + len2.z >= pos.z - len.z))
+		return true;
+	return false;
+}
+
+bool gameManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
+{
+	vector<gameManager::coord> SrcCollPts = ComplexCollisionInitialize(objSrc);
+	vector<gameManager::coord> DestCollPts = ComplexCollisionInitialize(objDest);
+	float distance = objSrc->collider_size + objDest->collider_size;
+
 	vector<gameManager::coord>::iterator iter1, iter2;
-	for (iter1 = obj1.begin(); iter1 < obj1.end(); iter1++)
+
+	for (iter1 = SrcCollPts.begin(); iter1 < SrcCollPts.end(); iter1++)
 	{
-		for (iter2 = obj2.begin(); iter2 < obj2.end(); iter2++)
+		for (iter2 = DestCollPts.begin(); iter2 < DestCollPts.end(); iter2++)
 		{
 			float result = pow(iter1->x - iter2->x,2) + pow(iter1->y - iter2->y,2) + pow(iter1->z - iter2->z,2);
 			if (result <= pow(distance, 2)) {
 				cout << "HIT!!" << endl;
 				return true;
 			}
+			else if (result >= pow(distance * 2,2)) {
+				return false;
+			}
 		}
 	}
 	return false;
 }
 
-vector <gameManager::coord> gameManager::GetColliderCenter(gameObject* obj)
+bool gameManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objComplex)
+{
+	float colliderSize = objComplex->collider_size;
+	vector<gameManager::coord> objComplexPts = ComplexCollisionInitialize(objComplex);
+
+	vector<gameManager::coord>::iterator iter1;
+	for (iter1 = objComplexPts.begin(); iter1 < objComplexPts.end(); iter1++)
+	{
+		if (SimpleDetection(objSimple, iter1,collider_size))
+			return true;
+	}
+
+}
+
+bool gameManager::SimpleDetection(gameObject* simple, vector<gameManager::coord>::iterator check,float colliderSize)
+{
+	gameManager::coord pos, len;
+	simple->GetPosition(pos.x, pos.y, pos.z);
+	simple->GetSize(len.x, len.y, len.z);
+	if ((check->x - colliderSize <= pos.x + len.x && check->x + colliderSize >= pos.x - len.x) &&
+		(check->y - colliderSize <= pos.y + len.y && check->y + colliderSize >= pos.y - len.y) &&
+		(check->z - colliderSize <= pos.z + len.z && check->z + colliderSize >= pos.z - len.z))
+		return true;
+	return false;
+}
+
+
+
+vector <gameManager::coord> gameManager::ComplexCollisionInitialize(gameObject* obj)
 {
 	vector <gameManager::coord> points;
 	float x, y, z;
@@ -113,3 +197,4 @@ vector <gameManager::coord> gameManager::GetColliderCenter(gameObject* obj)
 
 	return points;
 }
+

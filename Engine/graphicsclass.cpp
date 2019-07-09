@@ -116,7 +116,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model2->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/kraftonjpg.dds");
+	result = m_Model2->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/krafton.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -167,14 +167,26 @@ void GraphicsClass::InitializeMap()
 {
 	gameObject* temp;
 
-	player = new gameObject("player",m_Model);
-	player->SetScale(5, 5, 5);
+	player = new gameObject("player",m_Model,gameObject::COLLIDER_BOX);
+	player->SetScale(1, 1, 1);
 	m_GM->RegisterObject(player);
 
-	temp = new gameObject("floor",m_Model2);
+	temp = new gameObject("floor",m_Model2, gameObject::COLLIDER_BOX);
 	temp->SetScale(10, 0.5, 10);
 	temp->SetPosition(0, -5, 0);
 	m_GM->RegisterObject(temp);
+	
+	/*
+	temp = new gameObject("floor", m_Model2);
+	temp->SetScale(10, 0.5, 10);
+	temp->SetPosition(0, -10, 0);
+	m_GM->RegisterObject(temp);
+	
+	temp = new gameObject("floor", m_Model2);
+	temp->SetScale(10, 0.5, 10);
+	temp->SetPosition(0, -15, 0);
+	m_GM->RegisterObject(temp);
+	*/
 }
 
 
@@ -261,9 +273,6 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 {
 	D3DXMATRIX temp_rotY, temp_rotX;
 	bool result;
-	//-------------
-	//   UI
-	//-------------
 
 	// Set the location of the mouse.
 	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
@@ -285,9 +294,9 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 	//rightclick
 	if (RightMouseClicked(mousePress))
 	{
-		//-------------
-		//  camera
-		//-------------
+		//-------------------
+		//  camera movement
+		//-------------------
 		switch (key[0]) {
 		case 'A':
 			m_Camera->AdjustPosition(-CAM_SPEED, 0, 0);
@@ -302,7 +311,25 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 			m_Camera->AdjustPosition(0, 0, CAM_SPEED);
 			break;
 		}
+
+		//-------------------
+		//  camera rotation
+		//-------------------
+
+		if (offsetX)
+		{
+			float temp = -((float)offsetX / screenW) * 360 * D3DX_PI * CAM_SENSITIVITY;
+			D3DXMatrixRotationY(&temp_rotY, temp);
+			cam_rotY = cam_rotY * temp_rotY;
+		}
+		if (offsetY)
+		{
+			float temp = -((float)offsetY / screenH) * 360 * D3DX_PI * CAM_SENSITIVITY;
+			D3DXMatrixRotationX(&temp_rotX, temp);
+			cam_rotX = cam_rotX * temp_rotX;
+		}
 	}
+	//No click
 	else if(MouseNotClicked(mousePress))
 	{
 		//-------------
@@ -324,19 +351,6 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 			break;
 		}
 		
-	}
-
-	if (RightMouseClicked(mousePress) && offsetX)
-	{
-		float temp = -((float)offsetX/screenW) * 360 * D3DX_PI *CAM_SENSITIVITY;
-		D3DXMatrixRotationY(&temp_rotY, temp);
-		cam_rotY = cam_rotY * temp_rotY;
-	}
-	if (RightMouseClicked(mousePress) && offsetY)
-	{
-		float temp = -((float)offsetY/screenH) * 360 * D3DX_PI *CAM_SENSITIVITY;
-		D3DXMatrixRotationX(&temp_rotX, temp);
-		cam_rotX = cam_rotX * temp_rotX;
 	}
 
 	//-------------
@@ -385,6 +399,7 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	//-----------------
 	// Transformation
 	//-----------------
+	m_D3D->TurnOnAlphaBlending();
 
 	if (frame++ > 3)
 	{
@@ -419,9 +434,10 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	m_D3D->TurnZBufferOff();
 
 	// Turn on the alpha blending before rendering the text.
-	m_D3D->TurnOnAlphaBlending();
+	//m_D3D->TurnOnAlphaBlending();
 
 	// Render the text strings.
+	D3DXMatrixIdentity(&worldMatrix);
 	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if (!result)
 	{

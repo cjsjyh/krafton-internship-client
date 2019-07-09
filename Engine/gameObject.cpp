@@ -1,7 +1,7 @@
 #include "gameObject.h"
 
 
-gameObject::gameObject(string objname, ModelClass* model)
+gameObject::gameObject(string objname, ModelClass* model, ColliderType col)
 {
 	pos_x = pos_y = pos_z = 0;
 	scale_x = scale_y = scale_z = 1;
@@ -11,9 +11,10 @@ gameObject::gameObject(string objname, ModelClass* model)
 
 	name = objname;
 	m_model = model;
+	collider = col;
 }
 
-gameObject::gameObject(string objname,  ModelClass* model, float x, float y, float z)
+gameObject::gameObject(string objname,  ModelClass* model, ColliderType col, float x, float y, float z)
 {
 	pos_z = x;
 	pos_y = y;
@@ -25,6 +26,7 @@ gameObject::gameObject(string objname,  ModelClass* model, float x, float y, flo
 
 	name = objname;
 	m_model = model;
+	collider = col;
 }
 
 gameObject::~gameObject()
@@ -40,6 +42,11 @@ ModelClass* gameObject::GetModel()
 string gameObject::GetName()
 {
 	return name;
+}
+
+gameObject::ColliderType gameObject::GetColliderType()
+{
+	return collider;
 }
 
 void gameObject::GetSize(float& width, float& height, float& length)
