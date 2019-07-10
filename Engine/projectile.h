@@ -7,11 +7,11 @@
 #include <d3dx10math.h>
 #include <string>
 
-class projectileclass : public gameObject
+class projectile : public gameObject
 {
 public:
-	projectileclass(string, ModelClass*, ColliderType, D3DXVECTOR3, float);
-	~projectileclass();
+	projectile(string, ModelClass*, ColliderType, D3DXVECTOR3, float);
+	~projectile();
 protected:
 
 };

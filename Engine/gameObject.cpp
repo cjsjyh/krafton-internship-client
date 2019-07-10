@@ -16,7 +16,7 @@ gameObject::gameObject(string objname, ModelClass* model, ColliderType col)
 
 gameObject::gameObject(string objname, ModelClass* model, ColliderType col, D3DXVECTOR3 pos)
 {
-	pos_z = pos.x;
+	pos_x = pos.x;
 	pos_y = pos.y;
 	pos_z = pos.z;
 

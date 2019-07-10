@@ -63,7 +63,7 @@
     <ClCompile Include="gameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="projectileclass.cpp">
+    <ClCompile Include="projectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,7 +113,7 @@
     <ClInclude Include="gameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="projectileclass.h">
+    <ClInclude Include="projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

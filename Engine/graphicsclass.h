@@ -18,6 +18,7 @@
 
 #include "modelclass.h"
 #include "gameObject.h"
+#include "projectile.h"
 #include "gameManager.h"
 
 #include "iostream"
