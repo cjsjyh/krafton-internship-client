@@ -24,6 +24,8 @@
 //////////////
 #include <dinput.h>
 #include <iostream>
+#include <string>
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: InputClass
@@ -61,6 +63,8 @@ private:
 
 	unsigned char m_keyboardState[256];
 	DIMOUSESTATE m_mouseState;
+	POINT cursorPos;
+	HWND hwnd;
 
 	int m_screenWidth, m_screenHeight;
 	int m_mouseX, m_mouseY;

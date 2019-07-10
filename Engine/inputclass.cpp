@@ -28,11 +28,11 @@ InputClass::~InputClass()
 }
 
 
-bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
+bool InputClass::Initialize(HINSTANCE hinstance, HWND h, int screenWidth, int screenHeight)
 {
 	HRESULT result;
 
-
+	hwnd = h;
 	// Store the screen size which will be used for positioning the mouse cursor.
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
@@ -140,7 +140,19 @@ void InputClass::Shutdown()
 bool InputClass::Frame()
 {
 	bool result;
+	GetCursorPos(&cursorPos);
+	ScreenToClient(hwnd, &cursorPos);
 
+	
+	m_mouseX = cursorPos.x;
+	m_mouseY = cursorPos.y;
+
+	if (m_mouseX < 0) { m_mouseX = 0; }
+	if (m_mouseY < 0) { m_mouseY = 0; }
+	if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
+	if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
+
+	cout << "X: " + to_string(m_mouseX) << "Y: " + to_string(m_mouseY) << endl;
 
 	// Read the current state of the keyboard.
 	result = ReadKeyboard();
@@ -150,14 +162,12 @@ bool InputClass::Frame()
 	}
 
 	// Read the current state of the mouse.
+	
 	result = ReadMouse();
 	if (!result)
 	{
 		return false;
 	}
-
-	// Process the changes in the mouse and keyboard.
-	ProcessInput();
 
 	return true;
 }
@@ -208,24 +218,6 @@ bool InputClass::ReadMouse()
 	}
 
 	return true;
-}
-
-
-void InputClass::ProcessInput()
-{
-	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
-	m_mouseX += m_mouseState.lX;
-	m_mouseY += m_mouseState.lY;
-
-	// Ensure the mouse location doesn't exceed the screen width or height.
-	/*
-	if (m_mouseX < 0) { m_mouseX = 0; }
-	if (m_mouseY < 0) { m_mouseY = 0; }
-
-	if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
-	if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
-	*/
-	return;
 }
 
 void InputClass::GetMouseOffset(int &x, int &y)

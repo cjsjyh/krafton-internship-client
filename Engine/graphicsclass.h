@@ -35,7 +35,7 @@ const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 const float CAM_SENSITIVITY = 0.01f;
-
+const int PLAYER_MODEL_COUNT = 8;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: GraphicsClass
@@ -47,7 +47,7 @@ public:
 	GraphicsClass(const GraphicsClass&);
 	~GraphicsClass();
 
-	bool Initialize(int, int, HWND);
+	bool Initialize(int, int, HWND,int, int);
 	void Shutdown();
 	bool Frame(int, int, int, int, bool*, char*);
 	bool Render(D3DXMATRIX, D3DXMATRIX);
@@ -59,11 +59,13 @@ private:
 	bool IsKeyPressed(char*);
 	int GetDirection(char*);
 
+	void ChangePlayerModel();
+
 	void InitializeMap();
 
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model, *m_Model2, *m_Model3;
+	vector<ModelClass*> m_Model;
 	TextClass* m_Text;
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;

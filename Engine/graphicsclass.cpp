@@ -11,9 +11,6 @@ GraphicsClass::GraphicsClass()
 	
 	m_Text = 0;
 	
-	m_Model = 0;
-	m_Model2 = 0;
-	m_Model3 = 0;
 	m_TextureShader = 0;
 
 	m_GM = 0;
@@ -36,7 +33,7 @@ GraphicsClass::~GraphicsClass()
 }
 
 
-bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
+bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, int posX, int posY)
 {
 	bool result;
 	D3DXMATRIX baseViewMatrix;
@@ -53,7 +50,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the Direct3D object.
-	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR, posX, posY);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
@@ -98,26 +95,15 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	//-------------
 
 	// Create the model object.
-	m_Model = new ModelClass;
-	if (!m_Model)
+	for (int i = 0; i < PLAYER_MODEL_COUNT; i++)
 	{
-		return false;
+		m_Model.push_back(new ModelClass);
+		if (!m_Model[0])
+			return false;
 	}
-
-	m_Model2 = new ModelClass;
-	if (!m_Model2)
-	{
-		return false;
-	}
-
-	m_Model3 = new ModelClass;
-	if (!m_Model3)
-	{
-		return false;
-	}
-
+	
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
+	result = m_Model[0]->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -125,7 +111,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model2->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/krafton.dds");
+	result = m_Model[1]->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/krafton.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -133,7 +119,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model3->Initialize(m_D3D->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/seafloor.dds");
+	result = m_Model[2]->Initialize(m_D3D->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/seafloor.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -185,13 +171,13 @@ void GraphicsClass::InitializeMap()
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 
 	gameObject* temp;
-	temp = new gameObject("floor",m_Model, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
+	temp = new gameObject("floor",m_Model[1], gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
 	temp->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObject(temp);
 
-	player = new playerclass(m_Model3, D3DXVECTOR3(0, 0, 0));
+	player = new playerclass(m_Model[2], D3DXVECTOR3(0, 0, 0));
 	m_GM->RegisterObject(player);
 	
 }
@@ -215,25 +201,11 @@ void GraphicsClass::Shutdown()
 	}
 
 	// Release the model object.
-	if (m_Model)
+	for (int i = PLAYER_MODEL_COUNT-1; i >= 0 ; i--)
 	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = 0;
-	}
-
-	if (m_Model2)
-	{
-		m_Model2->Shutdown();
-		delete m_Model2;
-		m_Model2 = 0;
-	}
-	
-	if (m_Model3)
-	{
-		m_Model3->Shutdown();
-		delete m_Model3;
-		m_Model3 = 0;
+		m_Model[i]->Shutdown();
+		delete m_Model[i];
+		m_Model.pop_back();
 	}
 	
 	// Release the camera object.

@@ -25,7 +25,7 @@ SystemClass::~SystemClass()
 
 bool SystemClass::Initialize()
 {
-	int screenWidth, screenHeight;
+	int screenWidth, screenHeight, posX, posY;
 	bool result;
 
 
@@ -34,7 +34,7 @@ bool SystemClass::Initialize()
 	screenHeight = 0;
 
 	// Initialize the windows api.
-	InitializeWindows(screenWidth, screenHeight);
+	InitializeWindows(screenWidth, screenHeight, posX, posY);
 
 	// Create the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
@@ -59,7 +59,7 @@ bool SystemClass::Initialize()
 	}
 
 	// Initialize the graphics object.
-	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
+	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd, posX, posY);
 	if(!result)
 	{
 		return false;
@@ -161,7 +161,9 @@ bool SystemClass::Frame()
 	//  check key input
 	//----------------------
 	//keyboard
-	
+	m_Input->GetMouseLocation(mouseX, mouseY);
+
+
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < ARR_SIZE; i++) {
 		if (m_Input->IsKeyPressed(keyCode[i])) {
@@ -176,7 +178,7 @@ bool SystemClass::Frame()
 
 
 	if (mousePress[1] = m_Input->IsRMouseDown()) {
-		m_Input->GetMouseLocation(mouseX, mouseY);
+		
 		m_Input->GetMouseOffset(offsetX, offsetY);
 	}
 
@@ -231,7 +233,7 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 }
 */
 
-void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
+void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight, int& _posX, int& _posY)
 {
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
@@ -287,13 +289,15 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	}
 	else
 	{
-		// If windowed then set it to 800x600 resolution.
+		// If windowed then set it to 1200x800 resolution.
 		screenWidth  = 1200;
 		screenHeight = 800;
 
 		// Place the window in the middle of the screen.
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+		_posX = posX;
+		_posY = posY;
 	}
 
 	// Create the window with the screen settings and get the handle to it.
