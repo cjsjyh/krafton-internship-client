@@ -50,10 +50,20 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 	for (int i = 0; i < size-1; i++) {
 		gameObject::ColliderType srcType = gameobjects[i]->GetColliderType();
 
+		if (gameobjects[i]->channel == gameObject::NO_COLLISION)
+			continue;
+
 		for (int j = i + 1; j < size; j++) {
 			flag = false;
 			gameObject::ColliderType destType = gameobjects[j]->GetColliderType();
 			
+			//collision 검사를 하지 않는 channel
+			if (gameobjects[j]->channel == gameObject::NO_COLLISION)
+				continue;
+			//서로 다른 collision channel
+			else if (gameobjects[j]->channel != gameobjects[i]->channel)
+				continue;
+
 			//서로 타입이 같은 2물체
 			if (srcType == destType)
 			{
@@ -63,6 +73,7 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 					{
 						flag = true;
 						cout << "2 Box Hit!" << endl;
+						cout << gameobjects[i]->GetName() << gameobjects[j]->GetName() << endl;
 					}
 				}
 				else if (srcType == gameObject::COLLIDER_COMPLEX)
@@ -109,7 +120,6 @@ bool gameManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 	dest->GetSize(len2);
 
 	if ((pos2.x - len2.x <= pos.x + len.x && pos2.x + len2.x >= pos.x - len.x) &&
-		(pos2.y - len2.y <= pos.y + len.y && pos2.y + len2.y >= pos.y - len.y) &&
 		(pos2.z - len2.z <= pos.z + len.z && pos2.z + len2.z >= pos.z - len.z))
 		return true;
 	return false;
@@ -127,7 +137,7 @@ bool gameManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
 	{
 		for (iter2 = DestCollPts.begin(); iter2 < DestCollPts.end(); iter2++)
 		{
-			float result = pow(iter1->x - iter2->x,2) + pow(iter1->y - iter2->y,2) + pow(iter1->z - iter2->z,2);
+			float result = pow(iter1->x - iter2->x,2) + pow(iter1->z - iter2->z,2);
 			if (result <= pow(distance, 2)) {
 				cout << "HIT!!" << endl;
 				return true;
@@ -160,7 +170,6 @@ bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::itera
 	simple->GetPosition(pos);
 	simple->GetSize(len);
 	if ((check->x - colliderSize <= pos.x + len.x && check->x + colliderSize >= pos.x - len.x) &&
-		(check->y - colliderSize <= pos.y + len.y && check->y + colliderSize >= pos.y - len.y) &&
 		(check->z - colliderSize <= pos.z + len.z && check->z + colliderSize >= pos.z - len.z))
 		return true;
 	return false;
@@ -184,19 +193,16 @@ vector <D3DXVECTOR3> gameManager::ComplexCollisionInitialize(gameObject* obj)
 	minVertex -= collider_size;
 
 	for (int i = 1; i < (size.x/collider_size)*2; i+=2) {
-		for (int j = 1; j < (size.y/ collider_size)*2; j+=2) {
-			for (int k = 1; k < (size.z/ collider_size)*2; k+=2) {
-				D3DXVECTOR3 temp;
-				float maxVertex;
-				temp.x = pos.x - size.x + i * collider_size;
-				temp.y = pos.y - size.y + j * collider_size;
-				temp.z = pos.z - size.z + k * collider_size;
-				maxVertex = max(max(abs(temp.x), abs(temp.y)), abs(temp.z));
-				if (maxVertex < minVertex) {
-					continue;
-				}
-				points.push_back(temp);
+		for (int k = 1; k < (size.z / collider_size) * 2; k += 2) {
+			D3DXVECTOR3 temp;
+			float maxVertex;
+			temp.x = pos.x - size.x + i * collider_size;
+			temp.z = pos.z - size.z + k * collider_size;
+			maxVertex = max(abs(temp.x), abs(temp.z));
+			if (maxVertex < minVertex) {
+				continue;
 			}
+			points.push_back(temp);
 		}
 	}
 

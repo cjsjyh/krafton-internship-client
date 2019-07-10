@@ -1,7 +1,7 @@
 #include "gameObject.h"
 
 
-gameObject::gameObject(string objname, ModelClass* model, ColliderType col)
+gameObject::gameObject(string objname, ModelClass* model, ColliderType col, CollisionChannel _channel)
 {
 	pos.x = pos.y = pos.z = 0;
 	scale.x = scale.y = scale.z = 1;
@@ -12,9 +12,10 @@ gameObject::gameObject(string objname, ModelClass* model, ColliderType col)
 	name = objname;
 	m_model = model;
 	collider = col;
+	channel = _channel;
 }
 
-gameObject::gameObject(string objname, ModelClass* model, ColliderType col, D3DXVECTOR3 _pos)
+gameObject::gameObject(string objname, ModelClass* model, ColliderType col, D3DXVECTOR3 _pos, CollisionChannel _channel)
 {
 	pos.x = _pos.x;
 	pos.y = _pos.y;
@@ -27,6 +28,7 @@ gameObject::gameObject(string objname, ModelClass* model, ColliderType col, D3DX
 	name = objname;
 	m_model = model;
 	collider = col;
+	channel = _channel;
 }
 
 gameObject::~gameObject()

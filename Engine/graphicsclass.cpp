@@ -181,17 +181,17 @@ void GraphicsClass::InitializeMap()
 {
 	gameObject* temp;
 
-	temp = new gameObject("floor",m_Model, gameObject::COLLIDER_BOX);
+	temp = new gameObject("floor",m_Model, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
 	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
 	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
 	m_GM->RegisterObject(temp);
 	
-	temp = new gameObject("floor", m_Model2, gameObject::COLLIDER_BOX);
+	temp = new gameObject("floor", m_Model2, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
 	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
 	temp->SetPosition(D3DXVECTOR3(0, -10, 0));
 	m_GM->RegisterObject(temp);
 	
-	temp = new projectile("floor", m_Model2, gameObject::COLLIDER_BOX, D3DXVECTOR3(0,0,0),10);
+	temp = new projectile("floor", m_Model2, gameObject::COLLIDER_BOX, D3DXVECTOR3(0,0,0),10, gameObject::NO_COLLISION);
 	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
 	temp->SetPosition(D3DXVECTOR3(0, -15, 0));
 	m_GM->RegisterObject(temp);

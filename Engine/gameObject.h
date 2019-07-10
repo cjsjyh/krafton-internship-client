@@ -23,9 +23,14 @@ public:
 		COLLIDER_BOX,
 		COLLIDER_COMPLEX,
 	};
+	enum CollisionChannel
+	{
+		HIT_PLAYER,
+		NO_COLLISION,
+	};
 
-	gameObject(string, ModelClass*, ColliderType);
-	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3);
+	gameObject(string, ModelClass*, ColliderType, CollisionChannel=HIT_PLAYER);
+	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3, CollisionChannel=HIT_PLAYER);
 	~gameObject();
 
 	void GetPosition(D3DXVECTOR3&);
@@ -46,8 +51,8 @@ public:
 	ColliderType GetColliderType();
 
 	ModelClass* GetModel();
-
 	float sphere_collSize;
+	CollisionChannel channel;
 protected:
 	string name;
 	D3DXVECTOR3 pos;
@@ -57,6 +62,7 @@ protected:
 
 	ModelClass* m_model;
 	ColliderType collider;
+	
 };
 
 #endif
