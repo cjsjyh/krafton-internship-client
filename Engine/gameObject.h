@@ -48,7 +48,7 @@ public:
 	ModelClass* GetModel();
 
 	float collider_size;
-private:
+protected:
 	string name;
 	float pos_x, pos_y, pos_z;
 	float scale_x, scale_y, scale_z;
