@@ -15,8 +15,6 @@ GraphicsClass::GraphicsClass()
 
 	m_GM = 0;
 
-	D3DXMatrixIdentity(&cam_rotX);
-	D3DXMatrixIdentity(&cam_rotY);
 	frame = 0;
 
 
@@ -33,7 +31,7 @@ GraphicsClass::~GraphicsClass()
 }
 
 
-bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, int posX, int posY)
+bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
 	D3DXMATRIX baseViewMatrix;
@@ -50,7 +48,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, int
 	}
 
 	// Initialize the Direct3D object.
-	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR, posX, posY);
+	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
@@ -182,7 +180,6 @@ void GraphicsClass::InitializeMap()
 	
 }
 
-
 void GraphicsClass::Shutdown()
 {
 	// Release the texture shader object.
@@ -232,7 +229,6 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-
 bool GraphicsClass::MouseNotClicked(bool* mousePress)
 {
 	if (!mousePress[0] && !mousePress[1] && !mousePress[2])
@@ -262,7 +258,7 @@ bool GraphicsClass::IsKeyPressed(char* arr)
 	return false;
 }
 
-int GraphicsClass::GetDirection(char* keys)
+int GraphicsClass::GetDirectionKey(char* keys)
 {
 	// 0 1 2
 	// 7   3
@@ -295,10 +291,19 @@ int GraphicsClass::GetDirection(char* keys)
 		return -1;
 }
 
-bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool* mousePress, char* key)
+D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 {
-	D3DXMATRIX temp_rotY, temp_rotX;
+	float x, y, z, square;
+	square = mouseX * mouseX + mouseY * mouseY;
+	square = sqrt(square);
+	return D3DXVECTOR3(mouseX / square, 0, mouseY / square);
+}
+
+bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
+{
 	bool result;
+	mouseX = _mouseX - screenW/2;
+	mouseY = _mouseY - screenH/2;
 
 	// Set the location of the mouse.
 	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
@@ -353,7 +358,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 			}
 		}
 		//image direction
-		int dir = GetDirection(key);
+		int dir = GetDirectionKey(key);
 		if(dir != -1)
 			player->SetDirection(dir);
 		switch (dir)
@@ -377,6 +382,8 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		default:
 			break;
 		}
+		D3DXVECTOR3 temp222 = GetDirectionMouse();
+		cout << to_string(temp222.x) + " " + to_string(temp222.y) + " " + to_string(temp222.z) + " " << endl;
 	}
 
 	//-------------
@@ -384,7 +391,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 	//-------------
 	
 	// Render the graphics scene.
-	result = Render(cam_rotX, cam_rotY);
+	result = Render();
 	if(!result)
 	{
 		return false;
@@ -395,7 +402,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 
 
 
-bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
+bool GraphicsClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX temp;

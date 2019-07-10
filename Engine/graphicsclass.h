@@ -20,11 +20,13 @@
 #include "gameObject.h"
 #include "playerclass.h"
 #include "projectile.h"
+#include "inputclass.h"
 #include "gameManager.h"
 
 #include "iostream"
 #include <string>
 #include <vector>
+#include <math.h>
 using namespace std;
 
 /////////////
@@ -47,19 +49,21 @@ public:
 	GraphicsClass(const GraphicsClass&);
 	~GraphicsClass();
 
-	bool Initialize(int, int, HWND,int, int);
+	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, int, int, bool*, char*);
-	bool Render(D3DXMATRIX, D3DXMATRIX);
+	bool Frame(int, int, bool*, char*);
+	bool Render();
 
 private:
 	bool MouseNotClicked(bool*);
 	bool RightMouseClicked(bool*);
 	bool LeftMouseClicked(bool*);
 	bool IsKeyPressed(char*);
-	int GetDirection(char*);
 
-	void ChangePlayerModel();
+	int GetDirectionKey(char*);
+	D3DXVECTOR3 GetDirectionMouse();
+
+	//void ChangePlayerModel();
 
 	void InitializeMap();
 
@@ -73,9 +77,7 @@ private:
 	gameManager* m_GM;
 	playerclass* player;
 
-	D3DXMATRIX cam_rotY, cam_rotX;
-	D3DXMATRIX CamInitialRot, CamInitialPos;
-
+	int mouseX, mouseY;
 	int frame;
 	int screenW, screenH;
 };

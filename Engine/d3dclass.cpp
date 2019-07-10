@@ -31,7 +31,7 @@ D3DClass::~D3DClass()
 
 
 bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen,
-	float screenDepth, float screenNear, int posX, int posY)
+	float screenDepth, float screenNear)
 {
 	HRESULT result;
 	IDXGIFactory* factory;
@@ -388,8 +388,6 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	{
 		return false;
 	}
-
-	SetCursorPos(posX + screenWidth / 2, posY + screenHeight / 2);
 
 	return true;
 }

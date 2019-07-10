@@ -33,7 +33,7 @@ public:
 	D3DClass(const D3DClass&);
 	~D3DClass();
 
-	bool Initialize(int, int, bool, HWND, bool, float, float, int, int);
+	bool Initialize(int, int, bool, HWND, bool, float, float);
 	void Shutdown();
 	
 	void BeginScene(float, float, float, float);

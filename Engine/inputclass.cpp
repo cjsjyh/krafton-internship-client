@@ -152,7 +152,7 @@ bool InputClass::Frame()
 	if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
 	if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
 
-	cout << "X: " + to_string(m_mouseX) << "Y: " + to_string(m_mouseY) << endl;
+	//cout << "X: " + to_string(m_mouseX) << "Y: " + to_string(m_mouseY) << endl;
 
 	// Read the current state of the keyboard.
 	result = ReadKeyboard();

@@ -59,7 +59,7 @@ bool SystemClass::Initialize()
 	}
 
 	// Initialize the graphics object.
-	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd, posX, posY);
+	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
 	if(!result)
 	{
 		return false;
@@ -144,10 +144,6 @@ bool SystemClass::Frame()
 {
 	bool result;
 	bool mousePress[3];
-	
-	//int mouseX, mouseY;
-	//int offsetX, offsetY;
-
 	char keyInput[10];
 
 	// Do the input frame processing.
@@ -189,7 +185,7 @@ bool SystemClass::Frame()
 
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, offsetX, offsetY, mousePress, keyInput);
+	result = m_Graphics->Frame(mouseX, mouseY, mousePress, keyInput);
 	if (!result)
 	{
 		return false;
