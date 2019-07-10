@@ -191,8 +191,7 @@ void GraphicsClass::InitializeMap()
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObject(temp);
 
-	player = new gameObject("player", m_Model3, gameObject::COLLIDER_BOX);
-	player->SetPosition(D3DXVECTOR3(0, 0, 0));
+	player = new playerclass(m_Model3, D3DXVECTOR3(0, 0, 0));
 	m_GM->RegisterObject(player);
 	
 }
@@ -293,7 +292,35 @@ bool GraphicsClass::IsKeyPressed(char* arr)
 
 int GraphicsClass::GetDirection(char* keys)
 {
-	
+	// 0 1 2
+	// 7   3
+	// 6 5 4
+	//0 = W A
+	if (keys[0] && keys[1])
+		return 0;
+	//2 = W D
+	else if (keys[0] && keys[3])
+		return 2;
+	//4 = S D
+	else if (keys[2] && keys[3])
+		return 4;
+	//6 = S A
+	else if (keys[2] && keys[1])
+		return 6;
+	//1 = W
+	else if (keys[0])
+		return 1;
+	//3 = D
+	else if (keys[3])
+		return 3;
+	//5 = S
+	else if (keys[2])
+		return 5;
+	//7 = A
+	else if (keys[1])
+		return 7;
+	else
+		return -1;
 }
 
 bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool* mousePress, char* key)
@@ -353,7 +380,31 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 				break;
 			}
 		}
-		
+		//image direction
+		int dir = GetDirection(key);
+		if(dir != -1)
+			player->SetDirection(dir);
+		switch (dir)
+		{
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		default:
+			break;
+		}
 	}
 
 	//-------------
@@ -387,9 +438,9 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	D3DXVECTOR3 tempVec;
-	player->GetPosition(tempVec);
-	m_Camera->Render(tempVec);
+	D3DXVECTOR3 player_pos;
+	player->GetPosition(player_pos);
+	m_Camera->Render(player_pos);
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);

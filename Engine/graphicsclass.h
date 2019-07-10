@@ -18,6 +18,7 @@
 
 #include "modelclass.h"
 #include "gameObject.h"
+#include "playerclass.h"
 #include "projectile.h"
 #include "gameManager.h"
 
@@ -68,7 +69,7 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	gameManager* m_GM;
-	gameObject* player;
+	playerclass* player;
 
 	D3DXMATRIX cam_rotY, cam_rotX;
 	D3DXMATRIX CamInitialRot, CamInitialPos;
