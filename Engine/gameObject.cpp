@@ -14,11 +14,11 @@ gameObject::gameObject(string objname, ModelClass* model, ColliderType col)
 	collider = col;
 }
 
-gameObject::gameObject(string objname,  ModelClass* model, ColliderType col, float x, float y, float z)
+gameObject::gameObject(string objname, ModelClass* model, ColliderType col, D3DXVECTOR3 pos)
 {
-	pos_z = x;
-	pos_y = y;
-	pos_z = z;
+	pos_z = pos.x;
+	pos_y = pos.y;
+	pos_z = pos.z;
 
 	scale_x = scale_y = scale_z = 1;
 	rot_x = rot_y = rot_z = 0;

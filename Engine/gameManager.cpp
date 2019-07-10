@@ -101,10 +101,10 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 
 bool gameManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 {
-	gameManager::coord pos, len;
+	D3DXVECTOR3 pos, len;
 	src->GetPosition(pos.x, pos.y, pos.z);
 	src->GetSize(len.x, len.y, len.z);
-	gameManager::coord pos2, len2;
+	D3DXVECTOR3 pos2, len2;
 	dest->GetPosition(pos2.x, pos2.y, pos2.z);
 	dest->GetSize(len2.x, len2.y, len2.z);
 
@@ -117,11 +117,11 @@ bool gameManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 
 bool gameManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
 {
-	vector<gameManager::coord> SrcCollPts = ComplexCollisionInitialize(objSrc);
-	vector<gameManager::coord> DestCollPts = ComplexCollisionInitialize(objDest);
+	vector<D3DXVECTOR3> SrcCollPts = ComplexCollisionInitialize(objSrc);
+	vector<D3DXVECTOR3> DestCollPts = ComplexCollisionInitialize(objDest);
 	float distance = objSrc->collider_size + objDest->collider_size;
 
-	vector<gameManager::coord>::iterator iter1, iter2;
+	vector<D3DXVECTOR3>::iterator iter1, iter2;
 
 	for (iter1 = SrcCollPts.begin(); iter1 < SrcCollPts.end(); iter1++)
 	{
@@ -143,9 +143,9 @@ bool gameManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
 bool gameManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objComplex)
 {
 	float colliderSize = objComplex->collider_size;
-	vector<gameManager::coord> objComplexPts = ComplexCollisionInitialize(objComplex);
+	vector<D3DXVECTOR3> objComplexPts = ComplexCollisionInitialize(objComplex);
 
-	vector<gameManager::coord>::iterator iter1;
+	vector<D3DXVECTOR3>::iterator iter1;
 	for (iter1 = objComplexPts.begin(); iter1 < objComplexPts.end(); iter1++)
 	{
 		if (SimpleDetection(objSimple, iter1,collider_size))
@@ -154,9 +154,9 @@ bool gameManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objC
 
 }
 
-bool gameManager::SimpleDetection(gameObject* simple, vector<gameManager::coord>::iterator check,float colliderSize)
+bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::iterator check,float colliderSize)
 {
-	gameManager::coord pos, len;
+	D3DXVECTOR3 pos, len;
 	simple->GetPosition(pos.x, pos.y, pos.z);
 	simple->GetSize(len.x, len.y, len.z);
 	if ((check->x - colliderSize <= pos.x + len.x && check->x + colliderSize >= pos.x - len.x) &&
@@ -168,9 +168,9 @@ bool gameManager::SimpleDetection(gameObject* simple, vector<gameManager::coord>
 
 
 
-vector <gameManager::coord> gameManager::ComplexCollisionInitialize(gameObject* obj)
+vector <D3DXVECTOR3> gameManager::ComplexCollisionInitialize(gameObject* obj)
 {
-	vector <gameManager::coord> points;
+	vector <D3DXVECTOR3> points;
 	float x, y, z;
 	float w, h, l;
 	//from object
@@ -183,7 +183,7 @@ vector <gameManager::coord> gameManager::ComplexCollisionInitialize(gameObject* 
 	for (int i = 1; i < (w/collider_size)*2; i+=2) {
 		for (int j = 1; j < (h/ collider_size)*2; j+=2) {
 			for (int k = 1; k < (l/ collider_size)*2; k+=2) {
-				coord temp;
+				D3DXVECTOR3 temp;
 				float maxVertex;
 				temp.x = x - w + i * collider_size;
 				temp.y = y - h + j * collider_size;

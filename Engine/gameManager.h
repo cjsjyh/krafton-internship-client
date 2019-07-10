@@ -5,6 +5,7 @@
 #include "gameObject.h"
 
 #include "iostream"
+#include <D3DX10math.h>
 #include <math.h>
 #include <vector>
 using namespace std;
@@ -25,11 +26,7 @@ public:
 
 	bool CollisionManager(vector<gameObject*>&, vector<gameObject*>&);
 
-	struct coord {
-		float x;
-		float y;
-		float z;
-	};
+	
 
 private:
 	vector <gameObject*> gameobjects;
@@ -38,8 +35,8 @@ private:
 	bool SimpleBoxCollision(gameObject*, gameObject*);
 	bool ComplexCollision(gameObject*, gameObject*);
 
-	bool SimpleDetection(gameObject*, vector<gameManager::coord>::iterator, float);
-	vector <coord> ComplexCollisionInitialize(gameObject*);
+	bool SimpleDetection(gameObject*, vector<D3DXVECTOR3>::iterator, float);
+	vector <D3DXVECTOR3> ComplexCollisionInitialize(gameObject*);
 	
 
 	float collider_size;

@@ -14,6 +14,7 @@ using namespace std;
 #define CAM_SPEED 3
 #define PLAYER_SPEED 0.5
 
+
 class gameObject
 {
 public:
@@ -23,9 +24,8 @@ public:
 		COLLIDER_COMPLEX,
 	};
 
-
 	gameObject(string, ModelClass*, ColliderType);
-	gameObject(string, ModelClass*, ColliderType, float, float, float);
+	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3);
 	~gameObject();
 
 	void GetPosition(float&, float&, float&);
