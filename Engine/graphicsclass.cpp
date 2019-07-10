@@ -182,22 +182,22 @@ void GraphicsClass::InitializeMap()
 	gameObject* temp;
 
 	temp = new gameObject("floor",m_Model, gameObject::COLLIDER_BOX);
-	temp->SetScale(10, 0.5, 10);
-	temp->SetPosition(0, -5, 0);
+	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
+	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
 	m_GM->RegisterObject(temp);
 	
 	temp = new gameObject("floor", m_Model2, gameObject::COLLIDER_BOX);
-	temp->SetScale(10, 0.5, 10);
-	temp->SetPosition(0, -10, 0);
+	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
+	temp->SetPosition(D3DXVECTOR3(0, -10, 0));
 	m_GM->RegisterObject(temp);
 	
 	temp = new projectile("floor", m_Model2, gameObject::COLLIDER_BOX, D3DXVECTOR3(0,0,0),10);
-	temp->SetScale(10, 0.5, 10);
-	temp->SetPosition(0, -15, 0);
+	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
+	temp->SetPosition(D3DXVECTOR3(0, -15, 0));
 	m_GM->RegisterObject(temp);
 
 	player = new gameObject("player", m_Model3, gameObject::COLLIDER_BOX);
-	player->SetScale(1, 1, 1);
+	player->SetScale(D3DXVECTOR3(1, 1, 1));
 	m_GM->RegisterObject(player);
 	
 }
@@ -370,16 +370,16 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 		{
 			switch (key[i]) {
 			case 'A':
-				player->AdjustPosition(-PLAYER_SPEED, 0, 0);
+				player->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
 				break;
 			case 'S':
-				player->AdjustPosition(0, -PLAYER_SPEED, 0);
+				player->AdjustPosition(D3DXVECTOR3(0, -PLAYER_SPEED, 0));
 				break;
 			case 'D':
-				player->AdjustPosition(PLAYER_SPEED, 0, 0);
+				player->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
 				break;
 			case 'W':
-				player->AdjustPosition(0, PLAYER_SPEED, 0);
+				player->AdjustPosition(D3DXVECTOR3(0, PLAYER_SPEED, 0));
 				break;
 			}
 		}

@@ -28,32 +28,32 @@ public:
 	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3);
 	~gameObject();
 
-	void GetPosition(float&, float&, float&);
-	void GetRotation(float&, float&, float&);
-	void GetScale(float&, float&, float&);
+	void GetPosition(D3DXVECTOR3&);
+	void GetRotation(D3DXVECTOR3&);
+	void GetScale(D3DXVECTOR3&);
 
-	void SetPosition(float x, float y, float z);
-	void SetRotation(float x, float y, float z);
-	void SetScale(float x, float y, float z);
+	void SetPosition(D3DXVECTOR3 z);
+	void SetRotation(D3DXVECTOR3 z);
+	void SetScale(D3DXVECTOR3 z);
 
-	void AdjustPosition(float, float, float);
-	void AdjustRotation(float, float, float);
-	void AdjustScale(float, float, float);
+	void AdjustPosition(D3DXVECTOR3);
+	void AdjustRotation(D3DXVECTOR3);
+	void AdjustScale(D3DXVECTOR3);
 
 	void GetWorldMatrix(D3DXMATRIX&);
-	void GetSize(float&, float&, float&);
+	void GetSize(D3DXVECTOR3&);
 	string GetName();
 	ColliderType GetColliderType();
 
 	ModelClass* GetModel();
 
-	float collider_size;
+	float sphere_collSize;
 protected:
 	string name;
-	float pos_x, pos_y, pos_z;
-	float scale_x, scale_y, scale_z;
-	float rot_x,rot_y,rot_z;
-	float w, h, l;
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 scale;
+	D3DXVECTOR3 rot;
+	D3DXVECTOR3 box_collSize;
 
 	ModelClass* m_model;
 	ColliderType collider;

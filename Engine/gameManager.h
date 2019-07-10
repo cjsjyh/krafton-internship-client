@@ -37,9 +37,6 @@ private:
 
 	bool SimpleDetection(gameObject*, vector<D3DXVECTOR3>::iterator, float);
 	vector <D3DXVECTOR3> ComplexCollisionInitialize(gameObject*);
-	
-
-	float collider_size;
 };
 
 #endif

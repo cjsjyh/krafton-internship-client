@@ -3,26 +3,26 @@
 
 gameObject::gameObject(string objname, ModelClass* model, ColliderType col)
 {
-	pos_x = pos_y = pos_z = 0;
-	scale_x = scale_y = scale_z = 1;
-	rot_x = rot_y = rot_z = 0;
-	w = h = l = 1;
-	collider_size = 0.5;
+	pos.x = pos.y = pos.z = 0;
+	scale.x = scale.y = scale.z = 1;
+	rot.x = rot.y = rot.z = 0;
+	box_collSize.x = box_collSize.y = box_collSize.z = 1;
+	sphere_collSize = 0.5;
 
 	name = objname;
 	m_model = model;
 	collider = col;
 }
 
-gameObject::gameObject(string objname, ModelClass* model, ColliderType col, D3DXVECTOR3 pos)
+gameObject::gameObject(string objname, ModelClass* model, ColliderType col, D3DXVECTOR3 _pos)
 {
-	pos_x = pos.x;
-	pos_y = pos.y;
-	pos_z = pos.z;
+	pos.x = _pos.x;
+	pos.y = _pos.y;
+	pos.z = _pos.z;
 
-	scale_x = scale_y = scale_z = 1;
-	rot_x = rot_y = rot_z = 0;
-	w = h = l = 1;
+	scale.x = scale.y = scale.z = 1;
+	rot.x = rot.y = rot.z = 0;
+	box_collSize.x = box_collSize.y = box_collSize.z = 1;
 
 	name = objname;
 	m_model = model;
@@ -49,116 +49,116 @@ gameObject::ColliderType gameObject::GetColliderType()
 	return collider;
 }
 
-void gameObject::GetSize(float& width, float& height, float& length)
+void gameObject::GetSize(D3DXVECTOR3& _size)
 {
-	width = w;
-	height = h;
-	length = l;
+	_size.x = box_collSize.x;
+	_size.y = box_collSize.y;
+	_size.z = box_collSize.z;
 	return;
 }
 
-void gameObject::GetPosition(float& x, float& y, float& z)
+void gameObject::GetPosition(D3DXVECTOR3& _pos)
 {
-	x = pos_x;
-	y = pos_y;
-	z = pos_z;
+	_pos.x = pos.x;
+	_pos.y = pos.y;
+	_pos.z = pos.z;
 	return;
 }
 
-void gameObject::GetRotation(float& x, float& y, float& z)
+void gameObject::GetRotation(D3DXVECTOR3& _rot)
 {
-	x = rot_x;
-	y = rot_y;
-	z = rot_z;
-
-	return;
-}
-
-void gameObject::GetScale (float& x, float& y, float& z)
-{
-	x = scale_x;
-	y = scale_y;
-	z = scale_z;
+	_rot.x = rot.x;
+	_rot.y = rot.y;
+	_rot.z = rot.z;
 
 	return;
 }
 
-void gameObject::SetPosition(float x, float y, float z)
+void gameObject::GetScale (D3DXVECTOR3& _scale)
 {
-	pos_x = x;
-	pos_y = y;
-	pos_z = z;
+	_scale.x = scale.x;
+	_scale.y = scale.y;
+	_scale.z = scale.z;
+
 	return;
 }
 
-void gameObject::SetRotation(float x, float y, float z)
+void gameObject::SetPosition(D3DXVECTOR3 _pos)
 {
-	rot_x = x;
-	while (rot_x > 360)
-		rot_x = rot_x - 360;
-
-	rot_y = y;
-	while (rot_y > 360)
-		rot_y = rot_y - 360;
-
-	rot_z = z;
-	while (rot_z > 360)
-		rot_z = rot_z - 360;
+	pos.x = _pos.x;
+	pos.y = _pos.y;
+	pos.z = _pos.z;
 	return;
 }
 
-void gameObject::SetScale(float x, float y, float z)
+void gameObject::SetRotation(D3DXVECTOR3 _rot)
+{
+	rot.x = _rot.x;
+	while (rot.x > 360)
+		rot.x = rot.x - 360;
+
+	rot.y = _rot.y;
+	while (rot.y > 360)
+		rot.y = rot.y - 360;
+
+	rot.z = _rot.z;
+	while (rot.z > 360)
+		rot.z = rot.z - 360;
+	return;
+}
+
+void gameObject::SetScale(D3DXVECTOR3 _scale)
 {
 	//width
-	scale_x = x;
-	w *= x;
+	scale.x = _scale.x;
+	box_collSize.x *= _scale.x;
 
 	//height
-	scale_y = y;
-	h *= y;
+	scale.y = _scale.y;
+	box_collSize.y *= _scale.y;
 
 	//length
-	scale_z = z;
-	l *= z;
+	scale.z = _scale.z;
+	box_collSize.z *= _scale.z;
 	
-	collider_size = min(min(x, y), z) * 0.75;
+	sphere_collSize = min(min(_scale.x, _scale.y), _scale.z) * 0.75;
 	return;
 }
 
-void gameObject::AdjustPosition(float x, float y, float z)
+void gameObject::AdjustPosition(D3DXVECTOR3 _pos)
 {
-	pos_x += x;
-	pos_y += y;
-	pos_z += z;
+	pos.x += _pos.x;
+	pos.y += _pos.y;
+	pos.z += _pos.z;
 	return;
 }
 
-void gameObject::AdjustRotation(float x, float y, float z)
+void gameObject::AdjustRotation(D3DXVECTOR3 _rot)
 {
-	rot_x += x;
-	while (rot_x > 360)
-		rot_x = rot_x - 360;
+	rot.x += _rot.x;
+	while (rot.x > 360)
+		rot.x = rot.x - 360;
 
-	rot_y += y;
-	while (rot_y > 360)
-		rot_y = rot_y - 360;
+	rot.y += _rot.y;
+	while (rot.y > 360)
+		rot.y = rot.y - 360;
 
-	rot_z += z;
-	while (rot_z > 360)
-		rot_z = rot_z - 360;
+	rot.z += _rot.z;
+	while (rot.z > 360)
+		rot.z = rot.z - 360;
 	return;
 }
 
-void gameObject::AdjustScale(float x, float y, float z)
+void gameObject::AdjustScale(D3DXVECTOR3 _scale)
 {
-	scale_x += x;
-	w += x * 2;
+	scale.x += _scale.x;
+	box_collSize.x += _scale.x * 2;
 
-	scale_y += y;
-	h += y * 2;
+	scale.y += _scale.y;
+	box_collSize.y += _scale.y * 2;
 
-	scale_z += z;
-	l += z * 2;
+	scale.z += _scale.z;
+	box_collSize.z += _scale.z * 2;
 }
 
 void gameObject::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
@@ -167,16 +167,16 @@ void gameObject::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
 	
 	D3DXMatrixIdentity(&WorldMatrix);
 
-	D3DXMatrixScaling(&temp, scale_x, scale_y, scale_z);
+	D3DXMatrixScaling(&temp, scale.x, scale.y, scale.z);
 	WorldMatrix *= temp;
 
-	D3DXMatrixRotationX(&temp, rot_x);
+	D3DXMatrixRotationX(&temp, rot.x);
 	WorldMatrix *= temp;
-	D3DXMatrixRotationY(&temp, rot_y);
+	D3DXMatrixRotationY(&temp, rot.y);
 	WorldMatrix *= temp;
-	D3DXMatrixRotationZ(&temp, rot_z);
+	D3DXMatrixRotationZ(&temp, rot.z);
 	WorldMatrix *= temp;
 
-	D3DXMatrixTranslation(&temp, pos_x, pos_y, pos_z);
+	D3DXMatrixTranslation(&temp, pos.x, pos.y, pos.z);
 	WorldMatrix *= temp;
 }

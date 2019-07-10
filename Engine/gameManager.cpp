@@ -1,7 +1,7 @@
 #include "gameManager.h"
 gameManager::gameManager()
 {
-	collider_size = 1.0f;
+
 }
 
 gameManager::~gameManager()
@@ -102,11 +102,11 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 bool gameManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 {
 	D3DXVECTOR3 pos, len;
-	src->GetPosition(pos.x, pos.y, pos.z);
-	src->GetSize(len.x, len.y, len.z);
+	src->GetPosition(pos);
+	src->GetSize(len);
 	D3DXVECTOR3 pos2, len2;
-	dest->GetPosition(pos2.x, pos2.y, pos2.z);
-	dest->GetSize(len2.x, len2.y, len2.z);
+	dest->GetPosition(pos2);
+	dest->GetSize(len2);
 
 	if ((pos2.x - len2.x <= pos.x + len.x && pos2.x + len2.x >= pos.x - len.x) &&
 		(pos2.y - len2.y <= pos.y + len.y && pos2.y + len2.y >= pos.y - len.y) &&
@@ -119,7 +119,7 @@ bool gameManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
 {
 	vector<D3DXVECTOR3> SrcCollPts = ComplexCollisionInitialize(objSrc);
 	vector<D3DXVECTOR3> DestCollPts = ComplexCollisionInitialize(objDest);
-	float distance = objSrc->collider_size + objDest->collider_size;
+	float distance = objSrc->sphere_collSize + objDest->sphere_collSize;
 
 	vector<D3DXVECTOR3>::iterator iter1, iter2;
 
@@ -142,7 +142,7 @@ bool gameManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
 
 bool gameManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objComplex)
 {
-	float colliderSize = objComplex->collider_size;
+	float collider_size = objComplex->sphere_collSize;
 	vector<D3DXVECTOR3> objComplexPts = ComplexCollisionInitialize(objComplex);
 
 	vector<D3DXVECTOR3>::iterator iter1;
@@ -157,8 +157,8 @@ bool gameManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objC
 bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::iterator check,float colliderSize)
 {
 	D3DXVECTOR3 pos, len;
-	simple->GetPosition(pos.x, pos.y, pos.z);
-	simple->GetSize(len.x, len.y, len.z);
+	simple->GetPosition(pos);
+	simple->GetSize(len);
 	if ((check->x - colliderSize <= pos.x + len.x && check->x + colliderSize >= pos.x - len.x) &&
 		(check->y - colliderSize <= pos.y + len.y && check->y + colliderSize >= pos.y - len.y) &&
 		(check->z - colliderSize <= pos.z + len.z && check->z + colliderSize >= pos.z - len.z))
@@ -171,26 +171,28 @@ bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::itera
 vector <D3DXVECTOR3> gameManager::ComplexCollisionInitialize(gameObject* obj)
 {
 	vector <D3DXVECTOR3> points;
-	float x, y, z;
-	float w, h, l;
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 size;
 	//from object
 	float minVertex;
-	obj->GetPosition(x, y, z);
-	obj->GetScale(w, h, l);
-	minVertex = min(min(w, h), l);
+	float collider_size = obj->sphere_collSize;
+
+
+	obj->GetPosition(pos);
+	obj->GetScale(size);
+	minVertex = min(min(size.x, size.y), size.z);
 	minVertex -= collider_size;
 
-	for (int i = 1; i < (w/collider_size)*2; i+=2) {
-		for (int j = 1; j < (h/ collider_size)*2; j+=2) {
-			for (int k = 1; k < (l/ collider_size)*2; k+=2) {
+	for (int i = 1; i < (size.x/collider_size)*2; i+=2) {
+		for (int j = 1; j < (size.y/ collider_size)*2; j+=2) {
+			for (int k = 1; k < (size.z/ collider_size)*2; k+=2) {
 				D3DXVECTOR3 temp;
 				float maxVertex;
-				temp.x = x - w + i * collider_size;
-				temp.y = y - h + j * collider_size;
-				temp.z = z - l + k * collider_size;
+				temp.x = pos.x - size.x + i * collider_size;
+				temp.y = pos.y - size.y + j * collider_size;
+				temp.z = pos.z - size.z + k * collider_size;
 				maxVertex = max(max(abs(temp.x), abs(temp.y)), abs(temp.z));
 				if (maxVertex < minVertex) {
-					cout << "skip" << endl;
 					continue;
 				}
 				points.push_back(temp);
