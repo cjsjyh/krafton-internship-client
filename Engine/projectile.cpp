@@ -9,7 +9,7 @@ projectile::projectile(string name, ModelClass* model, ColliderType coll, D3DXVE
 
 	speed = _speed;
 	dirVector = D3DXVECTOR3(1, 0, 0);
-	//GetDirVector();
+	GetDirVector();
 }
 
 bool projectile::checkDistance()
@@ -21,7 +21,7 @@ bool projectile::checkDistance()
 
 void projectile::GetDirVector()
 {
-	D3DXMATRIX *temp;
+	D3DXMATRIX *temp = new D3DXMATRIX;
 	D3DXMatrixIdentity(temp);
 	D3DXMatrixRotationY(temp, rot.y);
 	D3DXVec3TransformCoord(new D3DXVECTOR3(1,0,0), &dirVector, temp);

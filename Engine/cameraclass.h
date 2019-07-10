@@ -21,15 +21,15 @@ public:
 	CameraClass(const CameraClass&);
 	~CameraClass();
 
-	void SetPosition(float, float, float);
-	void AdjustPosition(float, float, float);
-	void SetRotation(float, float, float);
-	void AdjustRotation(float, float, float);
+	void SetPosition(D3DXVECTOR3);
+	void AdjustPosition(D3DXVECTOR3);
+	void SetRotation(D3DXVECTOR3);
+	void AdjustRotation(D3DXVECTOR3);
 
 	D3DXVECTOR3 GetPosition();
 	D3DXVECTOR3 GetRotation();
 
-	void Render();
+	void Render(D3DXVECTOR3);
 	void GetViewMatrix(D3DXMATRIX&);
 
 private:

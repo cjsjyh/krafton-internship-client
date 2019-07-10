@@ -172,11 +172,11 @@ void gameObject::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
 	D3DXMatrixScaling(&temp, scale.x, scale.y, scale.z);
 	WorldMatrix *= temp;
 
-	D3DXMatrixRotationX(&temp, rot.x);
+	D3DXMatrixRotationX(&temp, rot.x * 0.0174532925f);
 	WorldMatrix *= temp;
-	D3DXMatrixRotationY(&temp, rot.y);
+	D3DXMatrixRotationY(&temp, rot.y * 0.0174532925f);
 	WorldMatrix *= temp;
-	D3DXMatrixRotationZ(&temp, rot.z);
+	D3DXMatrixRotationZ(&temp, rot.z * 0.0174532925f);
 	WorldMatrix *= temp;
 
 	D3DXMatrixTranslation(&temp, pos.x, pos.y, pos.z);

@@ -56,6 +56,7 @@ private:
 	bool RightMouseClicked(bool*);
 	bool LeftMouseClicked(bool*);
 	bool IsKeyPressed(char*);
+	int GetDirection(char*);
 
 	void InitializeMap();
 
@@ -64,14 +65,14 @@ private:
 	ModelClass* m_Model, *m_Model2, *m_Model3;
 	TextClass* m_Text;
 	TextureShaderClass* m_TextureShader;
-
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-
 	gameManager* m_GM;
 	gameObject* player;
 
 	D3DXMATRIX cam_rotY, cam_rotX;
+	D3DXMATRIX CamInitialRot, CamInitialPos;
+
 	int frame;
 	int screenW, screenH;
 };

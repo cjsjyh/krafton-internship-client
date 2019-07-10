@@ -68,9 +68,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-	m_Camera->Render();
+	
+	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
+	m_Camera->Render(D3DXVECTOR3(0,0,0));
 	m_Camera->GetViewMatrix(baseViewMatrix);
+
 
 	//------------
 	//   text
@@ -179,25 +181,18 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::InitializeMap() 
 {
-	gameObject* temp;
+	//initial camera setup
+	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 
+	gameObject* temp;
 	temp = new gameObject("floor",m_Model, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
-	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
+	temp->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
-	m_GM->RegisterObject(temp);
-	
-	temp = new gameObject("floor", m_Model2, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
-	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
-	temp->SetPosition(D3DXVECTOR3(0, -10, 0));
-	m_GM->RegisterObject(temp);
-	
-	temp = new projectile("floor", m_Model2, gameObject::COLLIDER_BOX, D3DXVECTOR3(0,0,0),10, gameObject::NO_COLLISION);
-	temp->SetScale(D3DXVECTOR3(10, 0.5, 10));
-	temp->SetPosition(D3DXVECTOR3(0, -15, 0));
+	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObject(temp);
 
 	player = new gameObject("player", m_Model3, gameObject::COLLIDER_BOX);
-	player->SetScale(D3DXVECTOR3(1, 1, 1));
+	player->SetPosition(D3DXVECTOR3(0, 0, 0));
 	m_GM->RegisterObject(player);
 	
 }
@@ -296,6 +291,11 @@ bool GraphicsClass::IsKeyPressed(char* arr)
 	return false;
 }
 
+int GraphicsClass::GetDirection(char* keys)
+{
+	
+}
+
 bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool* mousePress, char* key)
 {
 	D3DXMATRIX temp_rotY, temp_rotX;
@@ -322,42 +322,8 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 	//rightclick
 	if (RightMouseClicked(mousePress))
 	{
-		//-------------------
-		//  camera movement
-		//-------------------
-		for (int i = 0; i < sizeof(key); i++)
-		{
-			switch (key[i]) {
-			case 'A':
-				m_Camera->AdjustPosition(-CAM_SPEED, 0, 0);
-				break;
-			case 'S':
-				m_Camera->AdjustPosition(0, 0, -CAM_SPEED);
-				break;
-			case 'D':
-				m_Camera->AdjustPosition(CAM_SPEED, 0, 0);
-				break;
-			case 'W':
-				m_Camera->AdjustPosition(0, 0, CAM_SPEED);
-				break;
-			}
-		}
-		//-------------------
-		//  camera rotation
-		//-------------------
 
-		if (offsetX)
-		{
-			float temp = -((float)offsetX / screenW) * 360 * D3DX_PI * CAM_SENSITIVITY;
-			D3DXMatrixRotationY(&temp_rotY, temp);
-			cam_rotY = cam_rotY * temp_rotY;
-		}
-		if (offsetY)
-		{
-			float temp = -((float)offsetY / screenH) * 360 * D3DX_PI * CAM_SENSITIVITY;
-			D3DXMatrixRotationX(&temp_rotX, temp);
-			cam_rotX = cam_rotX * temp_rotX;
-		}
+
 	}
 	//No click
 	else if(MouseNotClicked(mousePress))
@@ -371,15 +337,19 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int offsetX, int offsetY, bool
 			switch (key[i]) {
 			case 'A':
 				player->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
+				m_Camera->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
 				break;
 			case 'S':
-				player->AdjustPosition(D3DXVECTOR3(0, -PLAYER_SPEED, 0));
+				player->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
+				m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
 				break;
 			case 'D':
 				player->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
+				m_Camera->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
 				break;
 			case 'W':
-				player->AdjustPosition(D3DXVECTOR3(0, PLAYER_SPEED, 0));
+				player->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
+				m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
 				break;
 			}
 		}
@@ -417,11 +387,12 @@ bool GraphicsClass::Render(D3DXMATRIX cam_rotX, D3DXMATRIX cam_rotY)
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
+	D3DXVECTOR3 tempVec;
+	player->GetPosition(tempVec);
+	m_Camera->Render(tempVec);
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
-	viewMatrix = cam_rotX * cam_rotY * viewMatrix;
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	m_D3D->GetOrthoMatrix(orthoMatrix);
 

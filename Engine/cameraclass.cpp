@@ -8,7 +8,7 @@ CameraClass::CameraClass()
 {
 	m_positionX = 0.0f;
 	m_positionY = 0.0f;
-	m_positionZ = -10.0f;
+	m_positionZ = 0.0f;
 
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
@@ -26,37 +26,36 @@ CameraClass::~CameraClass()
 }
 
 
-void CameraClass::SetPosition(float x, float y, float z)
+void CameraClass::SetPosition(D3DXVECTOR3 pos)
 {
-	m_positionX = x;
-	m_positionY = y;
-	m_positionZ = z;
+	m_positionX = pos.x;
+	m_positionY = pos.y;
+	m_positionZ = pos.z;
 	return;
 }
 
-void CameraClass::AdjustPosition(float x, float y, float z)
+void CameraClass::AdjustPosition(D3DXVECTOR3 offset)
 {
-	float multiplier = 0.05;
-	m_positionX += x * multiplier;
-	m_positionY += y * multiplier;
-	m_positionZ += z * multiplier;
+	m_positionX += offset.x;
+	m_positionY += offset.y;
+	m_positionZ += offset.z;
 	return;
 }
 
 
-void CameraClass::SetRotation(float x, float y, float z)
+void CameraClass::SetRotation(D3DXVECTOR3 _rot)
 {
-	m_rotationX = x;
-	m_rotationY = y;
-	m_rotationZ = z;
+	m_rotationX = _rot.x;
+	m_rotationY = _rot.y;
+	m_rotationZ = _rot.z;
 	return;
 }
 
-void CameraClass::AdjustRotation(float x, float y, float z)
+void CameraClass::AdjustRotation(D3DXVECTOR3 _rotOffset)
 {
-	m_rotationX += x;
-	m_rotationY += y;
-	m_rotationZ += z;
+	m_rotationX += _rotOffset.x;
+	m_rotationY += _rotOffset.y;
+	m_rotationZ += _rotOffset.z;
 	return;
 }
 
@@ -72,7 +71,7 @@ D3DXVECTOR3 CameraClass::GetRotation()
 }
 
 
-void CameraClass::Render()
+void CameraClass::Render(D3DXVECTOR3 model)
 {
 	D3DXVECTOR3 up, position, lookAt;
 	float yaw, pitch, roll;
@@ -90,9 +89,9 @@ void CameraClass::Render()
 	position.z = m_positionZ;
 
 	// Setup where the camera is looking by default.
-	lookAt.x = 0.0f;
-	lookAt.y = 0.0f;
-	lookAt.z = 1.0f;
+	lookAt.x = model.x - m_positionX;
+	lookAt.y = model.y - m_positionY;
+	lookAt.z = model.z - m_positionZ;
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 	pitch = m_rotationX * 0.0174532925f;
