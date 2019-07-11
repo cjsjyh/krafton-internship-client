@@ -1,13 +1,14 @@
 #include "projectile.h"
 
-projectile::projectile(string name, ModelClass* model, D3DXVECTOR3 pos, float _speed, int _distance, CollisionChannel _channel, ColliderType coll)
+projectile::projectile(string name, ModelClass* model, D3DXVECTOR3 pos, float _speed, int _distance, int _damage, CollisionChannel _channel, ColliderType coll)
 	:gameObject(name,model,coll,pos,_channel)
 {
 	D3DXVECTOR3 position = GetPosition();
-	speed = _speed;
 	objType = AUTOMOVE;
 	SetScale(D3DXVECTOR3(0.5, 0.5, 0.5));
 	distance = _distance;
+	speed = _speed;
+	damage = _damage;
 }
 
 bool projectile::checkDistance()

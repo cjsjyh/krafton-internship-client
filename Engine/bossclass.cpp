@@ -18,12 +18,20 @@ void bossclass::Move()
 
 bool bossclass::CheckDestroy()
 {
+	if (hp <= 0)
+	{
+		cout << "boss dead" << endl;
+		return true;
+	}
 	return false;
 }
 
 void bossclass::Hit(int _damage)
 {
 	hp -= _damage;
+	
 	cout << "boss hit! HP: " << to_string(hp) << endl;
+	
+	CheckDestroy();
 	return;
 }

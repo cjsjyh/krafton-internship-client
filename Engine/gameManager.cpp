@@ -19,9 +19,11 @@ void gameManager::RegisterObject(gameObject *item)
 void gameManager::UnregisterObject(gameObject *item)
 {
 	int index = FindObjectIndex(item);
-	gameObject* temp = gameobjects[index];
+	cout << "index: " << to_string(index) << endl;
+	gameObject* temp =  gameobjects[index];
 	gameobjects.erase(gameobjects.begin() + index);
-	delete temp;
+	//delete temp;
+
 	cout << "manager size: " << gameobjects.size() << endl;
 	return;
 }
@@ -56,12 +58,30 @@ bool gameManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 	return true;
 }
 
-void gameManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
+int gameManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 {
-	//if (obj1->GetName() == "boss" || gameobjects[j]->GetName() == "boss")
-		
-	cout << "2 Box Hit!" << endl;
-	cout << obj1->GetName() << obj2->GetName() << endl;
+	if (obj1->GetName() == "bullet" || obj2->GetName() == "bullet")
+	{
+		if (obj1->GetName() == "boss")
+		{
+			bossclass *boss = (bossclass*)obj1;
+			projectile* bullet = (projectile*)obj2;
+
+			boss->Hit(bullet->damage);
+			UnregisterObject(obj2);
+			return 2;
+		}
+		else if (obj2->GetName() == "boss")
+		{
+			bossclass* boss = (bossclass*)obj2;
+			projectile* bullet = (projectile*)obj1;
+
+			boss->Hit(bullet->damage);
+			UnregisterObject(obj1);
+			return 1;
+		}
+	}
+	return 0;
 }
 
 bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject*> &item2)
@@ -69,10 +89,10 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 	//check all objects if they collide and return true or false.
 	//if there are objects colliding, add them to the vector
 	int size = GetObjectCount();
-	bool flag;
-	for (int i = 0; i < size-1; i++) {
+	int flag;
+	for (int i = size-1; i > 0; i--) {
 		gameObject::ColliderType srcType = gameobjects[i]->GetColliderType();
-		for (int j = i + 1; j < size; j++) {
+		for (int j = i-1; j >= 0; j--) {
 			gameObject::ColliderType destType = gameobjects[j]->GetColliderType();
 			
 			//collision을 체크할 필요가 없는 경우
@@ -87,16 +107,24 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 				{
 					if (SimpleBoxCollision(gameobjects[i], gameobjects[j]))
 					{
-						flag = true;
-						CollisionHandler(gameobjects[i], gameobjects[j]);
+						flag = CollisionHandler(gameobjects[i], gameobjects[j]);
 					}
 				}
 			}
-
-			if (flag) {
+			
+			//pop된게 없으므로 서로 충돌된 물체를 등록
+			if (flag == 0)
+			{
 				item1.push_back(gameobjects[i]);
 				item2.push_back(gameobjects[j]);
 			}
+			//i가 pop됐으므로 다음 i로
+			else if (flag == 1)
+				break;
+			//j가 pop됐으므로 다음 j로
+			else if (flag == 2)
+				continue;
+			
 		}
 		
 	}

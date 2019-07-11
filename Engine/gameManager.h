@@ -3,6 +3,8 @@
 #define _GAMEMANAGER_H_
 
 #include "gameObject.h"
+#include "bossclass.h"
+#include "projectile.h"
 
 #include "iostream"
 #include <D3DX10math.h>
@@ -31,7 +33,7 @@ public:
 private:
 	vector <gameObject*> gameobjects;
 	
-	void CollisionHandler(gameObject*, gameObject*);
+	int CollisionHandler(gameObject*, gameObject*);
 	bool CheckCollisionChannel(gameObject*, gameObject*);
 
 	bool SimpleComplexCollision(gameObject*, gameObject*);
