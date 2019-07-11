@@ -3,8 +3,7 @@
 projectile::projectile(string name, ModelClass* model, ColliderType coll, D3DXVECTOR3 pos, float _speed, gameObject::CollisionChannel _channel)
 	:gameObject(name,model,coll,pos,_channel)
 {
-	D3DXVECTOR3 position;
-	GetPosition(position);
+	D3DXVECTOR3 position = GetPosition();
 	//cout << "x: " + to_string(position.x) << " y: " + to_string(position.y) << " z: " + to_string(position.z) << endl;
 
 	speed = _speed;
@@ -19,12 +18,21 @@ bool projectile::checkDistance()
 	return false;
 }
 
-void projectile::GetDirVector()
+void projectile::SetDirVector(D3DXVECTOR3 dir)
 {
+	dirVector = dir * speed;
+}
+
+D3DXVECTOR3 projectile::GetDirVector()
+{
+	/*
 	D3DXMATRIX *temp = new D3DXMATRIX;
 	D3DXMatrixIdentity(temp);
 	D3DXMatrixRotationY(temp, rot.y);
 	D3DXVec3TransformCoord(new D3DXVECTOR3(1,0,0), &dirVector, temp);
+	*/
 
-	cout << "x: " + to_string(dirVector.x) << "y: " + to_string(dirVector.y) << "z: " + to_string(dirVector.z) << endl;
+	return dirVector;
 }
+
+

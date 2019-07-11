@@ -36,6 +36,11 @@ gameObject::~gameObject()
 
 }
 
+void gameObject::PrintVector3(D3DXVECTOR3 vec)
+{
+	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
+}
+
 ModelClass* gameObject::GetModel()
 {
 	return m_model;
@@ -51,38 +56,24 @@ gameObject::ColliderType gameObject::GetColliderType()
 	return collider;
 }
 
-void gameObject::GetSize(D3DXVECTOR3& _size)
+D3DXVECTOR3 gameObject::GetSize()
 {
-	_size.x = box_collSize.x;
-	_size.y = box_collSize.y;
-	_size.z = box_collSize.z;
-	return;
+	return D3DXVECTOR3(box_collSize.x, box_collSize.y, box_collSize.z);
 }
 
-void gameObject::GetPosition(D3DXVECTOR3& _pos)
+D3DXVECTOR3 gameObject::GetPosition()
 {
-	_pos.x = pos.x;
-	_pos.y = pos.y;
-	_pos.z = pos.z;
-	return;
+	return D3DXVECTOR3(pos.x, pos.y, pos.z);
 }
 
-void gameObject::GetRotation(D3DXVECTOR3& _rot)
+D3DXVECTOR3 gameObject::GetRotation()
 {
-	_rot.x = rot.x;
-	_rot.y = rot.y;
-	_rot.z = rot.z;
-
-	return;
+	return D3DXVECTOR3(rot.x, rot.y, rot.z);
 }
 
-void gameObject::GetScale (D3DXVECTOR3& _scale)
+D3DXVECTOR3 gameObject::GetScale ()
 {
-	_scale.x = scale.x;
-	_scale.y = scale.y;
-	_scale.z = scale.z;
-
-	return;
+	return D3DXVECTOR3(scale.x, scale.y,scale.z);
 }
 
 void gameObject::SetPosition(D3DXVECTOR3 _pos)

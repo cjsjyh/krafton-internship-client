@@ -113,11 +113,11 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 bool gameManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 {
 	D3DXVECTOR3 pos, len;
-	src->GetPosition(pos);
-	src->GetSize(len);
+	pos = src->GetPosition();
+	len = src->GetSize();
 	D3DXVECTOR3 pos2, len2;
-	dest->GetPosition(pos2);
-	dest->GetSize(len2);
+	pos2 = dest->GetPosition();
+	len2 = dest->GetSize();
 
 	if ((pos2.x - len2.x <= pos.x + len.x && pos2.x + len2.x >= pos.x - len.x) &&
 		(pos2.z - len2.z <= pos.z + len.z && pos2.z + len2.z >= pos.z - len.z))
@@ -167,8 +167,8 @@ bool gameManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objC
 bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::iterator check,float colliderSize)
 {
 	D3DXVECTOR3 pos, len;
-	simple->GetPosition(pos);
-	simple->GetSize(len);
+	pos = simple->GetPosition();
+	len = simple->GetSize();
 	if ((check->x - colliderSize <= pos.x + len.x && check->x + colliderSize >= pos.x - len.x) &&
 		(check->z - colliderSize <= pos.z + len.z && check->z + colliderSize >= pos.z - len.z))
 		return true;
@@ -187,8 +187,8 @@ vector <D3DXVECTOR3> gameManager::ComplexCollisionInitialize(gameObject* obj)
 	float collider_size = obj->sphere_collSize;
 
 
-	obj->GetPosition(pos);
-	obj->GetScale(size);
+	pos = obj->GetPosition();
+	size = obj->GetScale();
 	minVertex = min(min(size.x, size.y), size.z);
 	minVertex -= collider_size;
 

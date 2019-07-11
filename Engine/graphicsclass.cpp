@@ -16,8 +16,7 @@ GraphicsClass::GraphicsClass()
 	m_GM = 0;
 
 	frame = 0;
-
-
+	lastLeftClick = 0;
 }
 
 
@@ -179,6 +178,10 @@ void GraphicsClass::InitializeMap()
 	m_GM->RegisterObject(player);
 	
 }
+void GraphicsClass::PrintVector3(D3DXVECTOR3 vec)
+{
+	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
+}
 
 void GraphicsClass::Shutdown()
 {
@@ -301,9 +304,21 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 {
+	vector<gameObject*> coll1, coll2;
 	bool result;
+
 	mouseX = _mouseX - screenW/2;
-	mouseY = _mouseY - screenH/2;
+	mouseY = -(_mouseY - screenH/2);
+	
+	frame++;
+	if (frame % COLL_CHECK_RATE)
+		m_GM->CollisionManager(coll1, coll2);
+	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
+		lastLeftClick = 0;
+
+	if (frame > 10000)
+		frame = lastLeftClick = 0;
+	cout << "frame: " << to_string(frame) << " click frame: " << to_string(lastLeftClick) << endl;
 
 	// Set the location of the mouse.
 	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
@@ -312,7 +327,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 		return false;
 	}
 
-	
 	// Set the Keyboard Input as UI.
 	if (IsKeyPressed(key))
 		result = m_Text->SetKeyInput("P", m_D3D->GetDeviceContext());
@@ -322,13 +336,34 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	{
 		return false;
 	}
-	
+
 	//rightclick
 	if (RightMouseClicked(mousePress))
 	{
 
 
 	}
+
+	else if (LeftMouseClicked(mousePress))
+	{
+		if (!lastLeftClick)
+		{
+			projectile* temp = new projectile("bullet", m_Model[0], gameObject::COLLIDER_BOX, player->GetPosition(), 1,gameObject::HIT_BOSS);
+			temp->SetDirVector(GetDirectionMouse());
+			m_GM->RegisterObject(temp);
+
+			lastLeftClick = frame;
+
+			cout << "player pos: ";
+			PrintVector3(player->GetPosition());
+			cout << "projectile pos: ";
+			PrintVector3(temp->GetPosition());
+			cout << "projectile dir: ";
+			PrintVector3(temp->GetDirVector());
+		}
+
+	}
+
 	//No click
 	else if(MouseNotClicked(mousePress))
 	{
@@ -382,8 +417,8 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 		default:
 			break;
 		}
-		D3DXVECTOR3 temp222 = GetDirectionMouse();
-		cout << to_string(temp222.x) + " " + to_string(temp222.y) + " " + to_string(temp222.z) + " " << endl;
+		//D3DXVECTOR3 temp222 = GetDirectionMouse();
+		//cout << to_string(temp222.x) + " " + to_string(temp222.y) + " " + to_string(temp222.z) + " " << endl;
 	}
 
 	//-------------
@@ -407,7 +442,6 @@ bool GraphicsClass::Render()
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX temp;
 
-	vector<gameObject*> coll1, coll2;
 	bool result;
 	float rotx, roty, rotz;
 	float x,y,z;
@@ -417,8 +451,7 @@ bool GraphicsClass::Render()
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	D3DXVECTOR3 player_pos;
-	player->GetPosition(player_pos);
+	D3DXVECTOR3 player_pos = player->GetPosition();
 	m_Camera->Render(player_pos);
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
@@ -433,12 +466,6 @@ bool GraphicsClass::Render()
 	// Transformation
 	//-----------------
 	m_D3D->TurnOnAlphaBlending();
-
-	if (frame++ > 3)
-	{
-		frame = 0;
-		m_GM->CollisionManager(coll1, coll2);
-	}
 
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)

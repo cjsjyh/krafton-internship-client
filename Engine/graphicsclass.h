@@ -37,7 +37,11 @@ const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 const float CAM_SENSITIVITY = 0.01f;
+
 const int PLAYER_MODEL_COUNT = 8;
+
+const int MOUSE_FRAME_RATE = 100;
+const int COLL_CHECK_RATE = 10;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: GraphicsClass
@@ -67,19 +71,23 @@ private:
 
 	void InitializeMap();
 
+	void PrintVector3(D3DXVECTOR3 vec);
+
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
-	vector<ModelClass*> m_Model;
 	TextClass* m_Text;
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-	gameManager* m_GM;
 	playerclass* player;
+
+	vector<ModelClass*> m_Model;
+	gameManager* m_GM;
 
 	int mouseX, mouseY;
 	int frame;
 	int screenW, screenH;
+	int lastLeftClick;
 };
 
 #endif

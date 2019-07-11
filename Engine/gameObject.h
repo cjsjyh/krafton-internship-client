@@ -26,6 +26,7 @@ public:
 	enum CollisionChannel
 	{
 		HIT_PLAYER,
+		HIT_BOSS,
 		NO_COLLISION,
 	};
 
@@ -33,9 +34,12 @@ public:
 	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3, CollisionChannel=HIT_PLAYER);
 	~gameObject();
 
-	void GetPosition(D3DXVECTOR3&);
-	void GetRotation(D3DXVECTOR3&);
-	void GetScale(D3DXVECTOR3&);
+	void PrintVector3(D3DXVECTOR3);
+
+	D3DXVECTOR3 GetPosition();
+	D3DXVECTOR3 GetRotation();
+	D3DXVECTOR3 GetScale();
+	D3DXVECTOR3 GetSize();
 
 	void SetPosition(D3DXVECTOR3 z);
 	void SetRotation(D3DXVECTOR3 z);
@@ -46,7 +50,7 @@ public:
 	void AdjustScale(D3DXVECTOR3);
 
 	void GetWorldMatrix(D3DXMATRIX&);
-	void GetSize(D3DXVECTOR3&);
+	
 	string GetName();
 	ColliderType GetColliderType();
 
