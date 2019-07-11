@@ -7,11 +7,12 @@
 class bossclass : public gameObject
 {
 public:
-	bossclass(ModelClass* model, ColliderType col, int _hp, int _damage);
+	bossclass(ModelClass* model, int _hp, int _damage, ColliderType col = COLLIDER_BOX);
 	~bossclass();
 
 	void Move();
 	bool CheckDestroy();
+	void Hit(int damage);
 private:
 	int hp;
 	int phase;

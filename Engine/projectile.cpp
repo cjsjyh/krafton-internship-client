@@ -1,6 +1,6 @@
 #include "projectile.h"
 
-projectile::projectile(string name, ModelClass* model, ColliderType coll, D3DXVECTOR3 pos, float _speed, int _distance, CollisionChannel _channel)
+projectile::projectile(string name, ModelClass* model, D3DXVECTOR3 pos, float _speed, int _distance, CollisionChannel _channel, ColliderType coll)
 	:gameObject(name,model,coll,pos,_channel)
 {
 	D3DXVECTOR3 position = GetPosition();

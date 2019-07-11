@@ -42,30 +42,44 @@ gameObject* gameManager::GetGameObject(int index)
 	return gameobjects[index];
 }
 
+bool gameManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
+{
+	if (obj1->channel == gameObject::NO_COLLISION)
+		return false;
+	
+	if (obj2->channel == gameObject::NO_COLLISION)
+		return false;
+	
+	if (obj2->channel != obj1->channel)
+		return false;
+	
+	return true;
+}
+
+void gameManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
+{
+	//if (obj1->GetName() == "boss" || gameobjects[j]->GetName() == "boss")
+		
+	cout << "2 Box Hit!" << endl;
+	cout << obj1->GetName() << obj2->GetName() << endl;
+}
+
 bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject*> &item2)
 {
 	//check all objects if they collide and return true or false.
 	//if there are objects colliding, add them to the vector
 	int size = GetObjectCount();
 	bool flag;
-
 	for (int i = 0; i < size-1; i++) {
 		gameObject::ColliderType srcType = gameobjects[i]->GetColliderType();
-
-		if (gameobjects[i]->channel == gameObject::NO_COLLISION)
-			continue;
-
 		for (int j = i + 1; j < size; j++) {
-			flag = false;
 			gameObject::ColliderType destType = gameobjects[j]->GetColliderType();
 			
-			//collision 검사를 하지 않는 channel
-			if (gameobjects[j]->channel == gameObject::NO_COLLISION)
-				continue;
-			//서로 다른 collision channel
-			else if (gameobjects[j]->channel != gameobjects[i]->channel)
+			//collision을 체크할 필요가 없는 경우
+			if (!CheckCollisionChannel(gameobjects[i],gameobjects[j]))
 				continue;
 
+			flag = false;
 			//서로 타입이 같은 2물체
 			if (srcType == destType)
 			{
@@ -74,30 +88,11 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 					if (SimpleBoxCollision(gameobjects[i], gameobjects[j]))
 					{
 						flag = true;
-						cout << "2 Box Hit!" << endl;
-						cout << gameobjects[i]->GetName() << gameobjects[j]->GetName() << endl;
+						CollisionHandler(gameobjects[i], gameobjects[j]);
 					}
 				}
-				else if (srcType == gameObject::COLLIDER_COMPLEX)
-				{
-					if (ComplexCollision(gameobjects[i], gameobjects[j]))
-						flag = true;
-				}
 			}
-			//서로 타입이 다른 2물체
-			else
-			{
-				if (srcType == gameObject::COLLIDER_BOX)
-				{
-					if (SimpleComplexCollision(gameobjects[i], gameobjects[j]))
-						flag = true;
-				}
-				else
-				{
-					if (SimpleComplexCollision(gameobjects[j], gameobjects[i]))
-						flag = true;
-				}
-			}
+
 			if (flag) {
 				item1.push_back(gameobjects[i]);
 				item2.push_back(gameobjects[j]);
@@ -126,6 +121,8 @@ bool gameManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 		return true;
 	return false;
 }
+
+
 
 bool gameManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
 {
@@ -166,7 +163,7 @@ bool gameManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objC
 
 }
 
-bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::iterator check,float colliderSize)
+bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::iterator check, float colliderSize)
 {
 	D3DXVECTOR3 pos, len;
 	pos = simple->GetPosition();
@@ -176,8 +173,6 @@ bool gameManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::itera
 		return true;
 	return false;
 }
-
-
 
 vector <D3DXVECTOR3> gameManager::ComplexCollisionInitialize(gameObject* obj)
 {
