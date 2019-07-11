@@ -168,7 +168,7 @@ void GraphicsClass::InitializeMap()
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 
 	gameObject* temp;
-	temp = new staticobjclass("floor",m_Model[1], gameObject::COLLIDER_BOX, gameObject::NO_COLLISION,gameObject::UNMOVABLE);
+	temp = new staticobjclass("floor",m_Model[1], gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
 	temp->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
@@ -324,11 +324,15 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	
 	//Move AUTOMOVE objects
 	int size = m_GM->GetObjectCount();
-	for (int i = 0; i < size; i++)
+	for (int i = size-1; i >= 0 ; i--)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
 		if (temp->objType == gameObject::AUTOMOVE)
+		{
 			temp->Move();
+			if (temp->CheckDestroy())
+				m_GM->UnregisterObject(temp);
+		}
 	}
 
 
@@ -359,11 +363,11 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 
 	}
 
-	else if (LeftMouseClicked(mousePress))
+	if (LeftMouseClicked(mousePress))
 	{
 		if (!lastLeftClick)
 		{
-			projectile* temp = new projectile("bullet", m_Model[0], gameObject::COLLIDER_BOX, player->GetPosition(), 1,gameObject::HIT_BOSS, gameObject::AUTOMOVE);
+			projectile* temp = new projectile("bullet", m_Model[0], gameObject::COLLIDER_BOX, player->GetPosition(), 1, 100 ,gameObject::HIT_BOSS);
 			temp->SetDirVector(GetDirectionMouse());
 			m_GM->RegisterObject(temp);
 
@@ -380,7 +384,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	}
 
 	//No click
-	else if(MouseNotClicked(mousePress))
+	//else if(MouseNotClicked(mousePress))
 	{
 		//-------------
 		//  player

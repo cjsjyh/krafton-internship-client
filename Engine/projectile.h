@@ -15,7 +15,7 @@ using namespace std;
 class projectile : public gameObject
 {
 public:
-	projectile(string, ModelClass*, ColliderType, D3DXVECTOR3, float, CollisionChannel=HIT_PLAYER, ObjectType=AUTOMOVE);
+	projectile(string, ModelClass*, ColliderType, D3DXVECTOR3, float speed, int distance, CollisionChannel = HIT_PLAYER);
 	~projectile();
 
 	void SetDirVector(D3DXVECTOR3);
@@ -23,6 +23,7 @@ public:
 
 	bool checkDistance();
 	void Move();
+	bool CheckDestroy();
 
 protected:
 

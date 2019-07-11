@@ -9,6 +9,8 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "d3dclass.h"
+#include "inputclass.h"
+#include "modelclass.h"
 
 #include "cameraclass.h"
 #include "textureshaderclass.h"
@@ -16,12 +18,12 @@
 #include "lightshaderclass.h"
 #include "lightclass.h"
 
-#include "staticobjclass.h"
-#include "modelclass.h"
 #include "gameObject.h"
+#include "staticobjclass.h"
 #include "playerclass.h"
 #include "projectile.h"
-#include "inputclass.h"
+#include "bossclass.h"
+
 #include "gameManager.h"
 
 #include "iostream"
@@ -41,7 +43,7 @@ const float CAM_SENSITIVITY = 0.01f;
 
 const int PLAYER_MODEL_COUNT = 8;
 
-const int MOUSE_FRAME_RATE = 100;
+const int MOUSE_FRAME_RATE = 10;
 const int COLL_CHECK_RATE = 10;
 
 ////////////////////////////////////////////////////////////////////////////////

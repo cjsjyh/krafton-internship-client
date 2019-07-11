@@ -36,8 +36,8 @@ public:
 		UNMOVABLE
 	};
 
-	gameObject(string, ModelClass*, ColliderType, CollisionChannel=HIT_PLAYER, ObjectType=AUTOMOVE);
-	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3, CollisionChannel=HIT_PLAYER, ObjectType = AUTOMOVE);
+	gameObject(string, ModelClass*, ColliderType, CollisionChannel=HIT_PLAYER);
+	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3, CollisionChannel=HIT_PLAYER);
 	~gameObject();
 
 	void PrintVector3(D3DXVECTOR3);
@@ -57,6 +57,7 @@ public:
 
 	void GetWorldMatrix(D3DXMATRIX&);
 	virtual void Move() = 0;
+	virtual bool CheckDestroy() = 0;
 
 	string GetName();
 	ColliderType GetColliderType();
@@ -74,7 +75,7 @@ protected:
 
 	ModelClass* m_model;
 	ColliderType collider;
-	
+	bool toShow;
 };
 
 #endif

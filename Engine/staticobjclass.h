@@ -8,9 +8,11 @@
 class staticobjclass : public gameObject
 {
 public:
-	staticobjclass(string objname, ModelClass* model, ColliderType col, CollisionChannel _channel, ObjectType type);
+	staticobjclass(string objname, ModelClass* model, ColliderType col, CollisionChannel _channel);
 	~staticobjclass();
+	
 	void Move();
+	bool CheckDestroy();
 private:
 };
 

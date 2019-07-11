@@ -19,7 +19,9 @@ void gameManager::RegisterObject(gameObject *item)
 void gameManager::UnregisterObject(gameObject *item)
 {
 	int index = FindObjectIndex(item);
+	gameObject* temp = gameobjects[index];
 	gameobjects.erase(gameobjects.begin() + index);
+	delete temp;
 	cout << "manager size: " << gameobjects.size() << endl;
 	return;
 }
