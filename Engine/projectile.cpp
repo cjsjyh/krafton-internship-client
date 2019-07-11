@@ -1,7 +1,7 @@
 #include "projectile.h"
 
 projectile::projectile(string name, ModelClass* model, D3DXVECTOR3 pos, float _speed, int _distance, int _damage, CollisionChannel _channel, ColliderType coll)
-	:gameObject(name,model,coll,pos,_channel)
+	:gameObject(name,model,pos,_channel, coll)
 {
 	D3DXVECTOR3 position = GetPosition();
 	objType = AUTOMOVE;

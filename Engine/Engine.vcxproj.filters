@@ -93,6 +93,9 @@
     <ClCompile Include="bossclass.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="hpobjects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphicsclass.h">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="bossclass.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="hpobjects.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

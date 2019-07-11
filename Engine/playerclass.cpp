@@ -1,7 +1,7 @@
 #include "playerclass.h"
 
-playerclass::playerclass(ModelClass* model, D3DXVECTOR3 pos)
-	:gameObject("player", model, gameObject::COLLIDER_BOX, pos,HIT_PLAYER)
+playerclass::playerclass(ModelClass* model, int hp, D3DXVECTOR3 pos)
+	:hpobjects("player", model, hp, HIT_PLAYER)
 {
 	objType = MOVEABLE;
 	direction = 1;
@@ -11,18 +11,6 @@ playerclass::~playerclass()
 {
 
 }
-
-void playerclass::Move()
-{
-	cout << "player move!" << endl;
-	return;
-}
-
-bool playerclass::CheckDestroy()
-{
-	return false;
-}
-
 
 int playerclass::GetDirection()
 {

@@ -11,7 +11,6 @@ public:
 	staticobjclass(string objname, ModelClass* model, ColliderType col, CollisionChannel _channel);
 	~staticobjclass();
 	
-	void Move();
 	bool CheckDestroy();
 private:
 };

@@ -20,8 +20,8 @@ public:
 
 	void SetDirVector(D3DXVECTOR3);
 	D3DXVECTOR3 GetDirVector();
-
 	bool checkDistance();
+	
 	void Move();
 	bool CheckDestroy();
 

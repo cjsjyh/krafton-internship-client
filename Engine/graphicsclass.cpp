@@ -174,11 +174,11 @@ void GraphicsClass::InitializeMap()
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObject(temp);
 
-	boss = new bossclass(m_Model[2], 100, 1);
+	boss = new bossclass(m_Model[2], 30, 1);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
 	m_GM->RegisterObject(boss);
 
-	player = new playerclass(m_Model[2], D3DXVECTOR3(0, 0, 0));
+	player = new playerclass(m_Model[2], 100, D3DXVECTOR3(0, 0, 0));
 	m_GM->RegisterObject(player);
 	
 }
@@ -333,7 +333,8 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 		gameObject* temp = m_GM->GetGameObject(i);
 		if (temp->objType == gameObject::AUTOMOVE)
 		{
-			temp->Move();
+			projectile* bullet = (projectile*)temp;
+			bullet->Move();
 			if (temp->CheckDestroy())
 				m_GM->UnregisterObject(temp);
 		}
@@ -371,7 +372,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	{
 		if (!lastLeftClick)
 		{
-			projectile* temp = new projectile("bullet", m_Model[0], player->GetPosition(), 1, 100, 1 ,gameObject::HIT_BOSS);
+			projectile* temp = new projectile("bullet", m_Model[0], player->GetPosition(), 1, 100, 3,gameObject::HIT_BOSS);
 			temp->SetDirVector(GetDirectionMouse());
 			m_GM->RegisterObject(temp);
 

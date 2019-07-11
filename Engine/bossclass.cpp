@@ -1,6 +1,6 @@
 #include "bossclass.h"
 bossclass::bossclass(ModelClass* model, int _hp, int _damage, ColliderType col)
-	:gameObject("boss", model, col, HIT_BOSS)
+	:hpobjects("boss", model, _hp, HIT_BOSS, col)
 {
 	hp = _hp;
 	damage = _hp;
@@ -9,29 +9,4 @@ bossclass::bossclass(ModelClass* model, int _hp, int _damage, ColliderType col)
 bossclass::~bossclass()
 {
 
-}
-
-void bossclass::Move()
-{
-	return;
-}
-
-bool bossclass::CheckDestroy()
-{
-	if (hp <= 0)
-	{
-		cout << "boss dead" << endl;
-		return true;
-	}
-	return false;
-}
-
-void bossclass::Hit(int _damage)
-{
-	hp -= _damage;
-	
-	cout << "boss hit! HP: " << to_string(hp) << endl;
-	
-	CheckDestroy();
-	return;
 }
