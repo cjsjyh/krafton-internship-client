@@ -174,6 +174,10 @@ void GraphicsClass::InitializeMap()
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObject(temp);
 
+	boss = new bossclass(m_Model[2], gameObject::COLLIDER_BOX, 100, 1);
+	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
+	m_GM->RegisterObject(boss);
+
 	player = new playerclass(m_Model[2], D3DXVECTOR3(0, 0, 0));
 	m_GM->RegisterObject(player);
 	

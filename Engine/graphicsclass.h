@@ -82,8 +82,9 @@ private:
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	
 	playerclass* player;
-
+	bossclass* boss;
 	vector<ModelClass*> m_Model;
 	gameManager* m_GM;
 
