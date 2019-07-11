@@ -67,6 +67,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Render(D3DXVECTOR3(0,0,0));
 	m_Camera->GetViewMatrix(baseViewMatrix);
 
+	//initial camera setup
+	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 
 	//------------
 	//   text
@@ -164,8 +166,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::InitializeMap() 
 {
-	//initial camera setup
-	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+	
 
 	gameObject* temp;
 	temp = new staticobjclass("floor",m_Model[1], gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
@@ -443,7 +444,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	//-------------
 	//  object
 	//-------------
-	
+
 	// Render the graphics scene.
 	result = Render();
 	if(!result)
@@ -459,12 +460,13 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 bool GraphicsClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	D3DXMATRIX temp;
+	D3DXMATRIX temp, MatrixToFaceCamera;
 
 	bool result;
 	float rotx, roty, rotz;
 	float x,y,z;
 
+	D3DXMatrixRotationX(&MatrixToFaceCamera,45);
 
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -488,13 +490,15 @@ bool GraphicsClass::Render()
 
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)
-	{	
+	{
 		gameObject* temp = m_GM->GetGameObject(i);
 		//¹Ù²Þ
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 
 		temp->GetWorldMatrix(worldMatrix);
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix, 
+		if (temp->GetName() == "player" || temp->GetName() == "boss")
+			worldMatrix = MatrixToFaceCamera* worldMatrix;
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(),worldMatrix,
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
 									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 		
@@ -535,3 +539,10 @@ bool GraphicsClass::Render()
 	return true;
 }
 
+D3DXVECTOR3 GraphicsClass::normalizeVec3(D3DXVECTOR3 vec)
+{
+	float square;
+	square = vec.x * vec.x + vec.z * vec.z;
+	square = sqrt(square);
+	return D3DXVECTOR3(vec.x / square, 0, vec.z / square);
+}

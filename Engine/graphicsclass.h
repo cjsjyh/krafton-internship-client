@@ -61,6 +61,8 @@ public:
 	bool Frame(int, int, bool*, char*);
 	bool Render();
 
+	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
+
 private:
 	bool MouseNotClicked(bool*);
 	bool RightMouseClicked(bool*);
@@ -73,7 +75,6 @@ private:
 	//void ChangePlayerModel();
 
 	void InitializeMap();
-
 	void PrintVector3(D3DXVECTOR3 vec);
 
 	D3DClass* m_D3D;
@@ -82,7 +83,7 @@ private:
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-	
+
 	playerclass* player;
 	bossclass* boss;
 	vector<ModelClass*> m_Model;
