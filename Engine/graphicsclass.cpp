@@ -174,12 +174,14 @@ void GraphicsClass::InitializeMap()
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObject(temp);
 
-	boss = new bossclass(m_Model[2], 30, 1);
-	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
-	m_GM->RegisterObject(boss);
+	
 
 	player = new playerclass(m_Model[2], 100, D3DXVECTOR3(0, 0, 0));
 	m_GM->RegisterObject(player);
+
+	boss = new bossclass(m_Model[2], m_Model[2], player, 30, 1);
+	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
+	m_GM->RegisterObject(boss);
 	
 }
 void GraphicsClass::PrintVector3(D3DXVECTOR3 vec)
@@ -300,7 +302,7 @@ int GraphicsClass::GetDirectionKey(char* keys)
 
 D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 {
-	float x, y, z, square;
+	float square;
 	square = mouseX * mouseX + mouseY * mouseY;
 	square = sqrt(square);
 	return D3DXVECTOR3(mouseX / square, 0, mouseY / square);
@@ -376,15 +378,9 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 			temp->SetDirVector(GetDirectionMouse());
 			m_GM->RegisterObject(temp);
 
+			m_GM->RegisterObject(boss->Fire());
+
 			lastLeftClick = frame;
-			/*
-			cout << "player pos: ";
-			PrintVector3(player->GetPosition());
-			cout << "projectile pos: ";
-			PrintVector3(temp->GetPosition());
-			cout << "projectile dir: ";
-			PrintVector3(temp->GetDirVector());
-			*/
 		}
 
 	}
