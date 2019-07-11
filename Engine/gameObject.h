@@ -29,9 +29,15 @@ public:
 		HIT_BOSS,
 		NO_COLLISION,
 	};
+	enum ObjectType
+	{
+		MOVEABLE,
+		AUTOMOVE,
+		UNMOVABLE
+	};
 
-	gameObject(string, ModelClass*, ColliderType, CollisionChannel=HIT_PLAYER);
-	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3, CollisionChannel=HIT_PLAYER);
+	gameObject(string, ModelClass*, ColliderType, CollisionChannel=HIT_PLAYER, ObjectType=AUTOMOVE);
+	gameObject(string, ModelClass*, ColliderType, D3DXVECTOR3, CollisionChannel=HIT_PLAYER, ObjectType = AUTOMOVE);
 	~gameObject();
 
 	void PrintVector3(D3DXVECTOR3);
@@ -50,13 +56,15 @@ public:
 	void AdjustScale(D3DXVECTOR3);
 
 	void GetWorldMatrix(D3DXMATRIX&);
-	
+	virtual void Move() = 0;
+
 	string GetName();
 	ColliderType GetColliderType();
-
 	ModelClass* GetModel();
+
 	float sphere_collSize;
 	CollisionChannel channel;
+	ObjectType objType;
 protected:
 	string name;
 	D3DXVECTOR3 pos;

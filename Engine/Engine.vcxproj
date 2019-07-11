@@ -92,6 +92,7 @@
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="playerclass.cpp" />
     <ClCompile Include="projectile.cpp" />
+    <ClCompile Include="staticobjclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="playerclass.h" />
     <ClInclude Include="projectile.h" />
+    <ClInclude Include="staticobjclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textclass.h" />
     <ClInclude Include="textureclass.h" />

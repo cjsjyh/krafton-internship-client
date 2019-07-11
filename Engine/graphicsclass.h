@@ -16,6 +16,7 @@
 #include "lightshaderclass.h"
 #include "lightclass.h"
 
+#include "staticobjclass.h"
 #include "modelclass.h"
 #include "gameObject.h"
 #include "playerclass.h"

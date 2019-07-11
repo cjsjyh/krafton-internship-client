@@ -1,14 +1,12 @@
 #include "projectile.h"
 
-projectile::projectile(string name, ModelClass* model, ColliderType coll, D3DXVECTOR3 pos, float _speed, gameObject::CollisionChannel _channel)
-	:gameObject(name,model,coll,pos,_channel)
+projectile::projectile(string name, ModelClass* model, ColliderType coll, D3DXVECTOR3 pos, float _speed, CollisionChannel _channel, ObjectType _objType)
+	:gameObject(name,model,coll,pos,_channel,_objType)
 {
 	D3DXVECTOR3 position = GetPosition();
 	//cout << "x: " + to_string(position.x) << " y: " + to_string(position.y) << " z: " + to_string(position.z) << endl;
-
 	speed = _speed;
-	dirVector = D3DXVECTOR3(1, 0, 0);
-	GetDirVector();
+	SetScale(D3DXVECTOR3(0.5, 0.5, 0.5));
 }
 
 bool projectile::checkDistance()
@@ -35,4 +33,8 @@ D3DXVECTOR3 projectile::GetDirVector()
 	return dirVector;
 }
 
+void projectile::Move()
+{
+	cout << "Move!" << endl;
+}
 

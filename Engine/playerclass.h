@@ -12,6 +12,7 @@ public:
 
 	void SetDirection(int);
 	int GetDirection();
+	void Move();
 private:
 	int direction;
 };

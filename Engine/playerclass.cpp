@@ -11,6 +11,11 @@ playerclass::~playerclass()
 
 }
 
+void playerclass::Move()
+{
+	cout << "player move!" << endl;
+}
+
 int playerclass::GetDirection()
 {
 	return direction;

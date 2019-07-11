@@ -168,7 +168,7 @@ void GraphicsClass::InitializeMap()
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 
 	gameObject* temp;
-	temp = new gameObject("floor",m_Model[1], gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
+	temp = new staticobjclass("floor",m_Model[1], gameObject::COLLIDER_BOX, gameObject::NO_COLLISION,gameObject::UNMOVABLE);
 	temp->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
@@ -310,6 +310,9 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	mouseX = _mouseX - screenW/2;
 	mouseY = -(_mouseY - screenH/2);
 	
+	//-------------------
+	//   Frame Action
+	//-------------------
 	frame++;
 	if (frame % COLL_CHECK_RATE)
 		m_GM->CollisionManager(coll1, coll2);
@@ -318,8 +321,18 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 
 	if (frame > 10000)
 		frame = lastLeftClick = 0;
-	cout << "frame: " << to_string(frame) << " click frame: " << to_string(lastLeftClick) << endl;
+	
+	int size = m_GM->GetObjectCount();
+	for (int i = 0; i < size; i++)
+	{
+		gameObject* temp = m_GM->GetGameObject(i);
+		temp->Move();
+	}
 
+
+	//-------------------
+	//  Input Handler
+	//-------------------
 	// Set the location of the mouse.
 	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
 	if (!result)
@@ -348,7 +361,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	{
 		if (!lastLeftClick)
 		{
-			projectile* temp = new projectile("bullet", m_Model[0], gameObject::COLLIDER_BOX, player->GetPosition(), 1,gameObject::HIT_BOSS);
+			projectile* temp = new projectile("bullet", m_Model[0], gameObject::COLLIDER_BOX, player->GetPosition(), 1,gameObject::HIT_BOSS, gameObject::AUTOMOVE);
 			temp->SetDirVector(GetDirectionMouse());
 			m_GM->RegisterObject(temp);
 

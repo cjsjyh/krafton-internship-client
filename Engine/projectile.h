@@ -15,7 +15,7 @@ using namespace std;
 class projectile : public gameObject
 {
 public:
-	projectile(string, ModelClass*, ColliderType, D3DXVECTOR3, float, gameObject::CollisionChannel=HIT_PLAYER);
+	projectile(string, ModelClass*, ColliderType, D3DXVECTOR3, float, CollisionChannel=HIT_PLAYER, ObjectType=AUTOMOVE);
 	~projectile();
 
 	void SetDirVector(D3DXVECTOR3);
