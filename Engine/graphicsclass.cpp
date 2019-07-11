@@ -322,11 +322,13 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	if (frame > 10000)
 		frame = lastLeftClick = 0;
 	
+	//Move AUTOMOVE objects
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
-		temp->Move();
+		if (temp->objType == gameObject::AUTOMOVE)
+			temp->Move();
 	}
 
 
