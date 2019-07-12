@@ -7,12 +7,14 @@
 class hpobjects : public gameObject
 {
 public:
-	hpobjects(string, ModelClass*, int, CollisionChannel, ColliderType = COLLIDER_BOX);
+	hpobjects(string,  int, D3DClass*, CollisionChannel, ColliderType = COLLIDER_BOX);
+	void HpObjectInitialize();
 	void Hit(int);
 	bool CheckDestroy();
-
+	
 protected:
 	int hp;
+	
 };
 
 #endif

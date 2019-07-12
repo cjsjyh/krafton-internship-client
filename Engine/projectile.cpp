@@ -1,7 +1,7 @@
 #include "projectile.h"
 
-projectile::projectile(string name, ModelClass* model, D3DXVECTOR3 pos, float _speed, int _distance, int _damage, CollisionChannel _channel, ColliderType coll)
-	:gameObject(name,model,pos,_channel, coll)
+projectile::projectile(string name, D3DXVECTOR3 pos, float _speed, int _distance, int _damage, D3DClass* _device, CollisionChannel _channel, ColliderType coll)
+	:gameObject(name, pos,_channel, coll)
 {
 	D3DXVECTOR3 position = GetPosition();
 	objType = AUTOMOVE;
@@ -9,6 +9,15 @@ projectile::projectile(string name, ModelClass* model, D3DXVECTOR3 pos, float _s
 	distance = _distance;
 	speed = _speed;
 	damage = _damage;
+	device = _device;
+
+	InitializeProjectile();
+}
+
+void projectile::InitializeProjectile()
+{
+	bool result;
+	result = m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
 }
 
 bool projectile::checkDistance()

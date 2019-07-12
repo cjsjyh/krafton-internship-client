@@ -26,13 +26,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	{
 		System->Run();
 	}
-
 	
 
 	// Shutdown and release the system object.
 	System->Shutdown();
 	delete System;
 	System = 0;
+
+	cout << "done2" << endl;
 
 	return 0;
 }

@@ -88,7 +88,6 @@ void SystemClass::Shutdown()
 
 	// Shutdown the window.
 	ShutdownWindows();
-	
 	return;
 }
 
@@ -135,7 +134,6 @@ void SystemClass::Run()
 			done = true;
 		}
 	}
-
 	return;
 }
 

@@ -15,7 +15,7 @@ using namespace std;
 class projectile : public gameObject
 {
 public:
-	projectile(string, ModelClass*, D3DXVECTOR3, float _speed, int _distance, int _damage, CollisionChannel = HIT_PLAYER, ColliderType = COLLIDER_BOX);
+	projectile(string, D3DXVECTOR3, float _speed, int _distance, int _damage, D3DClass*, CollisionChannel = HIT_PLAYER, ColliderType = COLLIDER_BOX);
 	~projectile();
 
 	void SetDirVector(D3DXVECTOR3);
@@ -30,6 +30,8 @@ protected:
 
 
 private:
+	void InitializeProjectile();
+
 	int distance;
 	float speed;
 	D3DXVECTOR3 dirVector;

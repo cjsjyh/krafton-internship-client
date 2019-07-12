@@ -9,7 +9,7 @@
 class bossclass : public hpobjects
 {
 public:
-	bossclass(ModelClass*, ModelClass*, playerclass*, int _hp, int _damage, ColliderType col = COLLIDER_BOX);
+	bossclass(int _hp, int _damage, D3DClass*, playerclass*,  ColliderType col = COLLIDER_BOX);
 	~bossclass();
 
 	projectile* Fire();

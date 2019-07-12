@@ -4,15 +4,16 @@
 
 #include "gameObject.h"
 
-
 class staticobjclass : public gameObject
 {
 public:
-	staticobjclass(string objname, ModelClass* model, ColliderType col, CollisionChannel _channel);
+	staticobjclass(string objname, D3DClass* _device, ColliderType _col=COLLIDER_BOX, CollisionChannel _channel=HIT_PLAYER);
 	~staticobjclass();
 	
+	void InitializeStatic();
 	bool CheckDestroy();
 private:
+	
 };
 
 #endif

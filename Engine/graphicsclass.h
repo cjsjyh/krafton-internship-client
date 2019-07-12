@@ -62,6 +62,8 @@ public:
 	bool Render();
 
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
+	void PrintVector3(D3DXVECTOR3 vec);
+	float clamp(float, float, float);
 
 private:
 	bool MouseNotClicked(bool*);
@@ -75,7 +77,7 @@ private:
 	//void ChangePlayerModel();
 
 	void InitializeMap();
-	void PrintVector3(D3DXVECTOR3 vec);
+	
 
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;

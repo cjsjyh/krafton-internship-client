@@ -89,42 +89,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	//-------------
-	//   object
-	//-------------
-
-	// Create the model object.
-	for (int i = 0; i < PLAYER_MODEL_COUNT; i++)
-	{
-		m_Model.push_back(new ModelClass);
-		if (!m_Model[0])
-			return false;
-	}
-	
-	// Initialize the model object.
-	result = m_Model[0]->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Initialize the model object.
-	result = m_Model[1]->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/krafton.dds");
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Initialize the model object.
-	result = m_Model[2]->Initialize(m_D3D->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/seafloor.dds");
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-	
 	// Create gameManager object
 	m_GM = new gameManager;
 	if (!m_GM)
@@ -167,20 +131,19 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void GraphicsClass::InitializeMap() 
 {
 	
-
+	
 	gameObject* temp;
-	temp = new staticobjclass("floor",m_Model[1], gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
+	temp = new staticobjclass("floor",m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
 	temp->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
 	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObject(temp);
-
 	
-
-	player = new playerclass(m_Model[2], 100, D3DXVECTOR3(0, 0, 0));
+	
+	player = new playerclass(100, m_D3D);
 	m_GM->RegisterObject(player);
 
-	boss = new bossclass(m_Model[2], m_Model[2], player, 30, 1);
+	boss = new bossclass(30, 1, m_D3D, player);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
 	m_GM->RegisterObject(boss);
 	
@@ -205,14 +168,6 @@ void GraphicsClass::Shutdown()
 		m_LightShader->Shutdown();
 		delete m_LightShader;
 		m_LightShader = 0;
-	}
-
-	// Release the model object.
-	for (int i = PLAYER_MODEL_COUNT-1; i >= 0 ; i--)
-	{
-		m_Model[i]->Shutdown();
-		delete m_Model[i];
-		m_Model.pop_back();
 	}
 	
 	// Release the camera object.
@@ -301,12 +256,25 @@ int GraphicsClass::GetDirectionKey(char* keys)
 		return -1;
 }
 
+
 D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 {
-	float square;
-	square = mouseX * mouseX + mouseY * mouseY;
+	float square, gradient;
+	float adjustedX = mouseX, adjustedY = mouseY;
+	float amount = 100;
+	
+	gradient = abs((float)mouseY) / abs(mouseX);
+	gradient = abs(gradient - 1);
+	amount *= clamp(1-gradient, 0.7, 1);
+	
+	if (mouseY < 0)
+		amount *= -1;
+
+	adjustedY += amount;
+
+	square = adjustedX * adjustedX + adjustedY * adjustedY;
 	square = sqrt(square);
-	return D3DXVECTOR3(mouseX / square, 0, mouseY / square);
+	return D3DXVECTOR3(adjustedX / square, 0, adjustedY / square);
 }
 
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
@@ -343,7 +311,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 		}
 	}
 
-
 	//-------------------
 	//  Input Handler
 	//-------------------
@@ -375,7 +342,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	{
 		if (!lastLeftClick)
 		{
-			projectile* temp = new projectile("bullet", m_Model[0], player->GetPosition(), 1, 100, 3,gameObject::HIT_BOSS);
+			projectile* temp = new projectile("bullet", player->GetPosition(), 1, 100, 3, m_D3D,gameObject::HIT_BOSS);
 			temp->SetDirVector(GetDirectionMouse());
 			m_GM->RegisterObject(temp);
 
@@ -386,60 +353,57 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 
 	}
 
-	//No click
-	//else if(MouseNotClicked(mousePress))
-	{
-		//-------------
-		//  player
-		//-------------
+	//-------------
+	//  player
+	//-------------
 		
-		for (int i = 0; i < sizeof(key); i++)
-		{
-			switch (key[i]) {
-			case 'A':
-				player->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
-				m_Camera->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
-				break;
-			case 'S':
-				player->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
-				m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
-				break;
-			case 'D':
-				player->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
-				m_Camera->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
-				break;
-			case 'W':
-				player->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
-				m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
-				break;
-			}
-		}
-		//image direction
-		int dir = GetDirectionKey(key);
-		if(dir != -1)
-			player->SetDirection(dir);
-		switch (dir)
-		{
-		case 0:
+	for (int i = 0; i < sizeof(key); i++)
+	{
+		switch (key[i]) {
+		case 'A':
+			player->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
+			m_Camera->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
 			break;
-		case 1:
+		case 'S':
+			player->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
+			m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
 			break;
-		case 2:
+		case 'D':
+			player->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
+			m_Camera->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
 			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
-		case 6:
-			break;
-		case 7:
-			break;
-		default:
+		case 'W':
+			player->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
+			m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
 			break;
 		}
 	}
+	//image direction
+	int dir = GetDirectionKey(key);
+	if(dir != -1)
+		player->SetDirection(dir);
+	switch (dir)
+	{
+	case 0:
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	case 6:
+		break;
+	case 7:
+		break;
+	default:
+		break;
+	}
+	
 
 	//-------------
 	//  object
@@ -466,6 +430,7 @@ bool GraphicsClass::Render()
 	float rotx, roty, rotz;
 	float x,y,z;
 
+
 	D3DXMatrixRotationX(&MatrixToFaceCamera,45);
 
 	// Clear the buffers to begin the scene.
@@ -474,6 +439,7 @@ bool GraphicsClass::Render()
 	// Generate the view matrix based on the camera's position.
 	D3DXVECTOR3 player_pos = player->GetPosition();
 	m_Camera->Render(player_pos);
+	
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
@@ -482,7 +448,6 @@ bool GraphicsClass::Render()
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	
-
 	//-----------------
 	// Transformation
 	//-----------------
@@ -545,4 +510,14 @@ D3DXVECTOR3 GraphicsClass::normalizeVec3(D3DXVECTOR3 vec)
 	square = vec.x * vec.x + vec.z * vec.z;
 	square = sqrt(square);
 	return D3DXVECTOR3(vec.x / square, 0, vec.z / square);
+}
+
+float GraphicsClass::clamp(float value, float min, float max)
+{
+	if (value < min)
+		return min;
+	else if (value > max)
+		return max;
+	else
+		return value;
 }

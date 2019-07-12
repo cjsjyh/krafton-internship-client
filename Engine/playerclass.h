@@ -7,7 +7,7 @@
 class playerclass : public hpobjects
 {
 public:
-	playerclass(ModelClass*, int, D3DXVECTOR3 pos = D3DXVECTOR3(0, 0, 0));
+	playerclass(int, D3DClass* ,D3DXVECTOR3 pos = D3DXVECTOR3(0, 0, 0));
 	~playerclass();
 
 	void SetDirection(int);

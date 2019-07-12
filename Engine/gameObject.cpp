@@ -1,22 +1,24 @@
 #include "gameObject.h"
 
 
-gameObject::gameObject(string objname, ModelClass* model, CollisionChannel _channel, ColliderType col)
+gameObject::gameObject(string objname, CollisionChannel _channel, ColliderType col)
 {
 	pos.x = pos.y = pos.z = 0;
 	scale.x = scale.y = scale.z = 1;
 	rot.x = rot.y = rot.z = 0;
 	box_collSize.x = box_collSize.y = box_collSize.z = 1;
 	sphere_collSize = 0.5;
+	m_model = 0;
 
 	name = objname;
-	m_model = model;
 	collider = col;
 	channel = _channel;
 	objType = UNMOVABLE;
+	
+	InitializeObject();
 }
 
-gameObject::gameObject(string objname, ModelClass* model, D3DXVECTOR3 _pos, CollisionChannel _channel, ColliderType col)
+gameObject::gameObject(string objname, D3DXVECTOR3 _pos, CollisionChannel _channel, ColliderType col)
 {
 	pos.x = _pos.x;
 	pos.y = _pos.y;
@@ -25,17 +27,24 @@ gameObject::gameObject(string objname, ModelClass* model, D3DXVECTOR3 _pos, Coll
 	scale.x = scale.y = scale.z = 1;
 	rot.x = rot.y = rot.z = 0;
 	box_collSize.x = box_collSize.y = box_collSize.z = 1;
+	m_model = 0;
 
 	name = objname;
-	m_model = model;
 	collider = col;
 	channel = _channel;
 	objType = UNMOVABLE;
+
+	InitializeObject();
 }
 
 gameObject::~gameObject()
 {
 
+}
+
+void gameObject::InitializeObject()
+{
+	m_model = new ModelClass();
 }
 
 void gameObject::PrintVector3(D3DXVECTOR3 vec)
@@ -51,6 +60,20 @@ ModelClass* gameObject::GetModel()
 string gameObject::GetName()
 {
 	return name;
+}
+
+WCHAR* gameObject::StringToWchar(string str)
+{
+	USES_CONVERSION;
+	char* writeable = new char[str.size() + 1];
+	WCHAR* converted = new WCHAR[str.size() + 1];
+	//string -> char*
+	std::copy(str.begin(), str.end(), writeable);
+	writeable[str.size()] = '\0';
+	//char* -> WCHAR*
+
+	wcscpy(converted, A2W(writeable));
+	return converted;
 }
 
 gameObject::ColliderType gameObject::GetColliderType()

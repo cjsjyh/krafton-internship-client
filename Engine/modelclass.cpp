@@ -34,22 +34,18 @@ bool ModelClass::Initialize(ID3D11Device* device, char* modelFilename, WCHAR* te
 	{
 		return false;
 	}
-
 	// Initialize the vertex and index buffers.
 	result = InitializeBuffers(device);
 	if(!result)
 	{
 		return false;
 	}
-
 	// Load the texture for this model.
 	result = LoadTexture(device, textureFilename);
 	if(!result)
 	{
 		return false;
 	}
-
-	
 
 	return true;
 }
@@ -266,8 +262,6 @@ bool ModelClass::LoadModel(char* filename)
 	char input;
 	int i;
 
-	cout << filename << endl;
-
 	// Open the model file.
 	fin.open(filename);
 
@@ -276,7 +270,6 @@ bool ModelClass::LoadModel(char* filename)
 	{
 		return false;
 	}
-
 	// Read up to the value of vertex count.
 	fin.get(input);
 	while (input != ':')
@@ -286,7 +279,7 @@ bool ModelClass::LoadModel(char* filename)
 
 	// Read in the vertex count.
 	fin >> m_vertexCount;
-
+	
 	// Set the number of indices to be the same as the vertex count.
 	m_indexCount = m_vertexCount;
 
@@ -296,7 +289,6 @@ bool ModelClass::LoadModel(char* filename)
 	{
 		return false;
 	}
-
 	// Read up to the beginning of the data.
 	fin.get(input);
 	while (input != ':')

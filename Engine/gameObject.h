@@ -9,6 +9,7 @@
 #include <d3dx10math.h>
 #include <string>
 #include <math.h>
+#include <atlconv.h>
 using namespace std;
 
 #define CAM_SPEED 3
@@ -36,10 +37,11 @@ public:
 		UNMOVABLE
 	};
 
-	gameObject(string, ModelClass*, CollisionChannel=HIT_PLAYER, ColliderType=COLLIDER_BOX);
-	gameObject(string, ModelClass*, D3DXVECTOR3, CollisionChannel=HIT_PLAYER, ColliderType = COLLIDER_BOX);
+	gameObject(string, CollisionChannel=HIT_PLAYER, ColliderType=COLLIDER_BOX);
+	gameObject(string, D3DXVECTOR3, CollisionChannel=HIT_PLAYER, ColliderType = COLLIDER_BOX);
 	~gameObject();
 
+	void InitializeObject();
 	void PrintVector3(D3DXVECTOR3);
 
 	D3DXVECTOR3 GetPosition();
@@ -60,12 +62,14 @@ public:
 	virtual bool CheckDestroy() = 0;
 
 	string GetName();
+	WCHAR* StringToWchar(string);
 	ColliderType GetColliderType();
 	ModelClass* GetModel();
 
 	float sphere_collSize;
 	CollisionChannel channel;
 	ObjectType objType;
+
 protected:
 	string name;
 	D3DXVECTOR3 pos;
@@ -75,6 +79,7 @@ protected:
 
 	ModelClass* m_model;
 	ColliderType collider;
+	D3DClass* device;
 	bool toShow;
 };
 

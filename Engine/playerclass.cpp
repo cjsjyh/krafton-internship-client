@@ -1,7 +1,7 @@
 #include "playerclass.h"
 
-playerclass::playerclass(ModelClass* model, int hp, D3DXVECTOR3 pos)
-	:hpobjects("player", model, hp, HIT_PLAYER)
+playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
+	:hpobjects("player", _hp, _device, HIT_PLAYER)
 {
 	objType = MOVEABLE;
 	direction = 1;
@@ -11,6 +11,8 @@ playerclass::~playerclass()
 {
 
 }
+
+
 
 int playerclass::GetDirection()
 {

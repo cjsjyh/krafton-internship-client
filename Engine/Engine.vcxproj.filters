@@ -94,7 +94,7 @@
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="hpobjects.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +156,7 @@
       <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="hpobjects.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
