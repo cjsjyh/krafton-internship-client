@@ -9,6 +9,7 @@
 #include <d3dx10math.h>
 #include <string>
 #include <math.h>
+#include <vector>
 #include <atlconv.h>
 using namespace std;
 
@@ -74,9 +75,9 @@ protected:
 	D3DXVECTOR3 box_collSize;
 
 	ModelClass* m_model;
+
 	ColliderType collider;
 	D3DClass* device;
-	bool toShow;
 };
 
 #endif

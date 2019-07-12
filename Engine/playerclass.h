@@ -5,12 +5,15 @@
 #include "hpobjects.h"
 #include "projectile.h"
 
+#define PLAYER_IMAGE_NUM 8
+
 class playerclass : public hpobjects
 {
 public:
 	playerclass(int, D3DClass* ,D3DXVECTOR3 pos = D3DXVECTOR3(0, 0, 0));
 	~playerclass();
 
+	void InitializeModels();
 	projectile* Fire(D3DXVECTOR3);
 	
 	void SetDirection(char*);

@@ -3,6 +3,7 @@
 #define _HPOBJECTS_H_
 
 #include "gameObject.h"
+#include <vector>
 
 class hpobjects : public gameObject
 {
@@ -15,7 +16,7 @@ public:
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
 protected:
 	int hp;
-	
+	vector<ModelClass*> model_list;
 };
 
 #endif
