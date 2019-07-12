@@ -30,3 +30,11 @@ bool hpobjects::CheckDestroy()
 	}
 	return false;
 }
+
+D3DXVECTOR3 hpobjects::normalizeVec3(D3DXVECTOR3 vec)
+{
+	float square;
+	square = vec.x * vec.x + vec.z * vec.z;
+	square = sqrt(square);
+	return D3DXVECTOR3(vec.x / square, 0, vec.z / square);
+}

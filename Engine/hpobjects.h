@@ -12,6 +12,7 @@ public:
 	void Hit(int);
 	bool CheckDestroy();
 	
+	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
 protected:
 	int hp;
 	

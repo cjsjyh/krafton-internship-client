@@ -12,7 +12,12 @@ playerclass::~playerclass()
 
 }
 
-
+projectile* playerclass::Fire(D3DXVECTOR3 dirVec)
+{
+	projectile* temp = new projectile("bullet", GetPosition(), 1, 100, 3, device, gameObject::HIT_BOSS);
+	temp->SetDirVector(dirVec);
+	return temp;
+}
 
 int playerclass::GetDirection()
 {

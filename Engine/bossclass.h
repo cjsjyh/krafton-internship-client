@@ -13,7 +13,7 @@ public:
 	~bossclass();
 
 	projectile* Fire();
-	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
+	
 
 private:
 	int phase;

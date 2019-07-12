@@ -342,10 +342,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	{
 		if (!lastLeftClick)
 		{
-			projectile* temp = new projectile("bullet", player->GetPosition(), 1, 100, 3, m_D3D,gameObject::HIT_BOSS);
-			temp->SetDirVector(GetDirectionMouse());
-			m_GM->RegisterObject(temp);
-
+			m_GM->RegisterObject(player->Fire( GetDirectionMouse() ));
 			m_GM->RegisterObject(boss->Fire());
 
 			lastLeftClick = frame;
