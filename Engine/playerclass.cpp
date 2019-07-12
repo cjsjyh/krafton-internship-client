@@ -19,6 +19,12 @@ projectile* playerclass::Fire(D3DXVECTOR3 dirVec)
 	return temp;
 }
 
+void playerclass::SetSpeed(float _speed)
+{
+	PLAYER_SPEED = _speed;
+	return;
+}
+
 int playerclass::GetDirection()
 {
 	return direction;
@@ -57,6 +63,29 @@ void playerclass::SetDirection(char* keys)
 	SetImage();
 
 	return;
+}
+
+void playerclass::Move(char* keys)
+{
+	SetDirection(keys);
+
+	for (int i = 0; i < sizeof(keys); i++)
+	{
+		switch (keys[i]) {
+		case 'A':
+			AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
+			break;
+		case 'S':
+			AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
+			break;
+		case 'D':
+			AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
+			break;
+		case 'W':
+			AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
+			break;
+		}
+	}
 }
 
 void playerclass::SetImage()

@@ -12,12 +12,18 @@ public:
 	~playerclass();
 
 	projectile* Fire(D3DXVECTOR3);
+	
 	void SetDirection(char*);
 	int GetDirection();
+
+	void SetSpeed(float);
+
 	void SetImage();
+	void Move(char*);
 
 private:
 	int direction;
+	float PLAYER_SPEED;
 };
 
 #endif

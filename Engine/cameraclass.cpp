@@ -15,6 +15,32 @@ CameraClass::CameraClass()
 	m_rotationZ = 0.0f;
 }
 
+void CameraClass::Move(char* keys)
+{
+	for (int i = 0; i < sizeof(keys); i++)
+	{
+		switch (keys[i]) {
+		case 'A':
+			AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
+			break;
+		case 'S':
+			AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
+			break;
+		case 'D':
+			AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
+			break;
+		case 'W':
+			AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
+			break;
+		}
+	}
+}
+
+void CameraClass::SetSpeed(float _speed)
+{
+	PLAYER_SPEED = _speed;
+	return;
+}
 
 CameraClass::CameraClass(const CameraClass& other)
 {

@@ -12,10 +12,6 @@
 #include <atlconv.h>
 using namespace std;
 
-#define CAM_SPEED 3
-#define PLAYER_SPEED 0.5
-
-
 class gameObject
 {
 public:

@@ -30,6 +30,7 @@
 #include "iostream"
 #include <string>
 #include <vector>
+#include <map>
 #include <math.h>
 using namespace std;
 
@@ -58,6 +59,7 @@ public:
 	~GraphicsClass();
 
 	bool Initialize(int, int, HWND);
+	void InitializeParameters();
 	void Shutdown();
 	bool Frame(int, int, bool*, char*, int, int);
 	bool Render();
@@ -65,7 +67,6 @@ public:
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
 	void PrintVector3(D3DXVECTOR3 vec);
 	float clamp(float, float, float);
-
 private:
 	bool MouseNotClicked(bool*);
 	bool RightMouseClicked(bool*);

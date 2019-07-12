@@ -2,7 +2,7 @@
 
 textfilereader::textfilereader()
 {
-
+	
 }
 
 textfilereader::~textfilereader()
@@ -25,7 +25,9 @@ bool textfilereader::ReadFile(char* fname, int per_line)
 
 	while (fgets(line, sizeof(line), fp) != NULL)
 	{
-		int count = sscanf(line, "%s %f", parameter_name, &parameter_value);
+		int count = sscanf(line,"%s	%f", parameter_name, &parameter_value);
+		cout << line << to_string(count)<<endl;
+		cout << parameter_name << endl;
 		if (count != 2)
 		{
 			cout << "Error! 2 params not inserted properly" << endl;

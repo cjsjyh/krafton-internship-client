@@ -36,9 +36,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	bool result;
 	D3DXMATRIX baseViewMatrix;
 
-	m_filereader = new textfilereader;
-	m_filereader->ReadFile("../Engine/data/game_parameter.csv");
-
 	screenW = screenWidth;
 	screenH = screenHeight;
 
@@ -127,8 +124,18 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	InitializeMap();
+	InitializeParameters();
 
 	return true;
+}
+
+void GraphicsClass::InitializeParameters()
+{
+	m_filereader = new textfilereader;
+	m_filereader->ReadFile("../Engine/data/parameter.csv");
+
+	player->SetSpeed(m_filereader->params.find("player_speed")->second);
+	m_Camera->SetSpeed(m_filereader->params.find("player_speed")->second);
 }
 
 void GraphicsClass::InitializeMap() 
@@ -321,29 +328,9 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	//-------------
 	//  player
 	//-------------
-	//image direction
-	player->SetDirection(key);
-	for (int i = 0; i < sizeof(key); i++)
-	{
-		switch (key[i]) {
-		case 'A':
-			player->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
-			m_Camera->AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
-			break;
-		case 'S':
-			player->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
-			m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
-			break;
-		case 'D':
-			player->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
-			m_Camera->AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
-			break;
-		case 'W':
-			player->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
-			m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
-			break;
-		}
-	}
+	player->Move(key);
+	m_Camera->Move(key);
+	
 
 	//----------------
 	//   CPU / FPS

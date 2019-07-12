@@ -21,6 +21,9 @@ public:
 	CameraClass(const CameraClass&);
 	~CameraClass();
 
+	void Move(char*);
+	void SetSpeed(float);
+
 	void SetPosition(D3DXVECTOR3);
 	void AdjustPosition(D3DXVECTOR3);
 	void SetRotation(D3DXVECTOR3);
@@ -36,6 +39,8 @@ private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
 	D3DXMATRIX m_viewMatrix;
+
+	float PLAYER_SPEED;
 };
 
 #endif
