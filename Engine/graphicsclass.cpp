@@ -223,39 +223,6 @@ bool GraphicsClass::IsKeyPressed(char* arr)
 	return false;
 }
 
-int GraphicsClass::GetDirectionKey(char* keys)
-{
-	// 0 1 2
-	// 7   3
-	// 6 5 4
-	//0 = W A
-	if (keys[0] && keys[1])
-		return 0;
-	//2 = W D
-	else if (keys[0] && keys[3])
-		return 2;
-	//4 = S D
-	else if (keys[2] && keys[3])
-		return 4;
-	//6 = S A
-	else if (keys[2] && keys[1])
-		return 6;
-	//1 = W
-	else if (keys[0])
-		return 1;
-	//3 = D
-	else if (keys[3])
-		return 3;
-	//5 = S
-	else if (keys[2])
-		return 5;
-	//7 = A
-	else if (keys[1])
-		return 7;
-	else
-		return -1;
-}
-
 
 D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 {
@@ -353,7 +320,8 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 	//-------------
 	//  player
 	//-------------
-		
+	//image direction
+	player->SetDirection(key);
 	for (int i = 0; i < sizeof(key); i++)
 	{
 		switch (key[i]) {
@@ -374,31 +342,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 			m_Camera->AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
 			break;
 		}
-	}
-	//image direction
-	int dir = GetDirectionKey(key);
-	if(dir != -1)
-		player->SetDirection(dir);
-	switch (dir)
-	{
-	case 0:
-		break;
-	case 1:
-		break;
-	case 2:
-		break;
-	case 3:
-		break;
-	case 4:
-		break;
-	case 5:
-		break;
-	case 6:
-		break;
-	case 7:
-		break;
-	default:
-		break;
 	}
 	
 

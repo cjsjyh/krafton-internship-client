@@ -12,8 +12,9 @@ public:
 	~playerclass();
 
 	projectile* Fire(D3DXVECTOR3);
-	void SetDirection(int);
+	void SetDirection(char*);
 	int GetDirection();
+	void SetImage();
 
 private:
 	int direction;

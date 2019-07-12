@@ -71,7 +71,7 @@ private:
 	bool LeftMouseClicked(bool*);
 	bool IsKeyPressed(char*);
 
-	int GetDirectionKey(char*);
+	//int GetDirectionKey(char*);
 	D3DXVECTOR3 GetDirectionMouse();
 
 	//void ChangePlayerModel();
