@@ -84,77 +84,13 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 			return false;
 		}
 	}
-	/*
 
-	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence2, 16, device);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, "Goodbye", 100, 200, 1.0f, 1.0f, 0.0f, deviceContext);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence5, 16, device);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence5, "Hello", 100, 100, 1.0f, 1.0f, 1.0f, deviceContext);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence1, 16, device);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, "Fps: ", 20, 20, 0.0f, 1.0f, 0.0f, deviceContext);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence2, 16, device);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, "Cpu: ", 20, 40, 0.0f, 1.0f, 0.0f, deviceContext);
-	if (!result)
-	{
-		return false;
-	}
-	*/
 	return true;
 }
 
 
 void TextClass::Shutdown()
 {
-	// Release the first sentence.
-	//ReleaseSentence(&m_sentence1);
-
-	// Release the second sentence.
-	//ReleaseSentence(&m_sentence2);
-
-	//ReleaseSentence(&m_sentence5);
 	for (int i = 0; i < NUM_LINES; i++)
 		ReleaseSentence(&(m_sentence[i]));
 
@@ -191,28 +127,7 @@ bool TextClass::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatri
 		}
 	}
 
-	/*
-	// Draw the first sentence.
-	result = RenderSentence(deviceContext, m_sentence1, worldMatrix, orthoMatrix);
-	if(!result)
-	{
-		return false;
-	}
 
-	// Draw the second sentence.
-	result = RenderSentence(deviceContext, m_sentence2, worldMatrix, orthoMatrix);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Draw the second sentence.
-	result = RenderSentence(deviceContext, m_sentence5, worldMatrix, orthoMatrix);
-	if (!result)
-	{
-		return false;
-	}
-	*/
 	return true;
 }
 

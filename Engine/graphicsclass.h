@@ -25,6 +25,7 @@
 #include "bossclass.h"
 
 #include "gameManager.h"
+#include "textfilereader.h"
 
 #include "iostream"
 #include <string>
@@ -78,6 +79,7 @@ private:
 
 	void InitializeMap();
 	
+	textfilereader* m_filereader;
 
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;

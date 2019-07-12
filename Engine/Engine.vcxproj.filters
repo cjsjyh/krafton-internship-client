@@ -102,6 +102,9 @@
     <ClCompile Include="cpuclass.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="textfilereader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphicsclass.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="cpuclass.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="textfilereader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

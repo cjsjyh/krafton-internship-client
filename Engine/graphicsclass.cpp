@@ -17,6 +17,7 @@ GraphicsClass::GraphicsClass()
 
 	frame = 0;
 	lastLeftClick = 0;
+	m_filereader = 0;
 }
 
 
@@ -35,6 +36,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	bool result;
 	D3DXMATRIX baseViewMatrix;
 
+	m_filereader = new textfilereader;
+	m_filereader->ReadFile("../Engine/data/game_parameter.csv");
 
 	screenW = screenWidth;
 	screenH = screenHeight;
@@ -130,8 +133,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::InitializeMap() 
 {
-	
-	
 	gameObject* temp;
 	temp = new staticobjclass("floor",m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
 	temp->SetScale(D3DXVECTOR3(20, 0.1, 20));
@@ -147,6 +148,7 @@ void GraphicsClass::InitializeMap()
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
 	m_GM->RegisterObject(boss);
 	
+
 }
 void GraphicsClass::PrintVector3(D3DXVECTOR3 vec)
 {

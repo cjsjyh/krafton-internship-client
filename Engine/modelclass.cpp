@@ -95,13 +95,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 
-
-	// Set the number of vertices in the vertex array.
-	//m_vertexCount = 8;
-
-	// Set the number of indices in the index array.
-	//m_indexCount = 36;
-
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
 	if(!vertices)
