@@ -24,6 +24,8 @@ using namespace std;
 ///////////////////////
 #include "inputclass.h"
 #include "graphicsclass.h"
+#include "fpsclass.h"
+#include "cpuclass.h"
 
 
 #define ARR_SIZE 4
@@ -56,6 +58,9 @@ private:
 
 	InputClass* m_Input;
 	GraphicsClass* m_Graphics;
+	FpsClass* m_Fps;
+	CpuClass* m_Cpu;
+
 	const int keyCode[ARR_SIZE] = { DIK_W, DIK_A,DIK_S,DIK_D };
 	const char keyChar[ARR_SIZE] = { 'W','A','S','D' };
 	

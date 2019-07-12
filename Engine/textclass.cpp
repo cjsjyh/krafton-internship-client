@@ -9,9 +9,8 @@ TextClass::TextClass()
 	m_Font = 0;
 	m_FontShader = 0;
 
-	m_sentence1 = 0;
-	m_sentence2 = 0;
-	m_sentence3 = 0;
+	for (int i = 0; i < NUM_LINES; i++)
+		m_sentence[i] = 0;
 }
 
 
@@ -68,19 +67,24 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 		return false;
 	}
 
-	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence1, 16, device);
-	if(!result)
-	{
-		return false;
-	}
 
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, "Hello", 100, 100, 1.0f, 1.0f, 1.0f, deviceContext);
-	if(!result)
+	// Initialize the first sentence.
+	for (int i = 0; i < NUM_LINES; i++)
 	{
-		return false;
+		result = InitializeSentence(&(m_sentence[i]), 16, device);
+		if (!result)
+		{
+			return false;
+		}
+
+		// Now update the sentence vertex buffer with the new string information.
+		result = UpdateSentence(m_sentence[i], "Hello", 100, 100 + 100*i, 1.0f, 1.0f, 1.0f, deviceContext);
+		if (!result)
+		{
+			return false;
+		}
 	}
+	/*
 
 	// Initialize the first sentence.
 	result = InitializeSentence(&m_sentence2, 16, device);
@@ -97,19 +101,47 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence3, 16, device);
+	result = InitializeSentence(&m_sentence5, 16, device);
 	if (!result)
 	{
 		return false;
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence3, "Hello", 100, 100, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence5, "Hello", 100, 100, 1.0f, 1.0f, 1.0f, deviceContext);
 	if (!result)
 	{
 		return false;
 	}
 
+	// Initialize the first sentence.
+	result = InitializeSentence(&m_sentence1, 16, device);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Now update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence1, "Fps: ", 20, 20, 0.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Initialize the first sentence.
+	result = InitializeSentence(&m_sentence2, 16, device);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Now update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence2, "Cpu: ", 20, 40, 0.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+	*/
 	return true;
 }
 
@@ -117,12 +149,14 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 void TextClass::Shutdown()
 {
 	// Release the first sentence.
-	ReleaseSentence(&m_sentence1);
+	//ReleaseSentence(&m_sentence1);
 
 	// Release the second sentence.
-	ReleaseSentence(&m_sentence2);
+	//ReleaseSentence(&m_sentence2);
 
-	ReleaseSentence(&m_sentence3);
+	//ReleaseSentence(&m_sentence5);
+	for (int i = 0; i < NUM_LINES; i++)
+		ReleaseSentence(&(m_sentence[i]));
 
 	// Release the font shader object.
 	if(m_FontShader)
@@ -148,7 +182,16 @@ bool TextClass::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatri
 {
 	bool result;
 
+	for (int i = 0; i < NUM_LINES; i++)
+	{
+		result = RenderSentence(deviceContext, m_sentence[i], worldMatrix, orthoMatrix);
+		if (!result)
+		{
+			return false;
+		}
+	}
 
+	/*
 	// Draw the first sentence.
 	result = RenderSentence(deviceContext, m_sentence1, worldMatrix, orthoMatrix);
 	if(!result)
@@ -164,12 +207,12 @@ bool TextClass::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatri
 	}
 
 	// Draw the second sentence.
-	result = RenderSentence(deviceContext, m_sentence3, worldMatrix, orthoMatrix);
+	result = RenderSentence(deviceContext, m_sentence5, worldMatrix, orthoMatrix);
 	if (!result)
 	{
 		return false;
 	}
-
+	*/
 	return true;
 }
 
@@ -423,7 +466,7 @@ bool TextClass::SetMousePosition(int mouseX, int mouseY, ID3D11DeviceContext* de
 	strcat_s(mouseString, tempString);
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, mouseString, 20, 20, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence[2], mouseString, 20, 80, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -437,7 +480,7 @@ bool TextClass::SetMousePosition(int mouseX, int mouseY, ID3D11DeviceContext* de
 	strcat_s(mouseString, tempString);
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, mouseString, 20, 40, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence[3], mouseString, 20, 100, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -455,11 +498,93 @@ bool TextClass::SetKeyInput(char* input, ID3D11DeviceContext* deviceContext)
 	strcat_s(keyString, input);
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence3, keyString, 20, 60, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence[4], keyString, 20, 60, 1.0f, 1.0f, 1.0f, deviceContext);
 	if (!result)
 	{
 		return false;
 	}
 	
+	return true;
+}
+
+
+bool TextClass::SetFps(int fps, ID3D11DeviceContext* deviceContext)
+{
+	char tempString[16];
+	char fpsString[16];
+	float red, green, blue;
+	bool result;
+
+
+	// Truncate the fps to below 10,000.
+	if (fps > 9999)
+	{
+		fps = 9999;
+	}
+
+	// Convert the fps integer to string format.
+	_itoa_s(fps, tempString, 10);
+
+	// Setup the fps string.
+	strcpy_s(fpsString, "Fps: ");
+	strcat_s(fpsString, tempString);
+
+	// If fps is 60 or above set the fps color to green.
+	if (fps >= 60)
+	{
+		red = 0.0f;
+		green = 1.0f;
+		blue = 0.0f;
+	}
+
+	// If fps is below 60 set the fps color to yellow.
+	if (fps < 60)
+	{
+		red = 1.0f;
+		green = 1.0f;
+		blue = 0.0f;
+	}
+
+	// If fps is below 30 set the fps color to red.
+	if (fps < 30)
+	{
+		red = 1.0f;
+		green = 0.0f;
+		blue = 0.0f;
+	}
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence[0], fpsString, 20, 20, red, green, blue, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool TextClass::SetCpu(int cpu, ID3D11DeviceContext* deviceContext)
+{
+	char tempString[16];
+	char cpuString[16];
+	bool result;
+
+
+	// Convert the cpu integer to string format.
+	_itoa_s(cpu, tempString, 10);
+
+	// Setup the cpu string.
+	strcpy_s(cpuString, "Cpu: ");
+	strcat_s(cpuString, tempString);
+	strcat_s(cpuString, "%");
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence[1], cpuString, 20, 40, 0.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 }

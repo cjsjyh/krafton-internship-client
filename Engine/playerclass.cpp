@@ -54,7 +54,6 @@ void playerclass::SetDirection(char* keys)
 	else if (keys[1])
 		direction = 7;
 
-	cout << "player direction" << to_string(direction) << endl;
 	SetImage();
 
 	return;

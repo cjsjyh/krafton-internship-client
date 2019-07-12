@@ -58,7 +58,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, bool*, char*);
+	bool Frame(int, int, bool*, char*, int, int);
 	bool Render();
 
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);

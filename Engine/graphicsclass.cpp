@@ -244,11 +244,10 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 	return D3DXVECTOR3(adjustedX / square, 0, adjustedY / square);
 }
 
-bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
+bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key, int fps, int cpu)
 {
 	vector<gameObject*> coll1, coll2;
 	bool result;
-
 	mouseX = _mouseX - screenW/2;
 	mouseY = -(_mouseY - screenH/2);
 	
@@ -343,7 +342,22 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key)
 			break;
 		}
 	}
-	
+
+	//----------------
+	//   CPU / FPS
+	//----------------
+	result = m_Text->SetFps(fps, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Set the cpu usage.
+	result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
 
 	//-------------
 	//  object

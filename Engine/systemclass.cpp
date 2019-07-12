@@ -9,6 +9,9 @@ SystemClass::SystemClass()
 	m_Input = 0;
 	m_Graphics = 0;
 	
+	m_Fps = 0;
+	m_Cpu = 0;
+
 	mouseX = mouseY = offsetX = offsetY = 0;
 }
 
@@ -65,6 +68,26 @@ bool SystemClass::Initialize()
 		return false;
 	}
 	
+	// Create the fps object.
+	m_Fps = new FpsClass;
+	if (!m_Fps)
+	{
+		return false;
+	}
+
+	// Initialize the fps object.
+	m_Fps->Initialize();
+
+	// Create the cpu object.
+	m_Cpu = new CpuClass;
+	if (!m_Cpu)
+	{
+		return false;
+	}
+
+	// Initialize the cpu object.
+	m_Cpu->Initialize();
+
 	return true;
 }
 
@@ -84,6 +107,21 @@ void SystemClass::Shutdown()
 	{
 		delete m_Input;
 		m_Input = 0;
+	}
+
+	// Release the cpu object.
+	if (m_Cpu)
+	{
+		m_Cpu->Shutdown();
+		delete m_Cpu;
+		m_Cpu = 0;
+	}
+
+	// Release the fps object.
+	if (m_Fps)
+	{
+		delete m_Fps;
+		m_Fps = 0;
 	}
 
 	// Shutdown the window.
@@ -144,6 +182,9 @@ bool SystemClass::Frame()
 	bool mousePress[3];
 	char keyInput[10];
 
+	m_Fps->Frame();
+	m_Cpu->Frame();
+
 	// Do the input frame processing.
 	result = m_Input->Frame();
 	if (!result)
@@ -183,7 +224,7 @@ bool SystemClass::Frame()
 
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, mousePress, keyInput);
+	result = m_Graphics->Frame(mouseX, mouseY, mousePress, keyInput, m_Fps->GetFps(), m_Cpu->GetCpuPercentage());
 	if (!result)
 	{
 		return false;
@@ -196,36 +237,6 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 {
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
-
-/*
-LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-{
-	switch(umsg)
-	{
-		// Check if a key has been pressed on the keyboard.
-		case WM_KEYDOWN:
-		{
-			// If a key is pressed send it to the input object so it can record that state.
-			m_Input->KeyDown((unsigned int)wparam);
-			return 0;
-		}
-
-		// Check if a key has been released on the keyboard.
-		case WM_KEYUP:
-		{
-			// If a key is released then send it to the input object so it can unset the state for that key.
-			m_Input->KeyUp((unsigned int)wparam);
-			return 0;
-		}
-
-		// Any other messages send to the default message handler as our application won't make use of them.
-		default:
-		{
-			return DefWindowProc(hwnd, umsg, wparam, lparam);
-		}
-	}
-}
-*/
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight, int& _posX, int& _posY)
 {

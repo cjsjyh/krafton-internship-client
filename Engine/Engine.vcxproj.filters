@@ -96,6 +96,12 @@
     <ClCompile Include="hpobjects.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="fpsclass.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="cpuclass.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphicsclass.h">
@@ -156,6 +162,12 @@
       <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="hpobjects.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="fpsclass.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="cpuclass.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
