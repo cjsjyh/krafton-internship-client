@@ -75,9 +75,6 @@
     <ClCompile Include="playerclass.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
-    <ClCompile Include="projectile.cpp">
-      <Filter>Source Files\Object</Filter>
-    </ClCompile>
     <ClCompile Include="staticobjclass.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
@@ -104,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="textfilereader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="projectileclass.cpp">
+      <Filter>Source Files\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +155,6 @@
     <ClInclude Include="playerclass.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="projectile.h">
-      <Filter>Header Files\Object</Filter>
-    </ClInclude>
     <ClInclude Include="staticobjclass.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
@@ -175,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="textfilereader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="projectileclass.h">
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

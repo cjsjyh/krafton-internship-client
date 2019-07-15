@@ -4,7 +4,7 @@
 
 #include "gameObject.h"
 #include "bossclass.h"
-#include "projectile.h"
+#include "projectileclass.h"
 
 #include "iostream"
 #include <D3DX10math.h>

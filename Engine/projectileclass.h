@@ -12,11 +12,11 @@
 
 using namespace std;
 
-class projectile : public gameObject
+class projectileclass : public gameObject
 {
 public:
-	projectile(string, D3DXVECTOR3, float _speed, int _distance, int _damage, D3DClass*, CollisionChannel = HIT_PLAYER, ColliderType = COLLIDER_BOX);
-	~projectile();
+	projectileclass(string, D3DXVECTOR3, float _speed, int _distance, int _damage, D3DClass*, CollisionChannel = HIT_PLAYER, ColliderType = COLLIDER_BOX);
+	~projectileclass();
 
 	void SetDirVector(D3DXVECTOR3);
 	D3DXVECTOR3 GetDirVector();

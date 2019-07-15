@@ -95,7 +95,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="playerclass.cpp" />
-    <ClCompile Include="projectile.cpp" />
+    <ClCompile Include="projectileclass.cpp" />
     <ClCompile Include="staticobjclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textclass.cpp" />
@@ -120,7 +120,7 @@
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="playerclass.h" />
-    <ClInclude Include="projectile.h" />
+    <ClInclude Include="projectileclass.h" />
     <ClInclude Include="staticobjclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textclass.h" />

@@ -3,7 +3,7 @@
 #define _PLYAERCLASS_H_
 
 #include "hpobjects.h"
-#include "projectile.h"
+#include "projectileclass.h"
 
 #define PLAYER_IMAGE_NUM 8
 
@@ -14,7 +14,7 @@ public:
 	~playerclass();
 
 	void InitializeModels();
-	projectile* Fire(D3DXVECTOR3);
+	projectileclass* Fire(D3DXVECTOR3);
 	
 	void SetDirection(char*);
 	int GetDirection();

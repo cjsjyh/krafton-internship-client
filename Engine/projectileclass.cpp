@@ -1,6 +1,6 @@
-#include "projectile.h"
+#include "projectileclass.h"
 
-projectile::projectile(string name, D3DXVECTOR3 pos, float _speed, int _distance, int _damage, D3DClass* _device, CollisionChannel _channel, ColliderType coll)
+projectileclass::projectileclass(string name, D3DXVECTOR3 pos, float _speed, int _distance, int _damage, D3DClass* _device, CollisionChannel _channel, ColliderType coll)
 	:gameObject(name, pos,_channel, coll)
 {
 	D3DXVECTOR3 position = GetPosition();
@@ -14,35 +14,35 @@ projectile::projectile(string name, D3DXVECTOR3 pos, float _speed, int _distance
 	InitializeProjectile();
 }
 
-void projectile::InitializeProjectile()
+void projectileclass::InitializeProjectile()
 {
 	bool result;
 	result = m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
 }
 
-bool projectile::checkDistance()
+bool projectileclass::checkDistance()
 {
 	if (distance-- < 0)
 		return true;
 	return false;
 }
 
-void projectile::SetDirVector(D3DXVECTOR3 dir)
+void projectileclass::SetDirVector(D3DXVECTOR3 dir)
 {
 	dirVector = dir * speed;
 }
 
-D3DXVECTOR3 projectile::GetDirVector()
+D3DXVECTOR3 projectileclass::GetDirVector()
 {
 	return dirVector;
 }
 
-void projectile::Move()
+void projectileclass::Move()
 {
 	AdjustPosition(dirVector);
 }
 
-bool projectile::CheckDestroy()
+bool projectileclass::CheckDestroy()
 {
 	return checkDistance();
 }

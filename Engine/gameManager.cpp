@@ -19,12 +19,9 @@ void gameManager::RegisterObject(gameObject *item)
 void gameManager::UnregisterObject(gameObject *item)
 {
 	int index = FindObjectIndex(item);
-	cout << "index: " << to_string(index) << endl;
 	gameObject* temp =  gameobjects[index];
 	gameobjects.erase(gameobjects.begin() + index);
-	//delete temp;
-
-	cout << "manager size: " << gameobjects.size() << endl;
+	delete temp;
 	return;
 }
 
@@ -52,6 +49,9 @@ bool gameManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 	if (obj2->channel == gameObject::NO_COLLISION)
 		return false;
 	
+	if (obj1->GetName() == "bullet" && obj2->GetName() == "bullet")
+		return true;
+
 	if (obj2->channel != obj1->channel)
 		return false;
 	
@@ -62,11 +62,20 @@ int gameManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 {
 	if (obj1->GetName() == "bullet" || obj2->GetName() == "bullet")
 	{
+		if (obj1->GetName() == obj2->GetName())
+		{
+			cout << "Deleting i and j" << endl;
+			UnregisterObject(obj1);
+			UnregisterObject(obj2);
+			return 1;
+		}
+
 		if (obj1->GetName() == "boss")
 		{
 			bossclass *boss = (bossclass*)obj1;
-			projectile* bullet = (projectile*)obj2;
+			projectileclass* bullet = (projectileclass*)obj2;
 
+			cout << "Deleting j" << endl;
 			boss->Hit(bullet->damage);
 			UnregisterObject(obj2);
 			return 2;
@@ -74,9 +83,31 @@ int gameManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 		else if (obj2->GetName() == "boss")
 		{
 			bossclass* boss = (bossclass*)obj2;
-			projectile* bullet = (projectile*)obj1;
+			projectileclass* bullet = (projectileclass*)obj1;
 
+			cout << "Deleting i" << endl;
 			boss->Hit(bullet->damage);
+			UnregisterObject(obj1);
+			return 1;
+		}
+
+		if (obj1->GetName() == "player")
+		{
+			playerclass* player = (playerclass*)obj1;
+			projectileclass* bullet = (projectileclass*)obj2;
+
+			cout << "Deleting j" << endl;
+			player->Hit(bullet->damage);
+			UnregisterObject(obj2);
+			return 2;
+		}
+		else if (obj2->GetName() == "player")
+		{
+			playerclass* player = (playerclass*)obj2;
+			projectileclass* bullet = (projectileclass*)obj1;
+
+			cout << "Deleting i" << endl;
+			player->Hit(bullet->damage);
 			UnregisterObject(obj1);
 			return 1;
 		}
@@ -91,6 +122,9 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 	int size = GetObjectCount();
 	int flag;
 	for (int i = size-1; i > 0; i--) {
+		while (i >= gameobjects.size())
+			i--;
+
 		gameObject::ColliderType srcType = gameobjects[i]->GetColliderType();
 		for (int j = i-1; j >= 0; j--) {
 			gameObject::ColliderType destType = gameobjects[j]->GetColliderType();
@@ -118,13 +152,11 @@ bool gameManager::CollisionManager(vector<gameObject*> &item1, vector<gameObject
 				item1.push_back(gameobjects[i]);
 				item2.push_back(gameobjects[j]);
 			}
-			//i가 pop됐으므로 다음 i로
+			//i가 pop되었을 경우
 			else if (flag == 1)
 				break;
-			//j가 pop됐으므로 다음 j로
 			else if (flag == 2)
-				continue;
-			
+				continue;	
 		}
 		
 	}

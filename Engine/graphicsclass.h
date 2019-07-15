@@ -21,7 +21,7 @@
 #include "gameObject.h"
 #include "staticobjclass.h"
 #include "playerclass.h"
-#include "projectile.h"
+#include "projectileclass.h"
 #include "bossclass.h"
 
 #include "gameManager.h"

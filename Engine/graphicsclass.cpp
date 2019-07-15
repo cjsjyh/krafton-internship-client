@@ -241,11 +241,14 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 	
 	gradient = abs((float)mouseY) / abs(mouseX);
 	gradient = abs(gradient - 1);
-	amount *= clamp(1-gradient, 0.7, 1);
+
+	if (abs(1 - gradient) > 0.2)
+		amount *= clamp(abs(1 - gradient), 0.6, 1);
+	else
+		amount *= (1 - gradient);
 	
 	if (mouseY < 0)
 		amount *= -1;
-
 	adjustedY += amount;
 
 	square = adjustedX * adjustedX + adjustedY * adjustedY;
@@ -279,7 +282,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 		gameObject* temp = m_GM->GetGameObject(i);
 		if (temp->objType == gameObject::AUTOMOVE)
 		{
-			projectile* bullet = (projectile*)temp;
+			projectileclass* bullet = (projectileclass*)temp;
 			bullet->Move();
 			if (temp->CheckDestroy())
 				m_GM->UnregisterObject(temp);

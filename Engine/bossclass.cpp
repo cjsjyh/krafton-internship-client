@@ -13,9 +13,9 @@ bossclass::~bossclass()
 
 }
 
-projectile* bossclass::Fire()
+projectileclass* bossclass::Fire()
 {
-	projectile* temp = new projectile("bullet", GetPosition(), 1, 100, 3, device,gameObject::HIT_PLAYER);
+	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 100, 3, device,gameObject::HIT_PLAYER);
 	temp->SetDirVector(normalizeVec3(player->GetPosition() - GetPosition()));
 	return temp;
 }
