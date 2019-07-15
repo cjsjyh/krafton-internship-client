@@ -13,10 +13,37 @@ bossclass::~bossclass()
 
 }
 
+vector<projectileclass*> bossclass::Frame(int frame)
+{
+	vector<projectileclass*> bossBullets;
+
+	if (frame % 30 == 0)
+	{
+		bossBullets.push_back(Fire());
+	}
+
+	return bossBullets;
+}
+
 projectileclass* bossclass::Fire()
 {
 	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 100, 3, device,gameObject::HIT_PLAYER);
 	temp->SetDirVector(normalizeVec3(player->GetPosition() - GetPosition()));
+
 	return temp;
 }
 
+void bossclass::PushQueue()
+{
+
+}
+
+void bossclass::CheckQueue()
+{
+
+}
+
+void bossclass::PopQueue()
+{
+
+}

@@ -6,13 +6,15 @@
 #include "projectileclass.h"
 #include "playerclass.h"
 
+#include <vector>
+
 class bossclass : public hpobjects
 {
 public:
 	bossclass(int _hp, int _damage, D3DClass*, playerclass*,  ColliderType col = COLLIDER_BOX);
 	~bossclass();
 
-	projectileclass* Fire();
+	vector<projectileclass*> Frame(int);
 	
 
 private:
@@ -21,6 +23,11 @@ private:
 
 	playerclass* player;
 	ModelClass* bullet_model;
+
+	projectileclass* Fire();
+	void PushQueue();
+	void CheckQueue();
+	void PopQueue();
 };
 
 #endif

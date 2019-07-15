@@ -259,7 +259,10 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key, int fps, int cpu)
 {
 	vector<gameObject*> coll1, coll2;
+	vector<projectileclass*> bossBullet;
+
 	bool result;
+
 	mouseX = _mouseX - screenW/2;
 	mouseY = -(_mouseY - screenH/2);
 	
@@ -267,6 +270,12 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	//   Frame Action
 	//-------------------
 	frame++;
+
+	bossBullet = boss->Frame(frame);
+	for (int i = 0; i < bossBullet.size(); i++)
+		m_GM->RegisterObject(bossBullet[i]);
+
+
 	if (frame % COLL_CHECK_RATE)
 		m_GM->CollisionManager(coll1, coll2);
 	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
@@ -288,7 +297,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 				m_GM->UnregisterObject(temp);
 		}
 	}
-
 	//-------------------
 	//  Input Handler
 	//-------------------
@@ -321,8 +329,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 		if (!lastLeftClick)
 		{
 			m_GM->RegisterObject(player->Fire( GetDirectionMouse() ));
-			m_GM->RegisterObject(boss->Fire());
-
 			lastLeftClick = frame;
 		}
 
