@@ -270,7 +270,10 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	//   Frame Action
 	//-------------------
 	frame++;
+	if (frame > 10000)
+		frame = lastLeftClick = 0;
 
+	//ADD BULLETS
 	bossBullet = boss->Frame(frame);
 	for (int i = 0; i < bossBullet.size(); i++)
 		m_GM->RegisterObject(bossBullet[i]);
@@ -278,46 +281,20 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 
 	if (frame % COLL_CHECK_RATE)
 		m_GM->CollisionManager(coll1, coll2);
+
+	//CAN CLICK AGAIN!
 	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
 		lastLeftClick = 0;
 
-	if (frame > 10000)
-		frame = lastLeftClick = 0;
 	
-	//Move AUTOMOVE objects
-	int size = m_GM->GetObjectCount();
-	for (int i = size-1; i >= 0 ; i--)
-	{
-		gameObject* temp = m_GM->GetGameObject(i);
-		if (temp->objType == gameObject::AUTOMOVE)
-		{
-			projectileclass* bullet = (projectileclass*)temp;
-			bullet->Move();
-			if (temp->CheckDestroy())
-				m_GM->UnregisterObject(temp);
-		}
-	}
+	
+	//UI
+	if (!SetUI(mouseX, mouseY, fps, cpu, key))
+		return false;
+
 	//-------------------
 	//  Input Handler
 	//-------------------
-	// Set the location of the mouse.
-	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the Keyboard Input as UI.
-	if (IsKeyPressed(key))
-		result = m_Text->SetKeyInput("P", m_D3D->GetDeviceContext());
-	else
-		result = m_Text->SetKeyInput("", m_D3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
-
-	//rightclick
 	if (RightMouseClicked(mousePress))
 	{
 
@@ -337,25 +314,12 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	//-------------
 	//  player
 	//-------------
+	AutoMove();
 	player->Move(key);
 	m_Camera->Move(key);
 	
 
-	//----------------
-	//   CPU / FPS
-	//----------------
-	result = m_Text->SetFps(fps, m_D3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the cpu usage.
-	result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
+	
 
 	//-------------
 	//  object
@@ -472,4 +436,58 @@ float GraphicsClass::clamp(float value, float min, float max)
 		return max;
 	else
 		return value;
+}
+
+void GraphicsClass::AutoMove()
+{
+	//Move AUTOMOVE objects
+	int size = m_GM->GetObjectCount();
+	for (int i = size - 1; i >= 0; i--)
+	{
+		gameObject* temp = m_GM->GetGameObject(i);
+		if (temp->objType == gameObject::AUTOMOVE)
+		{
+			projectileclass* bullet = (projectileclass*)temp;
+			bullet->Move();
+			if (temp->CheckDestroy())
+				m_GM->UnregisterObject(temp);
+		}
+	}
+}
+
+bool GraphicsClass::SetUI(int mouseX, int mouseY, int fps, int cpu, char* key)
+{
+	bool result;
+	// Set the location of the mouse.
+	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Set the Keyboard Input as UI.
+	if (IsKeyPressed(key))
+		result = m_Text->SetKeyInput("P", m_D3D->GetDeviceContext());
+	else
+		result = m_Text->SetKeyInput("", m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	//----------------
+	//   CPU / FPS
+	//----------------
+	result = m_Text->SetFps(fps, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Set the cpu usage.
+	result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
 }

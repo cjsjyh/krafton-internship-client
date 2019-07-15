@@ -67,21 +67,19 @@ public:
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
 	void PrintVector3(D3DXVECTOR3 vec);
 	float clamp(float, float, float);
+
 private:
 	bool MouseNotClicked(bool*);
 	bool RightMouseClicked(bool*);
 	bool LeftMouseClicked(bool*);
 	bool IsKeyPressed(char*);
 
-	//int GetDirectionKey(char*);
 	D3DXVECTOR3 GetDirectionMouse();
-
-	//void ChangePlayerModel();
-
 	void InitializeMap();
-	
-	textfilereader* m_filereader;
+	void AutoMove();
+	bool SetUI(int, int, int, int, char*);
 
+	textfilereader* m_filereader;
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	TextClass* m_Text;
