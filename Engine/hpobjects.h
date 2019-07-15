@@ -2,8 +2,9 @@
 #ifndef _HPOBJECTS_H_
 #define _HPOBJECTS_H_
 
-#include "gameObject.h"
-#include <vector>
+class gameObject;
+class D3DClass;
+class ModelClass;
 
 class hpobjects : public gameObject
 {

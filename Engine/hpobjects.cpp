@@ -1,3 +1,9 @@
+#include "stdafx.h"
+
+#include "gameObject.h"
+#include "d3dclass.h"
+#include "modelclass.h"
+
 #include "hpobjects.h"
 
 hpobjects::hpobjects(string name, int _hp, D3DClass* _device, CollisionChannel coll, ColliderType type)

@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="bossclass.cpp" />
     <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="collisionManager.cpp" />
     <ClCompile Include="cpuclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="fontclass.cpp" />
@@ -97,6 +98,7 @@
     <ClCompile Include="playerclass.cpp" />
     <ClCompile Include="projectileclass.cpp" />
     <ClCompile Include="staticobjclass.cpp" />
+    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textclass.cpp" />
     <ClCompile Include="textfilereader.cpp" />
@@ -106,6 +108,7 @@
   <ItemGroup>
     <ClInclude Include="bossclass.h" />
     <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="collisionManager.h" />
     <ClInclude Include="cpuclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="fontclass.h" />
@@ -122,6 +125,7 @@
     <ClInclude Include="playerclass.h" />
     <ClInclude Include="projectileclass.h" />
     <ClInclude Include="staticobjclass.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textclass.h" />
     <ClInclude Include="textfilereader.h" />

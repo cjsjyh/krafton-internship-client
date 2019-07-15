@@ -5,18 +5,12 @@
 #define _MODELCLASS_H_
 
 
-//////////////
-// INCLUDES //
-//////////////
-#include <d3d11.h>
-#include <d3dx10math.h>
-#include <fstream>
-#include "iostream"
-using namespace std;
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
-#include "textureclass.h"
+
+class TextureClass;
+
 
 
 ////////////////////////////////////////////////////////////////////////////////

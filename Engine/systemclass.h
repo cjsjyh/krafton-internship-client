@@ -14,19 +14,16 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <windows.h>
 
-#include "iostream"
-using namespace std;
 
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
-#include "inputclass.h"
-#include "graphicsclass.h"
-#include "fpsclass.h"
-#include "cpuclass.h"
 
+class FpsClass;
+class CpuClass;
+class InputClass;
+class GraphicsClass;
 
 #define ARR_SIZE 4
 

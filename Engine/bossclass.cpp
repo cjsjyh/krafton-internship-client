@@ -1,4 +1,12 @@
+#include "stdafx.h"
+
+#include "projectileclass.h"
+#include "playerclass.h"
+#include "d3dclass.h"
+#include "gameObject.h"
+
 #include "bossclass.h"
+
 bossclass::bossclass(int _hp, int _damage, D3DClass* _device, playerclass* _player, ColliderType col)
 	:hpobjects("boss", _hp, _device, HIT_BOSS, col)
 {

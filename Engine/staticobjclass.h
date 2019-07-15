@@ -2,7 +2,9 @@
 #ifndef _STATICOBJECTCLASS_H_
 #define _STATICOBJECTCLASS_H_
 
-#include "gameObject.h"
+class gameObject;
+class D3DClass;
+class ModelClass;
 
 class staticobjclass : public gameObject
 {

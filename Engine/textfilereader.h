@@ -2,12 +2,6 @@
 #ifndef _TEXTFILEREADER_H_
 #define _TEXTFILEREADER_H_
 
-#include "iostream"
-#include <fstream>
-#include <string>
-#include <map>
-using namespace std;
-
 class textfilereader
 {
 public:

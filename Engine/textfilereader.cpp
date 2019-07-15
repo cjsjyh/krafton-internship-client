@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "textfilereader.h"
 
 textfilereader::textfilereader()

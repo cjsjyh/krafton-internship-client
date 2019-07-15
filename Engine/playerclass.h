@@ -3,7 +3,11 @@
 #define _PLYAERCLASS_H_
 
 #include "hpobjects.h"
-#include "projectileclass.h"
+
+class projectileclass;
+class D3DClass;
+class ModelClass;
+class gameObject;
 
 #define PLAYER_IMAGE_NUM 8
 

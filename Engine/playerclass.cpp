@@ -1,3 +1,10 @@
+#include "stdafx.h"
+
+#include "projectileclass.h"
+#include "d3dclass.h"
+#include "modelclass.h"
+#include "gameObject.h"
+
 #include "playerclass.h"
 
 playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)

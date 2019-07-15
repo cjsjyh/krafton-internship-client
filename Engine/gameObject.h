@@ -2,16 +2,8 @@
 #ifndef _GAMEOBJECT_H_
 #define _GAMEOBJECT_H_
 
-#include "d3dclass.h"
-#include "iostream"
-#include "modelclass.h"
-
-#include <d3dx10math.h>
-#include <string>
-#include <math.h>
-#include <vector>
-#include <atlconv.h>
-using namespace std;
+class ModelClass;
+class D3DClass;
 
 class gameObject
 {

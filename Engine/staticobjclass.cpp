@@ -1,4 +1,11 @@
+#include "stdafx.h"
+
+#include "gameObject.h"
+#include "d3dclass.h"
+#include "modelclass.h"
+
 #include "staticobjclass.h"
+
 staticobjclass::staticobjclass(string objname, D3DClass* _device, ColliderType _col, CollisionChannel _channel)
 	:gameObject(objname, _channel, _col)
 {

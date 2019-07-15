@@ -1,4 +1,11 @@
+#include "stdafx.h"
+
+#include <atlconv.h>
+#include "modelclass.h"
+#include "d3dclass.h"
+
 #include "gameObject.h"
+
 
 
 gameObject::gameObject(string objname, CollisionChannel _channel, ColliderType col)

@@ -1,8 +1,28 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: graphicsclass.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "graphicsclass.h"
+#include "stdafx.h"
 
+#include "d3dclass.h"
+#include "inputclass.h"
+#include "modelclass.h"
+
+#include "cameraclass.h"
+#include "textureshaderclass.h"
+#include "textclass.h"
+#include "lightshaderclass.h"
+#include "lightclass.h"
+
+#include "gameObject.h"
+#include "staticobjclass.h"
+#include "playerclass.h"
+#include "projectileclass.h"
+#include "bossclass.h"
+
+#include "gameManager.h"
+#include "textfilereader.h"
+
+#include "graphicsclass.h"
 
 GraphicsClass::GraphicsClass()
 {
@@ -258,9 +278,6 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key, int fps, int cpu)
 {
-	vector<gameObject*> coll1, coll2;
-	vector<projectileclass*> bossBullet;
-
 	bool result;
 
 	mouseX = _mouseX - screenW/2;
@@ -274,13 +291,13 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 		frame = lastLeftClick = 0;
 
 	//ADD BULLETS
-	bossBullet = boss->Frame(frame);
-	for (int i = 0; i < bossBullet.size(); i++)
+	vector<projectileclass*> bossBullet = boss->Frame(frame);
+	for (unsigned int i = 0; i < bossBullet.size(); i++)
 		m_GM->RegisterObject(bossBullet[i]);
 
 
 	if (frame % COLL_CHECK_RATE)
-		m_GM->CollisionManager(coll1, coll2);
+		m_GM->CheckCollision();
 
 	//CAN CLICK AGAIN!
 	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
@@ -343,9 +360,6 @@ bool GraphicsClass::Render()
 	D3DXMATRIX temp, MatrixToFaceCamera;
 
 	bool result;
-	float rotx, roty, rotz;
-	float x,y,z;
-
 
 	D3DXMatrixRotationX(&MatrixToFaceCamera,45);
 

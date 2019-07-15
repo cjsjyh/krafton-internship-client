@@ -15,17 +15,14 @@
 /////////////
 // LINKING //
 /////////////
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
+
 
 
 //////////////
 // INCLUDES //
 //////////////
-#include <dinput.h>
-#include <iostream>
-#include <string>
-using namespace std;
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: InputClass

@@ -4,11 +4,8 @@
 #ifndef _TEXTCLASS_H_
 #define _TEXTCLASS_H_
 
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
-#include "fontclass.h"
-#include "fontshaderclass.h"
+class FontClass;
+class FontShaderClass;
 
 #define NUM_LINES 5
 ////////////////////////////////////////////////////////////////////////////////

@@ -3,10 +3,11 @@
 #define _BOSSCLASS_H_
 
 #include "hpobjects.h"
-#include "projectileclass.h"
-#include "playerclass.h"
 
-#include <vector>
+class projectileclass;
+class playerclass;
+class D3DClass;
+class gameObject;
 
 class bossclass : public hpobjects
 {

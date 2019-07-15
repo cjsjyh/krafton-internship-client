@@ -1,3 +1,8 @@
+#include "stdafx.h"
+
+#include "modelclass.h"
+#include "d3dclass.h"
+
 #include "projectileclass.h"
 
 projectileclass::projectileclass(string name, D3DXVECTOR3 pos, float _speed, int _distance, int _damage, D3DClass* _device, CollisionChannel _channel, ColliderType coll)

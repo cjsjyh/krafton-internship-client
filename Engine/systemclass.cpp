@@ -1,8 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: systemclass.cpp
 ////////////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
+
+
+#include "fpsclass.h"
+#include "cpuclass.h"
+#include "inputclass.h"
+#include "graphicsclass.h"
+
+
 #include "systemclass.h"
 
+#include <windows.h>
 
 SystemClass::SystemClass()
 {

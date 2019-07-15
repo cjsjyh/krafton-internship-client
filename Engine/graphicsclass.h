@@ -8,31 +8,24 @@
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
-#include "d3dclass.h"
-#include "inputclass.h"
-#include "modelclass.h"
+class D3DClass;
+class inputclass;
+class ModelClass;
 
-#include "cameraclass.h"
-#include "textureshaderclass.h"
-#include "textclass.h"
-#include "lightshaderclass.h"
-#include "lightclass.h"
+class CameraClass;
+class TextureShaderClass;
+class TextClass;
+class LightShaderClass;
+class LightClass;
 
-#include "gameObject.h"
-#include "staticobjclass.h"
-#include "playerclass.h"
-#include "projectileclass.h"
-#include "bossclass.h"
+class gameObject;
+class staticobjclass;
+class playerclass;
+class projectileclass;
+class bossclass;
 
-#include "gameManager.h"
-#include "textfilereader.h"
-
-#include "iostream"
-#include <string>
-#include <vector>
-#include <map>
-#include <math.h>
-using namespace std;
+class gameManager;
+class textfilereader;
 
 /////////////
 // GLOBALS //

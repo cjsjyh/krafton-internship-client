@@ -3,19 +3,13 @@
 #define _PROJECTILE_H_
 
 #include "gameObject.h"
-#include "modelclass.h"
-
-#include <d3dx10math.h>
-
-#include <string>
-#include "iostream"
-
-using namespace std;
+class ModelClass;
+class D3DClass;
 
 class projectileclass : public gameObject
 {
 public:
-	projectileclass(string, D3DXVECTOR3, float _speed, int _distance, int _damage, D3DClass*, CollisionChannel = HIT_PLAYER, ColliderType = COLLIDER_BOX);
+	projectileclass(string, D3DXVECTOR3, float _speed, int _distance, int _damage, D3DClass*, gameObject::CollisionChannel = HIT_PLAYER, gameObject::ColliderType = COLLIDER_BOX);
 	~projectileclass();
 
 	void SetDirVector(D3DXVECTOR3);
