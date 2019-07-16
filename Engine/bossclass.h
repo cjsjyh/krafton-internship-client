@@ -31,7 +31,7 @@ private:
 	ModelClass* bullet_model;
 
 	projectileclass* Fire();
-	void Fire8Direction(int);
+	void FireDirections(int,int);
 
 	void PushQueue(projectileclass*, int);
 	void CheckQueue();

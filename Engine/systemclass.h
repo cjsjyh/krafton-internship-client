@@ -25,7 +25,7 @@ class CpuClass;
 class InputClass;
 class GraphicsClass;
 
-#define ARR_SIZE 4
+#define ARR_SIZE 5
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass
@@ -58,8 +58,8 @@ private:
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
 
-	const int keyCode[ARR_SIZE] = { DIK_W, DIK_A,DIK_S,DIK_D };
-	const char keyChar[ARR_SIZE] = { 'W','A','S','D' };
+	const int keyCode[ARR_SIZE] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE};
+	const char keyChar[ARR_SIZE] = { 'W','A','S','D', 'S' };
 	
 	int mouseX, mouseY;
 	int offsetX, offsetY;

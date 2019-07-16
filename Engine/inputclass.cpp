@@ -247,7 +247,12 @@ bool InputClass::IsMMouseDown()
 		return true;
 	return false;
 }
-
+/*
+void InputClass::GetMouseState(bool& mouseState)
+{
+	
+}
+*/
 
 bool InputClass::IsEscapePressed()
 {

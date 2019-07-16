@@ -40,7 +40,7 @@ bool hpobjects::CheckDestroy()
 D3DXVECTOR3 hpobjects::normalizeVec3(D3DXVECTOR3 vec)
 {
 	float square;
-	square = vec.x * vec.x + vec.z * vec.z;
+	square = vec.x * vec.x + vec.y*vec.y + vec.z * vec.z;
 	square = sqrt(square);
-	return D3DXVECTOR3(vec.x / square, 0, vec.z / square);
+	return D3DXVECTOR3(vec.x / square, vec.y / square, vec.z / square);
 }
