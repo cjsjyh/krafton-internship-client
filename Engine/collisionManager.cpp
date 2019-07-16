@@ -22,7 +22,11 @@ bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 		return false;
 
 	if (obj1->GetName() == "bullet" && obj2->GetName() == "bullet")
-		return true;
+	{
+		if (obj2->channel != obj1->channel)
+			return true;
+		return false;
+	}
 
 	if (obj2->channel != obj1->channel)
 		return false;

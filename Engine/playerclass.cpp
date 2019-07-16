@@ -39,7 +39,7 @@ void playerclass::InitializeModels()
 
 projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
 {
-	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 100, 3, device, gameObject::HIT_BOSS);
+	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 3, device, 0, 100 ,gameObject::HIT_BOSS);
 	temp->SetDirVector(dirVec);
 	return temp;
 }

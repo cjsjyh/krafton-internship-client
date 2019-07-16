@@ -178,6 +178,7 @@ void GraphicsClass::InitializeMap()
 	
 
 }
+
 void GraphicsClass::PrintVector3(D3DXVECTOR3 vec)
 {
 	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
@@ -281,9 +282,9 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 {
 	bool result;
 
-	mouseX = _mouseX - screenW/2;
-	mouseY = -(_mouseY - screenH/2);
-	
+	mouseX = _mouseX - screenW / 2;
+	mouseY = -(_mouseY - screenH / 2);
+
 	//-------------------
 	//   Frame Action
 	//-------------------
@@ -296,15 +297,12 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	for (unsigned int i = 0; i < bossBullet.size(); i++)
 		m_GM->RegisterObject(bossBullet[i]);
 
-
 	if (frame % COLL_CHECK_RATE)
 		m_GM->CheckCollision();
 
 	//CAN CLICK AGAIN!
 	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
 		lastLeftClick = 0;
-
-	
 	
 	//UI
 	if (!SetUI(mouseX, mouseY, fps, cpu, key))
@@ -386,7 +384,6 @@ bool GraphicsClass::Render()
 		//¹Ù²Þ
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 
-
 		temp->GetWorldMatrix(worldMatrix);
 		if (temp->GetName() == "player" || temp->GetName() == "boss")
 			worldMatrix = MatrixToFaceCamera *  worldMatrix;
@@ -459,9 +456,19 @@ void GraphicsClass::AutoMove()
 		if (temp->objType == gameObject::AUTOMOVE)
 		{
 			projectileclass* bullet = (projectileclass*)temp;
-			bullet->Move();
-			if (temp->CheckDestroy())
-				m_GM->UnregisterObject(temp);
+
+			if (bullet->delay > 0)
+			{
+				bullet->delay--;
+				bullet->Move(0.1);
+
+			}
+			else
+			{
+				bullet->Move(1);
+				if (temp->CheckDestroy())
+					m_GM->UnregisterObject(temp);
+			}
 		}
 	}
 }

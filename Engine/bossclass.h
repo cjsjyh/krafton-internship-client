@@ -12,6 +12,11 @@ class gameObject;
 class bossclass : public hpobjects
 {
 public:
+	typedef struct BulletQueue{
+		projectileclass* bullet;
+		int frame;
+	}BulletQueue;
+
 	bossclass(int _hp, int _damage, D3DClass*, playerclass*,  ColliderType col = COLLIDER_BOX);
 	~bossclass();
 
@@ -26,13 +31,13 @@ private:
 	ModelClass* bullet_model;
 
 	projectileclass* Fire();
-	void Fire8Direction();
+	void Fire8Direction(int);
 
-	void PushQueue(projectileclass*);
+	void PushQueue(projectileclass*, int);
 	void CheckQueue();
-	void PopQueue();
+	void PopQueue(vector<projectileclass*>&);
 
-	vector<projectileclass*> bossBullets;
+	vector<BulletQueue> bossBullets;
 };
 
 #endif
