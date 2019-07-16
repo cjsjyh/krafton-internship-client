@@ -96,7 +96,7 @@ D3DXVECTOR3 CameraClass::GetRotation()
 }
 
 
-void CameraClass::Render(D3DXVECTOR3 model)
+void CameraClass::Render()
 {
 	D3DXVECTOR3 up, position, lookAt;
 	float yaw, pitch, roll;
@@ -114,9 +114,12 @@ void CameraClass::Render(D3DXVECTOR3 model)
 	position.z = m_positionZ;
 
 	// Setup where the camera is looking by default.
-	lookAt.x = model.x - m_positionX;
-	lookAt.y = model.y - m_positionY;
-	lookAt.z = model.z - m_positionZ;
+	//lookAt.x = model.x - m_positionX;
+	//lookAt.y = model.y - m_positionY;
+	//lookAt.z = model.z - m_positionZ;
+	lookAt.x = 0.0f;
+	lookAt.y = 0.0f;
+	lookAt.z = 1.0f;
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 	pitch = m_rotationX * 0.0174532925f;
@@ -144,4 +147,36 @@ void CameraClass::GetViewMatrix(D3DXMATRIX& viewMatrix)
 {
 	viewMatrix = m_viewMatrix;
 	return;
+}
+
+void CameraClass::GetBillBoardMatrix(D3DXMATRIX& billBoardMatrix, D3DXVECTOR3 player_pos)
+{
+	float yaw, pitch, rad_yaw, rad_pitch;
+	D3DXMATRIX rot_yaw, rot_pitch;
+	D3DXVECTOR3 tempvec = normalizeVec3(player_pos - GetPosition());
+
+	yaw = atan2(tempvec.x, tempvec.z) * (180.0 / D3DX_PI);
+	rad_yaw = yaw * 0.0174532925f;
+	pitch = asin(-1 * tempvec.y) * (180.0 / D3DX_PI);
+	rad_pitch = pitch * 0.0174532925f;
+
+	D3DXMatrixIdentity(&rot_yaw);
+	D3DXMatrixIdentity(&rot_pitch);
+	D3DXMatrixRotationY(&rot_yaw, rad_yaw);
+	D3DXMatrixRotationX(&rot_pitch, rad_pitch);
+
+	billBoardMatrix = rot_yaw * rot_pitch;
+}
+
+D3DXVECTOR3 CameraClass::normalizeVec3(D3DXVECTOR3 vec)
+{
+	float square;
+	square = vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+	square = sqrt(square);
+	return D3DXVECTOR3(vec.x / square, vec.y / square, vec.z / square);
+}
+
+void CameraClass::PrintVector3(D3DXVECTOR3 vec)
+{
+	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
 }

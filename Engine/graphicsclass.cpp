@@ -84,11 +84,12 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	
 	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
-	m_Camera->Render(D3DXVECTOR3(0,0,0));
+	m_Camera->Render();
 	m_Camera->GetViewMatrix(baseViewMatrix);
 
 	//initial camera setup
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+	m_Camera->SetRotation(D3DXVECTOR3(45, 0, 0));
 
 	//------------
 	//   text
@@ -358,25 +359,20 @@ bool GraphicsClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX temp, MatrixToFaceCamera;
-
 	bool result;
 
-	D3DXMatrixRotationX(&MatrixToFaceCamera,45);
+	//-----------------------
 
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	D3DXVECTOR3 player_pos = player->GetPosition();
-	m_Camera->Render(player_pos);
-	
+	m_Camera->Render();
+	m_Camera->GetBillBoardMatrix(MatrixToFaceCamera, player->GetPosition());
 
-	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	m_D3D->GetOrthoMatrix(orthoMatrix);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	
 	//-----------------
 	// Transformation
@@ -390,9 +386,10 @@ bool GraphicsClass::Render()
 		//¹Ù²Þ
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 
+
 		temp->GetWorldMatrix(worldMatrix);
 		if (temp->GetName() == "player" || temp->GetName() == "boss")
-			worldMatrix = MatrixToFaceCamera* worldMatrix;
+			worldMatrix = MatrixToFaceCamera *  worldMatrix;
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(),worldMatrix,
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
 									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
@@ -437,9 +434,9 @@ bool GraphicsClass::Render()
 D3DXVECTOR3 GraphicsClass::normalizeVec3(D3DXVECTOR3 vec)
 {
 	float square;
-	square = vec.x * vec.x + vec.z * vec.z;
+	square = vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 	square = sqrt(square);
-	return D3DXVECTOR3(vec.x / square, 0, vec.z / square);
+	return D3DXVECTOR3(vec.x / square, vec.y/square, vec.z / square);
 }
 
 float GraphicsClass::clamp(float value, float min, float max)

@@ -26,9 +26,13 @@ private:
 	ModelClass* bullet_model;
 
 	projectileclass* Fire();
-	void PushQueue();
+	void Fire8Direction();
+
+	void PushQueue(projectileclass*);
 	void CheckQueue();
 	void PopQueue();
+
+	vector<projectileclass*> bossBullets;
 };
 
 #endif
