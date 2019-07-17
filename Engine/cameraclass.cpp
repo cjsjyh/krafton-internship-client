@@ -12,9 +12,6 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
-
-	lastDistance = 0;
-	ratioY = 1;
 }
 
 
@@ -27,12 +24,6 @@ void CameraClass::Move(D3DXVECTOR3 midpoint, float distance)
 		cout << "over!" << endl;
 		SetPosition(D3DXVECTOR3(midpoint.x, (midpoint.y + 30) * (distance / 40), (midpoint.z - 30) * (distance / 40)));
 	}
-}
-
-void CameraClass::SetSpeed(float _speed)
-{
-	PLAYER_SPEED = _speed;
-	return;
 }
 
 CameraClass::CameraClass(const CameraClass& other)

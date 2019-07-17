@@ -4,28 +4,13 @@
 #ifndef _SYSTEMCLASS_H_
 #define _SYSTEMCLASS_H_
 
-
-///////////////////////////////
-// PRE-PROCESSING DIRECTIVES //
-///////////////////////////////
 #define WIN32_LEAN_AND_MEAN
 
-
-//////////////
-// INCLUDES //
-//////////////
-
-
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
 
 class FpsClass;
 class CpuClass;
 class InputClass;
 class GraphicsClass;
-
-#define ARR_SIZE 5
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass
@@ -58,8 +43,7 @@ private:
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
 
-	const int keyCode[ARR_SIZE] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE};
-	const char keyChar[ARR_SIZE] = { 'W','A','S','D', 'S' };
+	const int keyCode[KEY_NUM] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE};
 	
 	int mouseX, mouseY;
 	int offsetX, offsetY;

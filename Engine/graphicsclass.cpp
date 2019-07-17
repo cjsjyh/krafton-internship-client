@@ -158,9 +158,11 @@ void GraphicsClass::InitializeParameters()
 	if (!result)
 		return;
 
+	player->PLAYER_SPEED = m_filereader->paramFloat.find("PLAYER_SPEED")->second;
+	player->PLAYER_DASH_SPEED = m_filereader->paramFloat.find("PLAYER_DASH_SPEED")->second;
+	player->PLAYER_DASH_FRAME = m_filereader->paramInt.find("PLAYER_DASH_FRAME")->second;
+	player->PLAYER_DASH_PAUSE_FRAME = m_filereader->paramInt.find("PLAYER_DASH_PAUSE_FRAME")->second;
 
-	player->SetSpeed(m_filereader->paramFloat.find("player_speed")->second);
-	m_Camera->SetSpeed(m_filereader->paramFloat.find("player_speed")->second);
 }
 
 void GraphicsClass::InitializeMap() 
@@ -224,36 +226,6 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-bool GraphicsClass::MouseNotClicked(bool* mousePress)
-{
-	if (!mousePress[0] && !mousePress[1] && !mousePress[2])
-		return true;
-	return false;
-}
-
-bool GraphicsClass::RightMouseClicked(bool* mousePress)
-{
-	if (mousePress[1])
-		return true;
-	return false;
-}
-
-bool GraphicsClass::LeftMouseClicked(bool* mousePress)
-{
-	if (mousePress[0])
-		return true;
-	return false;
-}
-
-bool GraphicsClass::IsKeyPressed(char* arr)
-{
-	for (int i = 0; i < sizeof(arr); i++)
-		if (arr[i] != 0)
-			return true;
-	return false;
-}
-
-
 D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 {
 	float square, gradient;
@@ -312,13 +284,13 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//-------------------
 	//  Input Handler
 	//-------------------
-	if (RightMouseClicked(mousePress))
+	if (stdafx::RightMouseClicked(mousePress))
 	{
 
 
 	}
 
-	if (LeftMouseClicked(mousePress))
+	if (stdafx::LeftMouseClicked(mousePress))
 	{
 		if (!lastLeftClick)
 		{
@@ -332,7 +304,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//  player
 	//-------------
 	AutoMove();
-	player->Move(key);
+	player->Move(key, frame);
 
 	D3DXVECTOR3 camPos = m_Camera->GetPosition();
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
@@ -382,8 +354,6 @@ bool GraphicsClass::Render()
 	for (int i = 0; i < size; i++)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
-		cout << temp->GetName() << endl;;
-		//¹Ù²Þ
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 
 		temp->GetWorldMatrix(worldMatrix);

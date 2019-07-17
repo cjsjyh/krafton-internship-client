@@ -94,6 +94,5 @@ void bossclass::PopQueue(vector<projectileclass*>& shootBullet)
 			shootBullet.push_back(bossBullets[i].bullet);
 			bossBullets.erase(bossBullets.begin() + i);
 		}
-		cout << to_string(i) << endl;
 	}
 }

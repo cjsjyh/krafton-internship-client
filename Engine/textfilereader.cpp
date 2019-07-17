@@ -53,6 +53,7 @@ bool textfilereader::ReadFile(string fname)
 		}
 		else
 			return false;
+		cout << fields[0] << endl;
 	}
 	return true;
 }

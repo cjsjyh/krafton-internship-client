@@ -13,6 +13,13 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	objType = MOVEABLE;
 	direction = 1;
 
+	PLAYER_DASH_SPEED = 2;
+	PLAYER_DASH_FRAME = 20;
+	PLAYER_DASH_PAUSE_FRAME = 5;
+
+	dashFrame = dashPauseFrame = -1;
+	dashDir = -1;
+
 	InitializeModels();
 }
 
@@ -114,27 +121,78 @@ void playerclass::SetDirection(int* keys)
 	return;
 }
 
-void playerclass::Move(int* keys)
+D3DXVECTOR3 playerclass::GetDirectionVector(int dir)
+{
+	// 0 1 2
+	// 7   3
+	// 6 5 4
+	switch (dir)
+	{
+	case 0:
+		return normalizeVec3(D3DXVECTOR3(-1, 0, 1));
+	case 1:
+		return normalizeVec3(D3DXVECTOR3(0, 0, 1));
+	case 2:
+		return normalizeVec3(D3DXVECTOR3(1, 0, 1));
+	case 3:
+		return normalizeVec3(D3DXVECTOR3(1, 0, 0));
+	case 4:
+		return normalizeVec3(D3DXVECTOR3(1, 0, -1));
+	case 5:
+		return normalizeVec3(D3DXVECTOR3(0, 0, -1));
+	case 6:
+		return normalizeVec3(D3DXVECTOR3(-1, 0, -1));
+	case 7:
+		return normalizeVec3(D3DXVECTOR3(-1, 0, 0));
+	}
+}
+
+void playerclass::Move(int* keys, int frame)
 {
 	SetDirection(keys);
-
-	for (int i = 0; i < sizeof(keys); i++)
+	
+	//Dashing
+	if (keys[4] == DIK_SPACE || dashFrame != -1)
 	{
-		switch (keys[i]) {
-		case DIK_A:
-			AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
-			break;
-		case DIK_S:
-			AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
-			break;
-		case DIK_D:
-			AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
-			break;
-		case DIK_W:
-			AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
-			break;
+		if (dashFrame == -1)
+		{
+			dashFrame = frame;
+			dashDir = direction;
+		}
+		else
+		{
+			//DASH FINISH
+			if (frame - dashFrame >= PLAYER_DASH_FRAME)
+			{
+				//DASH PAUSE START
+				if (dashPauseFrame == -1)
+				{
+					dashPauseFrame = frame;
+				}
+				else
+				{
+					//DASH CYCLE DONE
+					if (frame - dashPauseFrame >= PLAYER_DASH_PAUSE_FRAME)
+					{
+
+						dashFrame = -1;
+						dashPauseFrame = -1;
+					}
+				}
+			}
+			//KEEP ON DASHING
+			else
+			{	
+				AdjustPosition(GetDirectionVector(dashDir) * PLAYER_DASH_SPEED);
+			}
 		}
 	}
+	
+	else if(stdafx::IsKeyPressed(keys))
+	{
+		AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
+	}
+
 }
 
 void playerclass::SetImage()

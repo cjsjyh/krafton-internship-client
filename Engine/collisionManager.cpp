@@ -146,7 +146,6 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 		return true;
 }
 
-
 bool collisionManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 {
 	D3DXVECTOR3 pos, len;

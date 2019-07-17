@@ -1,2 +1,5 @@
-bullet_speed,1.1,float,This is bullet speed
-player_speed,0.5,float,This is player speed
+BULLET_SPEED,1.1,float,This is bullet speed
+PLAYER_SPEED,0.5,float,This is player speed
+PLAYER_DASH_SPEED,1,float,how much to move every frame
+PLAYER_DASH_FRAME,10,int,how many frames will player dash
+PLAYER_DASH_PAUSE_FRAME,40,int,how many frames will player pause after dash

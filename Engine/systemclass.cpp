@@ -210,7 +210,7 @@ bool SystemClass::Frame()
 
 
 	memset(keyInput, 0, sizeof(keyInput));
-	for (int i = 0; i < ARR_SIZE; i++) {
+	for (int i = 0; i < KEY_NUM; i++) {
 		if (m_Input->IsKeyPressed(keyCode[i])) {
 			keyInput[i] = keyCode[i];
 		}

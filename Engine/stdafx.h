@@ -25,12 +25,20 @@
 #include "iostream"
 using namespace std;
 
+#define KEY_NUM 5
+
 class stdafx
 {
 public :
 	static float GetDistance(D3DXVECTOR3, D3DXVECTOR3);
 	static D3DXVECTOR3 normalizeVec3(D3DXVECTOR3 vec);
 	static void PrintVector3(D3DXVECTOR3 vec);
+
+	static bool stdafx::LeftMouseClicked(bool* mousePress);
+	static bool stdafx::IsKeyPressed(int* arr);
+	static bool stdafx::MouseNotClicked(bool* mousePress);
+	static bool stdafx::RightMouseClicked(bool* mousePress);
+
 };
 
 #endif

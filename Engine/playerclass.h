@@ -22,15 +22,22 @@ public:
 	
 	void SetDirection(int*);
 	int GetDirection();
+	D3DXVECTOR3 GetDirectionVector(int);
 
 	void SetSpeed(float);
 
 	void SetImage();
-	void Move(int*);
+	void Move(int*, int);
+
+	int PLAYER_DASH_SPEED;
+	int PLAYER_DASH_FRAME;
+	int PLAYER_DASH_PAUSE_FRAME;
+	float PLAYER_SPEED;
 
 private:
 	int direction;
-	float PLAYER_SPEED;
+	int dashFrame, dashPauseFrame;
+	int dashDir;
 };
 
 #endif

@@ -21,3 +21,32 @@ void stdafx::PrintVector3(D3DXVECTOR3 vec)
 {
 	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
 }
+
+bool stdafx::IsKeyPressed(int* arr)
+{
+	for (int i = 0; i < KEY_NUM; i++)
+		if (arr[i] != 0)
+			return true;
+	return false;
+}
+
+bool stdafx::MouseNotClicked(bool* mousePress)
+{
+	if (!mousePress[0] && !mousePress[1] && !mousePress[2])
+		return true;
+	return false;
+}
+
+bool stdafx::RightMouseClicked(bool* mousePress)
+{
+	if (mousePress[1])
+		return true;
+	return false;
+}
+
+bool stdafx::LeftMouseClicked(bool* mousePress)
+{
+	if (mousePress[0])
+		return true;
+	return false;
+}
