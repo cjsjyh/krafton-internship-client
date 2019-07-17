@@ -172,12 +172,11 @@ void GraphicsClass::InitializeParameters()
 
 void GraphicsClass::InitializeMap() 
 {
-	gameObject* temp;
-	temp = new staticobjclass("floor",m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
-	temp->SetScale(D3DXVECTOR3(20, 0.1, 20));
-	temp->SetPosition(D3DXVECTOR3(0, -5, 0));
-	temp->SetRotation(D3DXVECTOR3(0, 45, 0));
-	m_GM->RegisterObject(temp);
+	floor = new staticobjclass("floor",m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
+	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
+	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
+	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
+	//m_GM->RegisterObject(temp);
 	
 	
 	player = new playerclass(100, m_D3D);
@@ -355,6 +354,14 @@ bool GraphicsClass::Render()
 	// Transformation
 	//-----------------
 	m_D3D->TurnOnAlphaBlending();
+
+	//render floor first
+	floor->GetModel()->Render(m_D3D->GetDeviceContext());
+	floor->GetWorldMatrix(worldMatrix);
+	m_LightShader->Render(m_D3D->GetDeviceContext(), floor->GetModel()->GetIndexCount(), worldMatrix,
+		viewMatrix, projectionMatrix, floor->GetModel()->GetTexture(), m_Light->GetDirection(),
+		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)
 	{

@@ -4,6 +4,8 @@
 
 #include "hpobjects.h"
 
+#define BOSS_IMAGE_NUM 3
+
 class projectileclass;
 class playerclass;
 class D3DClass;
@@ -29,6 +31,8 @@ private:
 
 	playerclass* player;
 	ModelClass* bullet_model;
+
+	void InitializeModels();
 
 	projectileclass* Fire();
 	void FireDirections(int,int);

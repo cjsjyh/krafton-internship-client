@@ -16,6 +16,9 @@
 #include <d3dx11async.h>
 #include <d3dx10math.h>
 
+#include "DDSTextureLoader.h"
+#include "WICTextureLoader.h"
+
 #include <vector>
 #include <map>
 #include <algorithm>

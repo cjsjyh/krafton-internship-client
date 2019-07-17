@@ -4,6 +4,7 @@
 #include "playerclass.h"
 #include "d3dclass.h"
 #include "gameObject.h"
+#include "modelclass.h"
 
 #include "bossclass.h"
 
@@ -14,10 +15,31 @@ bossclass::bossclass(int _hp, int _damage, D3DClass* _device, playerclass* _play
 	damage = _hp;
 	phase = 1;
 	player = _player;
+
+	InitializeModels();
 }
 bossclass::~bossclass()
 {
 
+}
+
+void bossclass::InitializeModels()
+{
+	for (int i = 0; i < BOSS_IMAGE_NUM; i++)
+	{
+		string tName = "../Engine/data/boss/boss" + to_string(i) + ".dds";
+		cout << tName << endl;
+		ModelClass* temp = new ModelClass();
+		temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", StringToWchar(tName));
+
+		model_list.push_back(temp);
+	}
+	m_model = model_list[0];
+	/*
+	ModelClass* temp = new ModelClass();
+	temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/krafton.dds");
+	m_model = temp;
+	*/
 }
 
 vector<projectileclass*> bossclass::Frame(int frame)

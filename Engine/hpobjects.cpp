@@ -11,7 +11,7 @@ hpobjects::hpobjects(string name, int _hp, D3DClass* _device, CollisionChannel c
 {
 	hp = _hp;
 	device = _device;
-	HpObjectInitialize();
+	//HpObjectInitialize();
 }
 
 void hpobjects::HpObjectInitialize()

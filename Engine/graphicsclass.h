@@ -78,13 +78,16 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 
+	
 	playerclass* player;
 	bossclass* boss;
-	vector<ModelClass*> m_Model;
 	gameManager* m_GM;
+	gameObject* floor;
+
+	vector<ModelClass*> m_Model;
+	
 
 	D3DXVECTOR3 midPoint;
-
 	int mouseX, mouseY;
 	int frame;
 	int screenW, screenH;
