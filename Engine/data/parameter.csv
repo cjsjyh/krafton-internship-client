@@ -3,3 +3,7 @@ PLAYER_SPEED,0.5,float,This is player speed
 PLAYER_DASH_SPEED,1,float,how much to move every frame
 PLAYER_DASH_FRAME,10,int,how many frames will player dash
 PLAYER_DASH_PAUSE_FRAME,40,int,how many frames will player pause after dash
+PLAYER_BULLET_DAMAGE,3,int,
+PLAYER_BULLET_SPEED,1,float,
+PLAYER_BULLET_DISTANCE,50,int,
+PLAYER_BULLET_DELAY,0,int,how many frames to wait before moving at max speed

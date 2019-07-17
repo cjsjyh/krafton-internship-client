@@ -29,10 +29,18 @@ public:
 	void SetImage();
 	void Move(int*, int);
 
+	//player movement parameters
+	float PLAYER_SPEED;
 	int PLAYER_DASH_SPEED;
 	int PLAYER_DASH_FRAME;
 	int PLAYER_DASH_PAUSE_FRAME;
-	float PLAYER_SPEED;
+
+	//player bullet parameters
+	int PLAYER_BULLET_DAMAGE;
+	float PLAYER_BULLET_SPEED;
+	int PLAYER_BULLET_DISTANCE;
+	int PLAYER_BULLET_DELAY;
+	
 
 private:
 	int direction;
