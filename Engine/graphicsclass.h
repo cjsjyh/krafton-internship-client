@@ -54,7 +54,7 @@ public:
 	bool Initialize(int, int, HWND);
 	void InitializeParameters();
 	void Shutdown();
-	bool Frame(int, int, bool*, char*, int, int);
+	bool Frame(int, int, bool*, int*, int, int);
 	bool Render();
 
 	float clamp(float, float, float);
@@ -68,7 +68,7 @@ private:
 	D3DXVECTOR3 GetDirectionMouse();
 	void InitializeMap();
 	void AutoMove();
-	bool SetUI(int, int, int, int, char*);
+	bool SetUI(int, int, int, int);
 
 	textfilereader* m_filereader;
 	D3DClass* m_D3D;

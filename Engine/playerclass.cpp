@@ -55,7 +55,7 @@ int playerclass::GetDirection()
 	return direction;
 }
 
-void playerclass::SetDirection(char* keys)
+void playerclass::SetDirection(int* keys)
 {
 	// 0 1 2
 	// 7   3
@@ -114,23 +114,23 @@ void playerclass::SetDirection(char* keys)
 	return;
 }
 
-void playerclass::Move(char* keys)
+void playerclass::Move(int* keys)
 {
 	SetDirection(keys);
 
 	for (int i = 0; i < sizeof(keys); i++)
 	{
 		switch (keys[i]) {
-		case 'A':
+		case DIK_A:
 			AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
 			break;
-		case 'S':
+		case DIK_S:
 			AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
 			break;
-		case 'D':
+		case DIK_D:
 			AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
 			break;
-		case 'W':
+		case DIK_W:
 			AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
 			break;
 		}

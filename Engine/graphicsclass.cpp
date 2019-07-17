@@ -277,7 +277,7 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
 	return D3DXVECTOR3(adjustedX / square, 0, adjustedY / square);
 }
 
-bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key, int fps, int cpu)
+bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, int fps, int cpu)
 {
 	bool result;
 
@@ -291,11 +291,13 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	if (frame > 10000)
 		frame = lastLeftClick = 0;
 
+	
 	//ADD BULLETS
 	vector<projectileclass*> bossBullet = boss->Frame(frame);
 	for (unsigned int i = 0; i < bossBullet.size(); i++)
 		m_GM->RegisterObject(bossBullet[i]);
 
+	m_GM->AlphaSort(m_Camera->GetPosition());
 	if (frame % COLL_CHECK_RATE)
 		m_GM->CheckCollision();
 
@@ -304,7 +306,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 		lastLeftClick = 0;
 	
 	//UI
-	if (!SetUI(mouseX, mouseY, fps, cpu, key))
+	if (!SetUI(mouseX, mouseY, fps, cpu))
 		return false;
 
 	//-------------------
@@ -335,7 +337,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	D3DXVECTOR3 camPos = m_Camera->GetPosition();
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
 	float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
-	m_Camera->Move(key,midPoint, distance);
+	m_Camera->Move(midPoint, distance);
 
 	//-------------
 	//  object
@@ -376,8 +378,6 @@ bool GraphicsClass::Render()
 	// Transformation
 	//-----------------
 	m_D3D->TurnOnAlphaBlending();
-
-	m_GM->AlphaSort(m_Camera->GetPosition());
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)
 	{
@@ -470,21 +470,11 @@ void GraphicsClass::AutoMove()
 	}
 }
 
-bool GraphicsClass::SetUI(int mouseX, int mouseY, int fps, int cpu, char* key)
+bool GraphicsClass::SetUI(int mouseX, int mouseY, int fps, int cpu)
 {
 	bool result;
 	// Set the location of the mouse.
 	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the Keyboard Input as UI.
-	if (IsKeyPressed(key))
-		result = m_Text->SetKeyInput("P", m_D3D->GetDeviceContext());
-	else
-		result = m_Text->SetKeyInput("", m_D3D->GetDeviceContext());
 	if (!result)
 	{
 		return false;

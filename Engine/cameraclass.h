@@ -20,7 +20,7 @@ public:
 	CameraClass(const CameraClass&);
 	~CameraClass();
 
-	void Move(char*, D3DXVECTOR3, float);
+	void Move(D3DXVECTOR3, float);
 	void SetSpeed(float);
 
 	void SetPosition(D3DXVECTOR3);

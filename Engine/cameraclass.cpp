@@ -18,7 +18,7 @@ CameraClass::CameraClass()
 }
 
 
-void CameraClass::Move(char* keys, D3DXVECTOR3 midpoint, float distance)
+void CameraClass::Move(D3DXVECTOR3 midpoint, float distance)
 {
 	if (distance < 40)
 		SetPosition(D3DXVECTOR3(midpoint.x, midpoint.y + 30, midpoint.z - 30));

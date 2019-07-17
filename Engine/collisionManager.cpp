@@ -98,13 +98,11 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 	int size = GM->GetObjectCount();
 	int flag;
 	for (int i = size - 1; i > 0; i--) {
-		while (i >= GM->GetObjectCount())
-			i--;
-
 		gameObject::ColliderType srcType = GM->GetGameObject(i)->GetColliderType();
+		
 		for (int j = i - 1; j >= 0; j--) {
 			gameObject::ColliderType destType = GM->GetGameObject(j)->GetColliderType();
-
+			
 			//collision을 체크할 필요가 없는 경우
 			if (!CheckCollisionChannel(GM->GetGameObject(i), GM->GetGameObject(j)))
 				continue;
@@ -116,11 +114,10 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 				if (srcType == gameObject::COLLIDER_BOX)
 				{
 					if (SimpleBoxCollision(GM->GetGameObject(i), GM->GetGameObject(j)))
-					{
 						flag = CollisionHandler(GM->GetGameObject(i), GM->GetGameObject(j));
-					}
 				}
 			}
+
 
 			//pop된게 없으므로 서로 충돌된 물체를 등록
 			if (flag == 0)
@@ -130,9 +127,15 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 			}
 			//i가 pop되었을 경우
 			else if (flag == 1)
+			{
 				break;
+			}
 			else if (flag == 2)
+			{
+				i--;
 				continue;
+			}
+			
 		}
 
 	}
@@ -142,6 +145,7 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 	else
 		return true;
 }
+
 
 bool collisionManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 {

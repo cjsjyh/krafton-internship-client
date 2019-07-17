@@ -20,13 +20,13 @@ public:
 	void InitializeModels();
 	projectileclass* Fire(D3DXVECTOR3);
 	
-	void SetDirection(char*);
+	void SetDirection(int*);
 	int GetDirection();
 
 	void SetSpeed(float);
 
 	void SetImage();
-	void Move(char*);
+	void Move(int*);
 
 private:
 	int direction;

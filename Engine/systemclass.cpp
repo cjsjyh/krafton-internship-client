@@ -190,7 +190,7 @@ bool SystemClass::Frame()
 {
 	bool result;
 	bool mousePress[3];
-	char keyInput[10];
+	int keyInput[10];
 
 	m_Fps->Frame();
 	m_Cpu->Frame();
@@ -212,7 +212,7 @@ bool SystemClass::Frame()
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < ARR_SIZE; i++) {
 		if (m_Input->IsKeyPressed(keyCode[i])) {
-			keyInput[i] = keyChar[i];
+			keyInput[i] = keyCode[i];
 		}
 	}
 	

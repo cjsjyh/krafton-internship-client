@@ -42,6 +42,9 @@ void gameManager::AlphaSort(D3DXVECTOR3 _camPos)
 		(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), _camPos);
 	std::sort(gameobjects.begin(), gameobjects.end(), CompareDist());
 
+	cout << "after alpha sort" << endl;
+	for (auto iter = gameobjects.begin(); iter != gameobjects.end(); iter++)
+		cout << (*iter)->GetName() << " w: " << to_string((*iter)->w) << endl;
 }
 
 int gameManager::FindObjectIndex(gameObject *item)
@@ -62,6 +65,9 @@ gameObject* gameManager::GetGameObject(int index)
 
 void gameManager::CheckCollision()
 {
+	cout << "before collisoin" << endl;
+	for (auto iter = gameobjects.begin(); iter != gameobjects.end(); iter++)
+		cout << (*iter)->GetName() << " w: " << to_string((*iter)->w) << endl;
 	vector<gameObject*> coll1, coll2;
 	m_CM->CollisionManager(coll1, coll2);
 }
