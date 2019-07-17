@@ -59,6 +59,7 @@ public:
 
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
 	void PrintVector3(D3DXVECTOR3 vec);
+	float GetDistance(D3DXVECTOR3, D3DXVECTOR3);
 	float clamp(float, float, float);
 
 private:
@@ -84,6 +85,8 @@ private:
 	bossclass* boss;
 	vector<ModelClass*> m_Model;
 	gameManager* m_GM;
+
+	D3DXVECTOR3 midPoint;
 
 	int mouseX, mouseY;
 	int frame;

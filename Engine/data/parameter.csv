@@ -1,2 +1,2 @@
-bullet_speed 1.0
-player_speed 0.5
+bullet_speed,1.1,float,This is bullet speed
+player_speed,0.5,float,This is player speed

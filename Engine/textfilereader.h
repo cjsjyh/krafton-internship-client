@@ -7,9 +7,12 @@ class textfilereader
 public:
 	textfilereader();
 	~textfilereader();
-	bool ReadFile(char*, int per_line = 2);
+	bool ReadFile(string);
 
-	map<string, float> params;
+	
+	map<string, int> paramInt;
+	map<string, float> paramFloat;
+	map<string, bool> paramBool;
 private:
 
 

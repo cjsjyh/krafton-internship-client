@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+
 #include "textfilereader.h"
 
 textfilereader::textfilereader()
@@ -12,35 +13,46 @@ textfilereader::~textfilereader()
 
 }
 
-bool textfilereader::ReadFile(char* fname, int per_line)
+bool textfilereader::ReadFile(string fname)
 {
-	FILE* fp;
-	char line[200];
-	char parameter_name[50];
-	float parameter_value;
-
-	cout << "In file reader" << endl;
-	fp = fopen(fname, "r");
-
-	if (fp == NULL)
-		return false;
-
-	while (fgets(line, sizeof(line), fp) != NULL)
+	fstream in(fname);
+	string line;
+	int pos;
+	if (!in.is_open())
 	{
-		int count = sscanf(line,"%s	%f", parameter_name, &parameter_value);
-		cout << line << to_string(count)<<endl;
-		cout << parameter_name << endl;
-		if (count != 2)
+		cout << "Failed to open file" << endl;
+		return false;
+	}
+
+	while (getline(in, line))
+	{
+		vector<string> fields;
+		if (line == "")
+			break;
+		
+		while ((pos = line.find(',')) >= 0)
 		{
-			cout << "Error! 2 params not inserted properly" << endl;
-			return false;
+			fields.push_back(line.substr(0, pos));
+			line = line.substr(pos + 1);
+			
 		}
-		params.insert(make_pair(string(parameter_name,strlen(parameter_name)), parameter_value));
-	}
 
-	for (auto it = params.begin(); it != params.end(); it++) {
-		cout << "key : " << it->first << " " << "value : " << it->second << '\n';
-	}
+		if (fields.size() < 3)
+			return false;
 
+		if (fields[2] == "int")
+			paramInt.insert(make_pair(fields[0], stoi(fields[1])));
+		else if (fields[2] == "float")
+			paramFloat.insert(make_pair(fields[0], stof(fields[1])));
+		else if (fields[2] == "bool")
+		{
+			if (fields[2] == "true")
+				paramBool.insert(make_pair(fields[0], true));
+			else
+				paramBool.insert(make_pair(fields[0], false));
+		}
+		else
+			return false;
+	}
 	return true;
 }

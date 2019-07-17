@@ -12,26 +12,38 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
+
+	lastDistance = 0;
+	ratioY = 1;
 }
 
-void CameraClass::Move(char* keys)
+void CameraClass::SetRatio(float _ratio)
 {
-	for (int i = 0; i < sizeof(keys); i++)
+	ratioY = _ratio;
+}
+
+float CameraClass::GetYCoord(D3DXVECTOR3 midPoint)
+{
+	float length = sqrt(pow(midPoint.x - m_positionX, 2) + pow(midPoint.z - m_positionZ, 2));
+	return length * ratioY;
+}
+
+float CameraClass::GetDistance(D3DXVECTOR3 vec1, D3DXVECTOR3 vec2)
+{
+	float length = pow(vec2.x - vec2.x, 2) + pow(vec2.z - vec2.z, 2);
+	float height = pow(vec2.y - vec2.y, 2);
+
+	return sqrt(length + height);
+}
+
+void CameraClass::Move(char* keys, D3DXVECTOR3 midpoint, float distance)
+{
+	if (distance < 40)
+		SetPosition(D3DXVECTOR3(midpoint.x, midpoint.y + 30, midpoint.z - 30));
+	else
 	{
-		switch (keys[i]) {
-		case 'A':
-			AdjustPosition(D3DXVECTOR3(-PLAYER_SPEED, 0, 0));
-			break;
-		case 'S':
-			AdjustPosition(D3DXVECTOR3(0, 0, -PLAYER_SPEED));
-			break;
-		case 'D':
-			AdjustPosition(D3DXVECTOR3(PLAYER_SPEED, 0, 0));
-			break;
-		case 'W':
-			AdjustPosition(D3DXVECTOR3(0, 0, PLAYER_SPEED));
-			break;
-		}
+		cout << "over!" << endl;
+		SetPosition(D3DXVECTOR3(midpoint.x, (midpoint.y + 30) * (distance / 40), (midpoint.z - 30) * (distance / 40)));
 	}
 }
 
@@ -96,7 +108,7 @@ D3DXVECTOR3 CameraClass::GetRotation()
 }
 
 
-void CameraClass::Render()
+void CameraClass::Render(D3DXVECTOR3 camViewPt)
 {
 	D3DXVECTOR3 up, position, lookAt;
 	float yaw, pitch, roll;
@@ -114,9 +126,9 @@ void CameraClass::Render()
 	position.z = m_positionZ;
 
 	// Setup where the camera is looking by default.
-	//lookAt.x = model.x - m_positionX;
-	//lookAt.y = model.y - m_positionY;
-	//lookAt.z = model.z - m_positionZ;
+	//lookAt.x = camViewPt.x - m_positionX;
+	//lookAt.y = camViewPt.y - m_positionY;
+	//lookAt.z = camViewPt.z - m_positionZ;
 	lookAt.x = 0.0f;
 	lookAt.y = 0.0f;
 	lookAt.z = 1.0f;

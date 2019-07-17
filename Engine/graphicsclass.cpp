@@ -84,7 +84,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	
 	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
-	m_Camera->Render();
+	m_Camera->Render(D3DXVECTOR3(0,0,0));
 	m_Camera->GetViewMatrix(baseViewMatrix);
 
 	//initial camera setup
@@ -153,10 +153,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void GraphicsClass::InitializeParameters()
 {
 	m_filereader = new textfilereader;
-	m_filereader->ReadFile("../Engine/data/parameter.csv");
+	bool result = m_filereader->ReadFile("../Engine/data/parameter.csv");
+	
+	if (!result)
+		return;
 
-	player->SetSpeed(m_filereader->params.find("player_speed")->second);
-	m_Camera->SetSpeed(m_filereader->params.find("player_speed")->second);
+
+	player->SetSpeed(m_filereader->paramFloat.find("player_speed")->second);
+	m_Camera->SetSpeed(m_filereader->paramFloat.find("player_speed")->second);
 }
 
 void GraphicsClass::InitializeMap() 
@@ -176,6 +180,16 @@ void GraphicsClass::InitializeMap()
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
 	m_GM->RegisterObject(boss);
 	
+	D3DXVECTOR3 camPos;
+	camPos = m_Camera->GetPosition();
+	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
+	
+	float length = pow(midPoint.x - camPos.x, 2) + pow(midPoint.z - camPos.z, 2);
+	float height = pow(midPoint.y - camPos.y, 2);
+	cout << to_string(height / length) << endl;
+
+	m_Camera->SetRatio(height / length);
+
 
 }
 
@@ -332,7 +346,11 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 	//-------------
 	AutoMove();
 	player->Move(key);
-	m_Camera->Move(key);
+
+	D3DXVECTOR3 camPos = m_Camera->GetPosition();
+	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
+	float distance = GetDistance(player->GetPosition(), boss->GetPosition());
+	m_Camera->Move(key,midPoint, distance);
 	
 
 	
@@ -365,10 +383,10 @@ bool GraphicsClass::Render()
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
-	m_Camera->GetBillBoardMatrix(MatrixToFaceCamera, player->GetPosition());
-
+	m_Camera->Render(player->GetPosition());
+	m_Camera->GetBillBoardMatrix(MatrixToFaceCamera, midPoint);
 	m_Camera->GetViewMatrix(viewMatrix);
+
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	m_D3D->GetOrthoMatrix(orthoMatrix);
 	
@@ -434,6 +452,19 @@ D3DXVECTOR3 GraphicsClass::normalizeVec3(D3DXVECTOR3 vec)
 	square = vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 	square = sqrt(square);
 	return D3DXVECTOR3(vec.x / square, vec.y/square, vec.z / square);
+}
+
+float GraphicsClass::GetDistance(D3DXVECTOR3 vec1, D3DXVECTOR3 vec2)
+{
+	float x, y, z;
+	x = vec1.x - vec2.x;
+	y = vec1.y - vec2.y;
+	z = vec1.z - vec2.z;
+
+	x *= x;
+	y *= y;
+	z *= z;
+	return sqrt(x + y + z);
 }
 
 float GraphicsClass::clamp(float value, float min, float max)
