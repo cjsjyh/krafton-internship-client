@@ -18,8 +18,8 @@ public:
 
 private:
 	bool IsBullet(gameObject*);
-	bool IsPlayerBullet(gameObject*);
-	bool IsBossBullet(gameObject*);
+	bool IsPlayer(gameObject*, gameObject*);
+	bool IsBoss(gameObject*, gameObject*);
 
 	int CollisionHandler(gameObject*, gameObject*);
 	bool CheckCollisionChannel(gameObject*, gameObject*);

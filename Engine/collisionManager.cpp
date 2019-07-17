@@ -41,16 +41,16 @@ bool collisionManager::IsBullet(gameObject* obj)
 	return false;
 }
 
-bool collisionManager::IsPlayerBullet(gameObject* obj)
+bool collisionManager::IsPlayer(gameObject* obj1, gameObject* obj2)
 {
-	if (obj->GetName() == "player")
+	if (obj1->GetName() == "player" || obj2->GetName() == "player")
 		return 1;
 	return 0;
 }
 
-bool collisionManager::IsBossBullet(gameObject* obj)
+bool collisionManager::IsBoss(gameObject* obj1, gameObject* obj2)
 {
-	if (obj->GetName() == "boss")
+	if (obj1->GetName() == "boss" || obj2->GetName() == "boss")
 		return 1;
 	return 0;
 }
@@ -67,66 +67,61 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 			return 1;
 		}
 
-		if (obj1->GetName() == "boss")
+		if (IsBoss(obj1,obj2))
 		{
-			bossclass* boss = (bossclass*)obj1;
-			projectileclass* bullet = (projectileclass*)obj2;
+			int flag;
+			bossclass* boss;
+			projectileclass* bullet;
+			if(obj1->GetName() == "boss")
+			{
+				boss = (bossclass*)obj1;
+				bullet = (projectileclass*)obj2;
+				flag = 2;
+			}
+			else
+			{
+				boss = (bossclass*)obj2;
+				bullet = (projectileclass*)obj1;
+				flag = 1;
+			}
 
 			boss->Hit(bullet->damage);
 
-			GM->UnregisterObjectToRender(obj2);
-			if (IsPlayerBullet(obj2))
-				GM->RegisterToPlayerPool((projectileclass*)obj2);
+			GM->UnregisterObjectToRender((gameObject*)bullet);
+			if (bullet->GetName() == "playerbullet")
+				GM->RegisterToPlayerPool((projectileclass*)bullet);
 			else
-				GM->RegisterToBossPool((projectileclass*)obj2);
-			return 2;
+				GM->RegisterToBossPool((projectileclass*)bullet);
+			return flag;
 		}
-		else if (obj2->GetName() == "boss")
+		if (IsPlayer(obj1,obj2))
 		{
-			bossclass* boss = (bossclass*)obj2;
-			projectileclass* bullet = (projectileclass*)obj1;
+			int flag;
+			playerclass* boss;
+			projectileclass* bullet;
+			if (obj1->GetName() == "player")
+			{
+				boss = (playerclass*)obj1;
+				bullet = (projectileclass*)obj2;
+				flag = 2;
+			}
+			else
+			{
+				boss = (playerclass*)obj2;
+				bullet = (projectileclass*)obj1;
+				flag = 1;
+			}
 
 			boss->Hit(bullet->damage);
 
-			GM->UnregisterObjectToRender(obj1);
-			GM->RegisterToPlayerPool((projectileclass*)obj1);
-			if (IsPlayerBullet(obj2))
-				GM->RegisterToPlayerPool((projectileclass*)obj1);
+			GM->UnregisterObjectToRender((gameObject*)bullet);
+			if (bullet->GetName() == "playerbullet")
+				GM->RegisterToPlayerPool((projectileclass*)bullet);
 			else
-				GM->RegisterToBossPool((projectileclass*)obj1);
-			return 1;
+				GM->RegisterToBossPool((projectileclass*)bullet);
+			return flag;
 		}
 
-		if (obj1->GetName() == "player")
-		{
-			playerclass* player = (playerclass*)obj1;
-			projectileclass* bullet = (projectileclass*)obj2;
-
-			player->Hit(bullet->damage);
-
-			GM->UnregisterObjectToRender(obj2);
-			GM->RegisterToBossPool((projectileclass*)obj2);
-			if (IsPlayerBullet(obj2))
-				GM->RegisterToPlayerPool((projectileclass*)obj2);
-			else
-				GM->RegisterToBossPool((projectileclass*)obj2);
-			return 2;
-		}
-		else if (obj2->GetName() == "player")
-		{
-			playerclass* player = (playerclass*)obj2;
-			projectileclass* bullet = (projectileclass*)obj1;
-
-			player->Hit(bullet->damage);
-
-			GM->UnregisterObjectToRender(obj1);
-			GM->RegisterToBossPool((projectileclass*)obj1);
-			if (IsPlayerBullet(obj2))
-				GM->RegisterToPlayerPool((projectileclass*)obj1);
-			else
-				GM->RegisterToBossPool((projectileclass*)obj1);
-			return 1;
-		}
 	}
 	return 0;
 }
