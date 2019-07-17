@@ -34,10 +34,6 @@ public:
 	void Render(D3DXVECTOR3);
 	void GetViewMatrix(D3DXMATRIX&);
 	void GetBillBoardMatrix(D3DXMATRIX&, D3DXVECTOR3);
-	
-	void SetRatio(float);
-	float GetYCoord(D3DXVECTOR3);
-	float GetDistance(D3DXVECTOR3, D3DXVECTOR3);
 private:
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
 	void PrintVector3(D3DXVECTOR3);

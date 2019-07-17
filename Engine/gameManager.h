@@ -10,6 +10,14 @@ class projectileclass;
 class gameManager
 {
 public:
+
+	struct CompareDist
+	{
+		bool operator()(gameObject* obj1, gameObject* obj2) {
+			return obj1->w > obj2->w;
+		}
+	};
+
 	gameManager();
 	~gameManager();
 
@@ -20,11 +28,15 @@ public:
 	int GetObjectCount();
 	gameObject* GetGameObject(int index);
 	void CheckCollision();
-	
+
+	void AlphaSort(D3DXVECTOR3);
 
 private:
 	vector <gameObject*> gameobjects;
 	collisionManager* m_CM;
+	D3DXVECTOR3 camPos;
+
+	
 };
 
 #endif

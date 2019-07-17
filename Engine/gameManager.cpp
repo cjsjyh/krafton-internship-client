@@ -33,6 +33,17 @@ void gameManager::UnregisterObject(gameObject *item)
 	return;
 }
 
+
+
+void gameManager::AlphaSort(D3DXVECTOR3 _camPos)
+{
+	camPos = _camPos;
+	for (auto iter = gameobjects.begin(); iter != gameobjects.end(); iter++)
+		(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), _camPos);
+	std::sort(gameobjects.begin(), gameobjects.end(), CompareDist());
+
+}
+
 int gameManager::FindObjectIndex(gameObject *item)
 {
 	vector<gameObject*>::iterator itr = find(gameobjects.begin(), gameobjects.end(), item);

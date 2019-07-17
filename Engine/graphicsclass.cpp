@@ -179,23 +179,8 @@ void GraphicsClass::InitializeMap()
 	boss = new bossclass(30, 1, m_D3D, player);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
 	m_GM->RegisterObject(boss);
-	
-	D3DXVECTOR3 camPos;
-	camPos = m_Camera->GetPosition();
+
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
-	
-	float length = pow(midPoint.x - camPos.x, 2) + pow(midPoint.z - camPos.z, 2);
-	float height = pow(midPoint.y - camPos.y, 2);
-	cout << to_string(height / length) << endl;
-
-	m_Camera->SetRatio(height / length);
-
-
-}
-
-void GraphicsClass::PrintVector3(D3DXVECTOR3 vec)
-{
-	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
 }
 
 void GraphicsClass::Shutdown()
@@ -349,11 +334,8 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, char* key,
 
 	D3DXVECTOR3 camPos = m_Camera->GetPosition();
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
-	float distance = GetDistance(player->GetPosition(), boss->GetPosition());
+	float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
 	m_Camera->Move(key,midPoint, distance);
-	
-
-	
 
 	//-------------
 	//  object
@@ -395,10 +377,12 @@ bool GraphicsClass::Render()
 	//-----------------
 	m_D3D->TurnOnAlphaBlending();
 
+	m_GM->AlphaSort(m_Camera->GetPosition());
 	int size = m_GM->GetObjectCount();
 	for (int i = 0; i < size; i++)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
+		cout << temp->GetName() << endl;;
 		//¹Ù²Þ
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 
@@ -446,26 +430,8 @@ bool GraphicsClass::Render()
 	return true;
 }
 
-D3DXVECTOR3 GraphicsClass::normalizeVec3(D3DXVECTOR3 vec)
-{
-	float square;
-	square = vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
-	square = sqrt(square);
-	return D3DXVECTOR3(vec.x / square, vec.y/square, vec.z / square);
-}
 
-float GraphicsClass::GetDistance(D3DXVECTOR3 vec1, D3DXVECTOR3 vec2)
-{
-	float x, y, z;
-	x = vec1.x - vec2.x;
-	y = vec1.y - vec2.y;
-	z = vec1.z - vec2.z;
 
-	x *= x;
-	y *= y;
-	z *= z;
-	return sqrt(x + y + z);
-}
 
 float GraphicsClass::clamp(float value, float min, float max)
 {

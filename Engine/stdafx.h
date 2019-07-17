@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <map>
+#include <algorithm>
 #include <math.h>
 #include <string>
 #include <fstream>
@@ -26,6 +27,10 @@ using namespace std;
 
 class stdafx
 {
+public :
+	static float GetDistance(D3DXVECTOR3, D3DXVECTOR3);
+	static D3DXVECTOR3 normalizeVec3(D3DXVECTOR3 vec);
+	static void PrintVector3(D3DXVECTOR3 vec);
 };
 
 #endif

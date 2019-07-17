@@ -57,9 +57,6 @@ public:
 	bool Frame(int, int, bool*, char*, int, int);
 	bool Render();
 
-	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
-	void PrintVector3(D3DXVECTOR3 vec);
-	float GetDistance(D3DXVECTOR3, D3DXVECTOR3);
 	float clamp(float, float, float);
 
 private:

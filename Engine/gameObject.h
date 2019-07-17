@@ -58,6 +58,7 @@ public:
 	float sphere_collSize;
 	CollisionChannel channel;
 	ObjectType objType;
+	float w;
 
 protected:
 	string name;

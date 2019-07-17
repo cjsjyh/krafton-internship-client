@@ -17,24 +17,6 @@ CameraClass::CameraClass()
 	ratioY = 1;
 }
 
-void CameraClass::SetRatio(float _ratio)
-{
-	ratioY = _ratio;
-}
-
-float CameraClass::GetYCoord(D3DXVECTOR3 midPoint)
-{
-	float length = sqrt(pow(midPoint.x - m_positionX, 2) + pow(midPoint.z - m_positionZ, 2));
-	return length * ratioY;
-}
-
-float CameraClass::GetDistance(D3DXVECTOR3 vec1, D3DXVECTOR3 vec2)
-{
-	float length = pow(vec2.x - vec2.x, 2) + pow(vec2.z - vec2.z, 2);
-	float height = pow(vec2.y - vec2.y, 2);
-
-	return sqrt(length + height);
-}
 
 void CameraClass::Move(char* keys, D3DXVECTOR3 midpoint, float distance)
 {
