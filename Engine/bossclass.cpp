@@ -5,6 +5,7 @@
 #include "d3dclass.h"
 #include "gameObject.h"
 #include "modelclass.h"
+#include "gameManager.h"
 
 #include "bossclass.h"
 
@@ -35,12 +36,13 @@ void bossclass::InitializeModels()
 		model_list.push_back(temp);
 	}
 	m_model = model_list[0];
-	/*
-	ModelClass* temp = new ModelClass();
-	temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/krafton.dds");
-	m_model = temp;
-	*/
 }
+
+void bossclass::SetGameManager(gameManager* _GM)
+{
+	GM = _GM;
+}
+
 
 vector<projectileclass*> bossclass::Frame(int frame)
 {
@@ -84,12 +86,29 @@ void bossclass::FireDirections(int dir, int frame)
 
 		dirVec = normalizeVec3(D3DXVECTOR3(result.x, result.y, result.z));
 
-		projectileclass* temp = new projectileclass("bullet", GetPosition()+dirVec, 1, 3, device, 5, 100,gameObject::HIT_PLAYER);
-		temp->SetDirVector(dirVec);
+		projectileclass* temp = GM->GetFromBossPool();
+		if (!temp)
+		{
+			//cout << "temp NULL" << endl;
+			temp = new projectileclass("bossbullet", GetPosition() + dirVec, 1, 3, device, 5, 100, gameObject::HIT_PLAYER);
+			temp->SetDirVector(dirVec);
+		}
+		else
+		{
+			cout << "found" << endl;
+			SetBullet((projectileclass*)temp, dirVec);
+		}
 
 		PushQueue(temp, 0);
 	}
 	
+}
+
+void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec)
+{
+	bullet->SetPosition(GetPosition() + dirVec);
+	bullet->SetDirVector(dirVec);
+	bullet->SetDistance(100);
 }
 
 

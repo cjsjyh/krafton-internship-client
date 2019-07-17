@@ -4,6 +4,7 @@
 #include "d3dclass.h"
 #include "modelclass.h"
 #include "gameObject.h"
+#include "gameManager.h"
 
 #include "playerclass.h"
 
@@ -43,12 +44,34 @@ void playerclass::InitializeModels()
 	
 }
 
+void playerclass::SetGameManager(gameManager* _GM)
+{
+	GM = _GM;
+}
+
 projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
 {
-	projectileclass* temp = new projectileclass("bullet", GetPosition(), PLAYER_BULLET_SPEED, 
-		PLAYER_BULLET_DAMAGE, device, PLAYER_BULLET_DELAY, PLAYER_BULLET_DISTANCE, gameObject::HIT_BOSS);
-	temp->SetDirVector(dirVec);
+	projectileclass* temp = GM->GetFromPlayerPool();
+	if (!temp)
+	{
+		temp = new projectileclass("playerbullet", GetPosition(), PLAYER_BULLET_SPEED,
+									PLAYER_BULLET_DAMAGE, device, PLAYER_BULLET_DELAY, 
+									PLAYER_BULLET_DISTANCE, gameObject::HIT_BOSS);
+		temp->SetDirVector(dirVec);
+	}
+	else
+	{
+		SetBullet((projectileclass*)temp, dirVec);
+	}
+		
 	return temp;
+}
+
+void playerclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec)
+{
+	bullet->SetPosition(GetPosition() + dirVec);
+	bullet->SetDirVector(dirVec);
+	bullet->SetDistance(100);
 }
 
 void playerclass::SetSpeed(float _speed)

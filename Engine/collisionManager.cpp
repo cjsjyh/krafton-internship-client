@@ -21,7 +21,7 @@ bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 	if (obj2->channel == gameObject::NO_COLLISION)
 		return false;
 
-	if (obj1->GetName() == "bullet" && obj2->GetName() == "bullet")
+	if (IsBullet(obj1) && IsBullet(obj2))
 	{
 		if (obj2->channel != obj1->channel)
 			return true;
@@ -34,15 +34,36 @@ bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 	return true;
 }
 
+bool collisionManager::IsBullet(gameObject* obj)
+{
+	if (obj->GetName() == "playerbullet" || obj->GetName() == "bossbullet")
+		return true;
+	return false;
+}
+
+bool collisionManager::IsPlayerBullet(gameObject* obj)
+{
+	if (obj->GetName() == "player")
+		return 1;
+	return 0;
+}
+
+bool collisionManager::IsBossBullet(gameObject* obj)
+{
+	if (obj->GetName() == "boss")
+		return 1;
+	return 0;
+}
+
 int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 {
-	if (obj1->GetName() == "bullet" || obj2->GetName() == "bullet")
+	if (IsBullet(obj1) || IsBullet(obj2))
 	{
-		if (obj1->GetName() == obj2->GetName())
+		
+		if (IsBullet(obj1) && IsBullet(obj2))
 		{
-			cout << "Deleting i and j" << endl;
-			GM->UnregisterObject(obj1);
-			GM->UnregisterObject(obj2);
+			GM->UnregisterObjectToRender(obj1);
+			GM->UnregisterObjectToRender(obj2);
 			return 1;
 		}
 
@@ -51,9 +72,13 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 			bossclass* boss = (bossclass*)obj1;
 			projectileclass* bullet = (projectileclass*)obj2;
 
-			cout << "Deleting j" << endl;
 			boss->Hit(bullet->damage);
-			GM->UnregisterObject(obj2);
+
+			GM->UnregisterObjectToRender(obj2);
+			if (IsPlayerBullet(obj2))
+				GM->RegisterToPlayerPool((projectileclass*)obj2);
+			else
+				GM->RegisterToBossPool((projectileclass*)obj2);
 			return 2;
 		}
 		else if (obj2->GetName() == "boss")
@@ -61,9 +86,14 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 			bossclass* boss = (bossclass*)obj2;
 			projectileclass* bullet = (projectileclass*)obj1;
 
-			cout << "Deleting i" << endl;
 			boss->Hit(bullet->damage);
-			GM->UnregisterObject(obj1);
+
+			GM->UnregisterObjectToRender(obj1);
+			GM->RegisterToPlayerPool((projectileclass*)obj1);
+			if (IsPlayerBullet(obj2))
+				GM->RegisterToPlayerPool((projectileclass*)obj1);
+			else
+				GM->RegisterToBossPool((projectileclass*)obj1);
 			return 1;
 		}
 
@@ -72,9 +102,14 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 			playerclass* player = (playerclass*)obj1;
 			projectileclass* bullet = (projectileclass*)obj2;
 
-			cout << "Deleting j" << endl;
 			player->Hit(bullet->damage);
-			GM->UnregisterObject(obj2);
+
+			GM->UnregisterObjectToRender(obj2);
+			GM->RegisterToBossPool((projectileclass*)obj2);
+			if (IsPlayerBullet(obj2))
+				GM->RegisterToPlayerPool((projectileclass*)obj2);
+			else
+				GM->RegisterToBossPool((projectileclass*)obj2);
 			return 2;
 		}
 		else if (obj2->GetName() == "player")
@@ -82,9 +117,14 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 			playerclass* player = (playerclass*)obj2;
 			projectileclass* bullet = (projectileclass*)obj1;
 
-			cout << "Deleting i" << endl;
 			player->Hit(bullet->damage);
-			GM->UnregisterObject(obj1);
+
+			GM->UnregisterObjectToRender(obj1);
+			GM->RegisterToBossPool((projectileclass*)obj1);
+			if (IsPlayerBullet(obj2))
+				GM->RegisterToPlayerPool((projectileclass*)obj1);
+			else
+				GM->RegisterToBossPool((projectileclass*)obj1);
 			return 1;
 		}
 	}
@@ -95,7 +135,7 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 {
 	//check all objects if they collide and return true or false.
 	//if there are objects colliding, add them to the vector
-	int size = GM->GetObjectCount();
+	int size = GM->GetRenderObjectCount();
 	int flag;
 	for (int i = size - 1; i > 0; i--) {
 		gameObject::ColliderType srcType = GM->GetGameObject(i)->GetColliderType();

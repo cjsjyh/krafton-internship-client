@@ -176,15 +176,17 @@ void GraphicsClass::InitializeMap()
 	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
-	//m_GM->RegisterObject(temp);
+	//m_GM->RegisterObjectToRender(temp);
 	
 	
 	player = new playerclass(100, m_D3D);
-	m_GM->RegisterObject(player);
+	player->SetGameManager(m_GM);
+	m_GM->RegisterObjectToRender(player);
 
 	boss = new bossclass(30, 1, m_D3D, player);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
-	m_GM->RegisterObject(boss);
+	boss->SetGameManager(m_GM);
+	m_GM->RegisterObjectToRender(boss);
 
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
 }
@@ -271,7 +273,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//ADD BULLETS
 	vector<projectileclass*> bossBullet = boss->Frame(frame);
 	for (unsigned int i = 0; i < bossBullet.size(); i++)
-		m_GM->RegisterObject(bossBullet[i]);
+		m_GM->RegisterObjectToRender(bossBullet[i]);
 
 	m_GM->AlphaSort(m_Camera->GetPosition());
 	if (frame % COLL_CHECK_RATE)
@@ -298,7 +300,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	{
 		if (!lastLeftClick)
 		{
-			m_GM->RegisterObject(player->Fire( GetDirectionMouse() ));
+			m_GM->RegisterObjectToRender(player->Fire( GetDirectionMouse() ));
 			lastLeftClick = frame;
 		}
 
@@ -362,7 +364,7 @@ bool GraphicsClass::Render()
 		viewMatrix, projectionMatrix, floor->GetModel()->GetTexture(), m_Light->GetDirection(),
 		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 
-	int size = m_GM->GetObjectCount();
+	int size = m_GM->GetRenderObjectCount();
 	for (int i = 0; i < size; i++)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
@@ -430,7 +432,7 @@ float GraphicsClass::clamp(float value, float min, float max)
 void GraphicsClass::AutoMove()
 {
 	//Move AUTOMOVE objects
-	int size = m_GM->GetObjectCount();
+	int size = m_GM->GetRenderObjectCount();
 	for (int i = size - 1; i >= 0; i--)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
@@ -448,7 +450,20 @@ void GraphicsClass::AutoMove()
 			{
 				bullet->Move(1);
 				if (temp->CheckDestroy())
-					m_GM->UnregisterObject(temp);
+				{
+					if (temp->GetName() == "bossbullet")
+					{
+						m_GM->UnregisterObjectToRender(temp);
+						m_GM->RegisterToBossPool((projectileclass*)temp);
+					}
+					else if (temp->GetName() == "playerbullet")
+					{
+						m_GM->UnregisterObjectToRender(temp);
+						m_GM->RegisterToPlayerPool((projectileclass*)temp);
+					}
+					else
+						m_GM->RemoveObjectToRender(temp);
+				}
 			}
 		}
 	}

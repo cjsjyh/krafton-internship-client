@@ -10,6 +10,7 @@ class projectileclass;
 class playerclass;
 class D3DClass;
 class gameObject;
+class gameManager;
 
 class bossclass : public hpobjects
 {
@@ -23,7 +24,7 @@ public:
 	~bossclass();
 
 	vector<projectileclass*> Frame(int);
-	
+	void SetGameManager(gameManager*);
 
 private:
 	int phase;
@@ -36,12 +37,14 @@ private:
 
 	projectileclass* Fire();
 	void FireDirections(int,int);
+	void SetBullet(projectileclass*, D3DXVECTOR3);
 
 	void PushQueue(projectileclass*, int);
 	void CheckQueue();
 	void PopQueue(vector<projectileclass*>&);
 
 	vector<BulletQueue> bossBullets;
+	gameManager* GM;
 };
 
 #endif

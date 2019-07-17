@@ -17,6 +17,10 @@ public:
 	bool CollisionManager(vector<gameObject*>&, vector<gameObject*>&);
 
 private:
+	bool IsBullet(gameObject*);
+	bool IsPlayerBullet(gameObject*);
+	bool IsBossBullet(gameObject*);
+
 	int CollisionHandler(gameObject*, gameObject*);
 	bool CheckCollisionChannel(gameObject*, gameObject*);
 

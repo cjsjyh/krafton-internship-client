@@ -21,18 +21,28 @@ public:
 	gameManager();
 	~gameManager();
 
-	void RegisterObject(gameObject *item);
-	void UnregisterObject(gameObject *item);
+	void RegisterObjectToRender(gameObject *item);
+	void UnregisterObjectToRender(gameObject *item);
+	void RemoveObjectToRender(gameObject* item);
 	int FindObjectIndex(gameObject *item);
 	
-	int GetObjectCount();
+	void RegisterToBossPool(projectileclass* item);
+	projectileclass* GetFromBossPool();
+	void RegisterToPlayerPool(projectileclass* item);
+	projectileclass* GetFromPlayerPool();
+
+	int GetRenderObjectCount();
 	gameObject* GetGameObject(int index);
+	
 	void CheckCollision();
 
 	void AlphaSort(D3DXVECTOR3);
 
 private:
-	vector <gameObject*> gameobjects;
+	vector <gameObject*> renderObjects;
+	vector <projectileclass*> BossbulletPool;
+	vector <projectileclass*> PlayerbulletPool;
+
 	collisionManager* m_CM;
 	D3DXVECTOR3 camPos;
 

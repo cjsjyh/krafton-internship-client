@@ -33,6 +33,11 @@ bool projectileclass::checkDistance()
 	return false;
 }
 
+void projectileclass::SetDistance(int _dist)
+{
+	distance = _dist;
+}
+
 void projectileclass::SetDirVector(D3DXVECTOR3 dir)
 {
 	dirVector = dir * speed;

@@ -30,15 +30,15 @@ bool TextureClass::InitializeModel(ID3D11Device* device, WCHAR* filename)
 	HRESULT result;
 
 	// Load the texture in.
-	//result = CreateDDSTextureFromFile(device,filename,nullptr,&m_texture);
-	result = CreateWICTextureFromFile(device, filename, nullptr, &m_texture);
-	if(FAILED(result))
+	result = CreateDDSTextureFromFile(device,filename,nullptr,&m_texture);
+	if (FAILED(result))
 	{
-		cout << "failed" << endl;
-		return false;
+		result = CreateWICTextureFromFile(device, filename, nullptr, &m_texture);
+		if (FAILED(result))
+		{
+			return false;
+		}
 	}
-	
-	cout << "success" << endl;
 
 	return true;
 }

@@ -8,6 +8,7 @@ class projectileclass;
 class D3DClass;
 class ModelClass;
 class gameObject;
+class gameManager;
 
 #define PLAYER_IMAGE_NUM 8
 
@@ -20,12 +21,14 @@ public:
 	void InitializeModels();
 	projectileclass* Fire(D3DXVECTOR3);
 	
+	void SetGameManager(gameManager*);
 	void SetDirection(int*);
 	int GetDirection();
 	D3DXVECTOR3 GetDirectionVector(int);
 
+	void SetBullet(projectileclass*, D3DXVECTOR3);
 	void SetSpeed(float);
-
+	
 	void SetImage();
 	void Move(int*, int);
 
@@ -46,6 +49,7 @@ private:
 	int direction;
 	int dashFrame, dashPauseFrame;
 	int dashDir;
+	gameManager* GM;
 };
 
 #endif

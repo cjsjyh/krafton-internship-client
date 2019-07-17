@@ -18,6 +18,7 @@ public:
 	
 	void Move(float);
 	bool CheckDestroy();
+	void SetDistance(int);
 
 	int damage;
 	int delay;
