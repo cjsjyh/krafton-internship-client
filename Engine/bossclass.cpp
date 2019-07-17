@@ -27,7 +27,7 @@ void bossclass::InitializeModels()
 {
 	for (int i = 0; i < BOSS_IMAGE_NUM; i++)
 	{
-		string tName = "../Engine/data/boss/boss" + to_string(i) + ".dds";
+		string tName = "../Engine/data/boss/boss" + to_string(i) + ".png";
 		cout << tName << endl;
 		ModelClass* temp = new ModelClass();
 		temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", StringToWchar(tName));

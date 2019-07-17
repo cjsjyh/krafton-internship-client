@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
+#include <atlconv.h>
+
 #include "textureclass.h"
 
 
@@ -22,21 +24,35 @@ TextureClass::~TextureClass()
 }
 
 
-bool TextureClass::Initialize(ID3D11Device* device, WCHAR* filename)
+bool TextureClass::InitializeModel(ID3D11Device* device, WCHAR* filename)
 {
+	USES_CONVERSION;
 	HRESULT result;
 
-
 	// Load the texture in.
-	//result = D3DX10CreateTextureFromFile(device,filename,NULL,NULL,&m_texture,NULL)
-	
-	result = D3DX11CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &m_texture, NULL);
-	
+	//result = CreateDDSTextureFromFile(device,filename,nullptr,&m_texture);
+	result = CreateWICTextureFromFile(device, filename, nullptr, &m_texture);
 	if(FAILED(result))
 	{
+		cout << "failed" << endl;
 		return false;
 	}
 	
+	cout << "success" << endl;
+
+	return true;
+}
+
+bool TextureClass::Initialize(ID3D11Device* device, WCHAR* filename)
+{
+	HRESULT result;
+	result = D3DX11CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &m_texture, NULL);
+
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 
 
 	return true;

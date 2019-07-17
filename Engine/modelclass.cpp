@@ -230,7 +230,7 @@ bool ModelClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
 	}
 
 	// Initialize the texture object.
-	result = m_Texture->Initialize(device, filename);
+	result = m_Texture->InitializeModel(device, filename);
 	if(!result)
 	{
 		return false;

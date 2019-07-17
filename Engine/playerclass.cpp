@@ -32,8 +32,7 @@ void playerclass::InitializeModels()
 {
 	for (int i = 0; i < PLAYER_IMAGE_NUM; i++)
 	{
-		string tName = "../Engine/data/player/player" + to_string(i) + ".dds";
-		cout << tName << endl;
+		string tName = "../Engine/data/player/player" + to_string(i) + ".png";
 		ModelClass* temp = new ModelClass();
 		temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", StringToWchar(tName));
 
