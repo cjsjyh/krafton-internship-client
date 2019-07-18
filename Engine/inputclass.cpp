@@ -227,33 +227,6 @@ void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 	return;
 }
 
-bool InputClass::IsLMouseDown()
-{
-	if (m_mouseState.rgbButtons[0] & 0x80)
-		return true;
-	return false;
-}
-
-bool InputClass::IsRMouseDown()
-{
-	if (m_mouseState.rgbButtons[1] & 0x80)
-		return true;
-	return false;
-}
-
-bool InputClass::IsMMouseDown()
-{
-	if (m_mouseState.rgbButtons[2] & 0x80)
-		return true;
-	return false;
-}
-/*
-void InputClass::GetMouseState(bool& mouseState)
-{
-	
-}
-*/
-
 bool InputClass::IsEscapePressed()
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
@@ -274,58 +247,73 @@ bool InputClass::IsKeyPressed(int key)
 	return false;
 }
 
-
-
-/*
-InputClass::InputClass()
+bool InputClass::IsWASDKeyPressed(int* arr)
 {
+	for (int i = 0; i < 4; i++)
+		if (arr[i] != 0)
+			return true;
+	return false;
 }
 
-
-InputClass::InputClass(const InputClass& other)
+bool InputClass::IsKeyPressed(int* arr, char key)
 {
-}
-
-
-InputClass::~InputClass()
-{
-}
-
-
-void InputClass::Initialize()
-{
-	int i;
-	
-
-	// Initialize all the keys to being released and not pressed.
-	for(i=0; i<256; i++)
+	int check;
+	switch (key)
 	{
-		m_keys[i] = false;
+	case 'T':
+		check = DIK_T;
+		break;
+	case 'F':
+		check = DIK_F;
+		break;
+	default:
+		return false;
 	}
 
-	return;
+	for (int i = 0; i < KEY_NUM; i++)
+		if (arr[i] == check)
+			return true;
+	return false;
 }
 
-
-void InputClass::KeyDown(unsigned int input)
+bool InputClass::IsLMouseDown()
 {
-	// If a key is pressed then save that state in the key array.
-	m_keys[input] = true;
-	return;
+	if (m_mouseState.rgbButtons[0] & 0x80)
+		return true;
+	return false;
 }
 
-
-void InputClass::KeyUp(unsigned int input)
+bool InputClass::IsRMouseDown()
 {
-	// If a key is released then clear that state in the key array.
-	m_keys[input] = false;
-	return;
+	if (m_mouseState.rgbButtons[1] & 0x80)
+		return true;
+	return false;
 }
 
-
-bool InputClass::IsKeyDown(unsigned int key)
+bool InputClass::IsMMouseDown()
 {
-	// Return what state the key is in (pressed/not pressed).
-	return m_keys[key];
+	if (m_mouseState.rgbButtons[2] & 0x80)
+		return true;
+	return false;
 }
-*/
+
+bool InputClass::MouseNotClicked(bool* mousePress)
+{
+	if (!mousePress[0] && !mousePress[1] && !mousePress[2])
+		return true;
+	return false;
+}
+
+bool InputClass::RightMouseClicked(bool* mousePress)
+{
+	if (mousePress[1])
+		return true;
+	return false;
+}
+
+bool InputClass::LeftMouseClicked(bool* mousePress)
+{
+	if (mousePress[0])
+		return true;
+	return false;
+}

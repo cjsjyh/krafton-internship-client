@@ -217,21 +217,9 @@ bool SystemClass::Frame()
 	}
 	
 	//mouse
-	if (mousePress[0] = m_Input->IsLMouseDown()) {
-
-	}
-
-
-	if (mousePress[1] = m_Input->IsRMouseDown()) {
-		
-		m_Input->GetMouseOffset(offsetX, offsetY);
-	}
-
-
-	if (mousePress[2] = m_Input->IsMMouseDown()) {
-
-	}
-
+	mousePress[0] = m_Input->IsLMouseDown();
+	mousePress[1] = m_Input->IsRMouseDown();
+	mousePress[2] = m_Input->IsMMouseDown();
 
 	// Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(mouseX, mouseY, mousePress, keyInput, m_Fps->GetFps(), m_Cpu->GetCpuPercentage());

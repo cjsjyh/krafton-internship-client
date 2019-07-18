@@ -146,7 +146,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	InitializeMap();
 	InitializeParameters();
-
+	InitializeRewardMap();
 	return true;
 }
 
@@ -195,6 +195,9 @@ void GraphicsClass::InitializeParameters()
 
 void GraphicsClass::InitializeMap() 
 {
+	m_GM->scene = 0;
+	sceneChangeFrame = 0;
+
 	floor = new staticobjclass("floor",m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
 	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
@@ -212,6 +215,17 @@ void GraphicsClass::InitializeMap()
 	m_GM->RegisterObjectToRender(boss);
 
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
+}
+
+void GraphicsClass::InitializeRewardMap()
+{
+	floor = new staticobjclass("floor", m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
+	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
+	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
+	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
+	m_GM->RegisterObjectToRender(floor, 1);
+	
+	m_GM->RegisterObjectToRender(player, 1);
 }
 
 void GraphicsClass::Shutdown()
@@ -309,12 +323,14 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 		frame = lastLeftClick = 0;
 
 	
-	//ADD BULLETS
-	vector<projectileclass*> bossBullet = boss->Frame(frame);
-	for (unsigned int i = 0; i < bossBullet.size(); i++)
-		m_GM->RegisterObjectToRender(bossBullet[i]);
+	//BOSS Attack
+	if (m_GM->scene == 0)
+	{
+		vector<projectileclass*> bossBullet = boss->Frame(frame);
+		for (unsigned int i = 0; i < bossBullet.size(); i++)
+			m_GM->RegisterObjectToRender(bossBullet[i]);
+	}
 
-	m_GM->AlphaSort(m_Camera->GetPosition());
 	if (frame % COLL_CHECK_RATE)
 		m_GM->CheckCollision();
 
@@ -329,22 +345,43 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//-------------------
 	//  Input Handler
 	//-------------------
-	if (stdafx::RightMouseClicked(mousePress))
+	if (InputClass::RightMouseClicked(mousePress))
 	{
 
 
 	}
 
-	if (stdafx::LeftMouseClicked(mousePress))
+	if (InputClass::LeftMouseClicked(mousePress))
 	{
 		if (!lastLeftClick)
 		{
-			m_GM->RegisterObjectToRender(player->Fire( GetDirectionMouse(_mouseX,_mouseY) ));
+			m_GM->RegisterObjectToRender(player->Fire(GetDirectionMouse(_mouseX,_mouseY)));
 			lastLeftClick = frame;
 		}
-
 	}
 
+	if (InputClass::IsKeyPressed(key, 'T'))
+	{
+		if (frame - sceneChangeFrame > 60)
+		{
+			sceneChangeFrame = frame;
+			if (m_GM->scene == 0)
+			{
+				player->SavePlayerPos(m_GM->scene);
+				player->SetPosition(D3DXVECTOR3(0, 0, 0));
+				player->SetDirection(1);
+				m_GM->scene = 1;
+				
+				cout << "scene 1" << endl;
+			}
+			else
+			{
+				m_GM->scene = 0;
+				player->SetPosition(player->GetSavedPlayerPos(m_GM->scene));
+				cout << "scene 0" << endl;
+			}
+		}
+	}
 	//-------------
 	//  player
 	//-------------
@@ -380,7 +417,6 @@ bool GraphicsClass::Render()
 	bool result;
 
 	//-----------------------
-
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -398,14 +434,9 @@ bool GraphicsClass::Render()
 	m_D3D->TurnOnAlphaBlending();
 
 	//render floor first
-	/*
-	floor->GetModel()->Render(m_D3D->GetDeviceContext());
-	floor->GetWorldMatrix(worldMatrix);
-	m_LightShader->Render(m_D3D->GetDeviceContext(), floor->GetModel()->GetIndexCount(), worldMatrix,
-		viewMatrix, projectionMatrix, floor->GetModel()->GetTexture(), m_Light->GetDirection(),
-		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
-	*/
+	m_GM->AlphaSort(m_Camera->GetPosition());
 	int size = m_GM->GetRenderObjectCount();
+	cout << "size " + to_string(size) << endl;
 	for (int i = 0; i < size; i++)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
@@ -424,7 +455,6 @@ bool GraphicsClass::Render()
 		}
 	}
 
-	
 
 	//---------------------
 	//   TEXT

@@ -21,22 +21,25 @@ public:
 	gameManager(int);
 	~gameManager();
 
-	void RegisterObjectToRender(gameObject *item, int scene = 0);
-	void UnregisterObjectToRender(gameObject *item, int scene = 0);
-	void RemoveObjectToRender(gameObject* item, int scene = 0);
-	int FindObjectIndex(gameObject *item, int scene = 0);
+	//void DisableSceneObjects(int scene);
+	//void EnableSceneObjects(int scene);
+
+	void RegisterObjectToRender(gameObject *item, int _scene=0);
+	void UnregisterObjectToRender(gameObject *item, int _scene=0);
+	void RemoveObjectToRender(gameObject* item, int _scene=0);
+	int FindObjectIndex(gameObject *item, int _scene=0);
 	
 	void RegisterToBossPool(projectileclass* item);
 	projectileclass* GetFromBossPool();
 	void RegisterToPlayerPool(projectileclass* item);
 	projectileclass* GetFromPlayerPool();
 
-	int GetRenderObjectCount(int scene = 0);
-	gameObject* GetGameObject(int index, int scene = 0);
+	int GetRenderObjectCount();
+	gameObject* GetGameObject(int index);
 	
-	void CheckCollision(int scene = 0);
-
-	void AlphaSort(D3DXVECTOR3, int scene = 0);
+	void CheckCollision();
+	void AlphaSort(D3DXVECTOR3);
+	int scene;
 
 private:
 	vector< vector<gameObject*> > renderObjects;

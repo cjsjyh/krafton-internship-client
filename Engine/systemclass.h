@@ -43,7 +43,7 @@ private:
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
 
-	const int keyCode[KEY_NUM] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE};
+	const int keyCode[KEY_NUM] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE, DIK_T, DIK_F};
 	
 	int mouseX, mouseY;
 	int offsetX, offsetY;

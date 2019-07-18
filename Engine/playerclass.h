@@ -23,6 +23,7 @@ public:
 	
 	void SetGameManager(gameManager*);
 	void SetDirection(int*);
+	void SetDirection(int);
 	int GetDirection();
 	D3DXVECTOR3 GetDirectionVector(int);
 
@@ -33,7 +34,7 @@ public:
 	void Move(int*, int);
 
 	void SavePlayerPos(int scene);
-	D3DXVECTOR3 GetPlayerPos(int scene);
+	D3DXVECTOR3 GetSavedPlayerPos(int scene);
 
 	//player movement parameters
 	float PLAYER_SPEED;
@@ -46,7 +47,6 @@ public:
 	float PLAYER_BULLET_SPEED;
 	int PLAYER_BULLET_DISTANCE;
 	int PLAYER_BULLET_DELAY;
-	
 
 private:
 	int direction;

@@ -21,31 +21,45 @@ gameManager::~gameManager()
 {
 	delete m_CM;
 }
-
-void gameManager::RegisterObjectToRender(gameObject *item, int scene)
+/*
+void gameManager::DisableSceneObjects(int scene)
 {
-	renderObjects[scene].push_back(item);
+	for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
+	{
+		(*iter)->
+	}
+}
+
+void gameManager::EnableSceneObjects(int scene)
+{
+
+}
+*/
+
+void gameManager::RegisterObjectToRender(gameObject *item, int _scene)
+{
+	renderObjects[_scene].push_back(item);
 	return;
 }
 
-void gameManager::UnregisterObjectToRender(gameObject *item, int scene)
+void gameManager::UnregisterObjectToRender(gameObject *item, int _scene)
 {
 	int index = FindObjectIndex(item);
-	gameObject* temp =  renderObjects[scene][index];
-	renderObjects[scene].erase(renderObjects[scene].begin() + index);
+	gameObject* temp =  renderObjects[_scene][index];
+	renderObjects[_scene].erase(renderObjects[_scene].begin() + index);
 	return;
 }
 
-void gameManager::RemoveObjectToRender(gameObject* item, int scene)
+void gameManager::RemoveObjectToRender(gameObject* item, int _scene)
 {
 	int index = FindObjectIndex(item);
-	gameObject* temp = renderObjects[scene][index];
-	renderObjects[scene].erase(renderObjects[scene].begin() + index);
+	gameObject* temp = renderObjects[_scene][index];
+	renderObjects[_scene].erase(renderObjects[_scene].begin() + index);
 	delete temp;
 	return;
 }
 
-void gameManager::AlphaSort(D3DXVECTOR3 _camPos, int scene)
+void gameManager::AlphaSort(D3DXVECTOR3 _camPos)
 {
 	camPos = _camPos;
 	for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
@@ -101,23 +115,23 @@ projectileclass* gameManager::GetFromPlayerPool()
 }
 
 
-int gameManager::FindObjectIndex(gameObject *item, int scene)
+int gameManager::FindObjectIndex(gameObject *item, int _scene)
 {
-	vector<gameObject*>::iterator itr = find(renderObjects[scene].begin(), renderObjects[scene].end(), item);
-	return distance(renderObjects[scene].begin(), itr);
+	vector<gameObject*>::iterator itr = find(renderObjects[_scene].begin(), renderObjects[scene].end(), item);
+	return distance(renderObjects[_scene].begin(), itr);
 }
 
-int gameManager::GetRenderObjectCount(int scene)
+int gameManager::GetRenderObjectCount()
 {
 	return renderObjects[scene].size();
 }
 
-gameObject* gameManager::GetGameObject(int index, int scene)
+gameObject* gameManager::GetGameObject(int index)
 {
 	return renderObjects[scene][index];
 }
 
-void gameManager::CheckCollision(int scene)
+void gameManager::CheckCollision()
 {
 	vector<gameObject*> coll1, coll2;
 	m_CM->CollisionManager(coll1, coll2);

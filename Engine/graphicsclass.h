@@ -53,7 +53,9 @@ public:
 	~GraphicsClass();
 
 	bool Initialize(int, int, HWND);
+	void InitializeMap();
 	void InitializeParameters();
+	void InitializeRewardMap();
 	void Shutdown();
 	bool Frame(int, int, bool*, int*, int, int);
 	bool Render();
@@ -61,13 +63,8 @@ public:
 	float clamp(float, float, float);
 
 private:
-	bool MouseNotClicked(bool*);
-	bool RightMouseClicked(bool*);
-	bool LeftMouseClicked(bool*);
-	bool IsKeyPressed(char*);
-
 	D3DXVECTOR3 GetDirectionMouse(int, int);
-	void InitializeMap();
+	
 	void AutoMove();
 	bool SetUI(int, int, int, int);
 
@@ -93,6 +90,7 @@ private:
 	int frame;
 	int screenW, screenH;
 	int lastLeftClick;
+	int currentScene, sceneChangeFrame;
 };
 
 #endif

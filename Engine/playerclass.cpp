@@ -5,6 +5,7 @@
 #include "modelclass.h"
 #include "gameObject.h"
 #include "gameManager.h"
+#include "inputclass.h"
 
 #include "playerclass.h"
 
@@ -136,6 +137,10 @@ void playerclass::SetDirection(int* keys)
 	SetImage();
 	return;
 }
+void playerclass::SetDirection(int dir)
+{
+	direction = dir;
+}
 
 D3DXVECTOR3 playerclass::GetDirectionVector(int dir)
 {
@@ -203,7 +208,7 @@ void playerclass::Move(int* keys, int frame)
 		}
 	}
 	
-	else if(stdafx::IsKeyPressed(keys))
+	else if(InputClass::IsWASDKeyPressed(keys))
 	{
 		AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 	}
@@ -218,7 +223,7 @@ void playerclass::SetImage()
 void playerclass::SavePlayerPos(int scene)
 {
 	int curSize = playerPosSave.size();
-	if (curSize < scene)
+	if (curSize < scene+1)
 	{
 		for (int i = curSize; i < scene + 1; i++)
 			playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
@@ -226,7 +231,7 @@ void playerclass::SavePlayerPos(int scene)
 	playerPosSave[scene] = GetPosition();
 }
 
-D3DXVECTOR3 playerclass::GetPlayerPos(int scene)
+D3DXVECTOR3 playerclass::GetSavedPlayerPos(int scene)
 {
 	int curSize = playerPosSave.size();
 	if (curSize < scene)

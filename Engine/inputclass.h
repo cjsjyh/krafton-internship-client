@@ -48,10 +48,15 @@ public:
 	void GetMouseLocation(int&, int&);
 	void GetMouseOffset(int&, int&);
 
+	static bool IsWASDKeyPressed(int* arr);
+	static bool IsKeyPressed(int* arr, char key);
+	static bool MouseNotClicked(bool* mousePress);
+	static bool RightMouseClicked(bool* mousePress);
+	static bool LeftMouseClicked(bool* mousePress);
+
 private:
 	bool ReadKeyboard();
 	bool ReadMouse();
-	void ProcessInput();
 
 private:
 	IDirectInput8* m_directInput;
@@ -67,23 +72,4 @@ private:
 	int m_mouseX, m_mouseY;
 };
 
-/*
-class InputClass
-{
-public:
-	InputClass();
-	InputClass(const InputClass&);
-	~InputClass();
-
-	void Initialize();
-
-	void KeyDown(unsigned int);
-	void KeyUp(unsigned int);
-
-	bool IsKeyDown(unsigned int);
-
-private:
-	bool m_keys[256];
-};
-*/
 #endif
