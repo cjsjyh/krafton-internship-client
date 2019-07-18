@@ -95,7 +95,6 @@ void bossclass::FireDirections(int dir, int frame)
 		}
 		else
 		{
-			cout << "found" << endl;
 			SetBullet((projectileclass*)temp, dirVec);
 		}
 

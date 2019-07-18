@@ -232,33 +232,49 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-D3DXVECTOR3 GraphicsClass::GetDirectionMouse()
+D3DXVECTOR3 GraphicsClass::GetDirectionMouse(int _mouseX, int _mouseY)
 {
-	float square, gradient;
-	float adjustedX = mouseX, adjustedY = mouseY;
-	float amount = 100;
-	
-	gradient = abs((float)mouseY) / abs(mouseX);
-	gradient = abs(gradient - 1);
+	D3DXVECTOR3 direction, origin, rayOrigin, rayDirection, projectedPt;
+	D3DXMATRIX projectionMatrix, viewMatrix, inverseViewMatrix, worldMatrix, temp;
 
-	if (abs(1 - gradient) > 0.2)
-		amount *= clamp(abs(1 - gradient), 0.6, 1);
-	else
-		amount *= (1 - gradient);
-	
-	if (mouseY < 0)
-		amount *= -1;
-	adjustedY += amount;
+	float pointX = ((2.0f * _mouseX) / screenW) - 1;
+	float pointY = (((2.0f * _mouseY) / screenH) - 1) * -1;
 
-	square = adjustedX * adjustedX + adjustedY * adjustedY;
-	square = sqrt(square);
-	return D3DXVECTOR3(adjustedX / square, 0, adjustedY / square);
+	m_D3D->GetProjectionMatrix(projectionMatrix);
+	pointX = pointX / projectionMatrix._11;
+	pointY = pointY / projectionMatrix._22;
+
+	m_Camera->GetViewMatrix(viewMatrix);
+	D3DXMatrixInverse(&inverseViewMatrix, NULL, &viewMatrix);
+
+	direction.x = (pointX * inverseViewMatrix._11) + (pointY * inverseViewMatrix._21) + inverseViewMatrix._31;
+	direction.y = (pointX * inverseViewMatrix._12) + (pointY * inverseViewMatrix._22) + inverseViewMatrix._32;
+	direction.z = (pointX * inverseViewMatrix._13) + (pointY * inverseViewMatrix._23) + inverseViewMatrix._33;
+
+	origin = m_Camera->GetPosition();
+
+	m_D3D->GetWorldMatrix(worldMatrix);
+	D3DXMatrixTranslation(&temp, player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &temp);
+	D3DXMatrixInverse(&worldMatrix, NULL, &worldMatrix);
+
+	D3DXVec3TransformCoord(&rayOrigin, &origin, &worldMatrix);
+	D3DXVec3TransformNormal(&rayDirection, &direction, &worldMatrix);
+	D3DXVec3Normalize(&rayDirection, &rayDirection);
+
+	projectedPt = D3DXVECTOR3(0, 0, 0);
+	float k = -(rayOrigin.y / rayDirection.y);
+	projectedPt.x = rayOrigin.x + rayDirection.x * k;
+	projectedPt.z = rayOrigin.z + rayDirection.z * k;
+
+	return stdafx::normalizeVec3(projectedPt);
 }
+
 
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, int fps, int cpu)
 {
+	
 	bool result;
-
 	mouseX = _mouseX - screenW / 2;
 	mouseY = -(_mouseY - screenH / 2);
 
@@ -300,7 +316,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	{
 		if (!lastLeftClick)
 		{
-			m_GM->RegisterObjectToRender(player->Fire( GetDirectionMouse() ));
+			m_GM->RegisterObjectToRender(player->Fire( GetDirectionMouse(_mouseX,_mouseY) ));
 			lastLeftClick = frame;
 		}
 
@@ -312,10 +328,11 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	AutoMove();
 	player->Move(key, frame);
 
-	D3DXVECTOR3 camPos = m_Camera->GetPosition();
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
 	float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
+
 	m_Camera->Move(midPoint, distance);
+	
 
 	//-------------
 	//  object

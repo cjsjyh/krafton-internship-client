@@ -65,7 +65,7 @@ private:
 	bool LeftMouseClicked(bool*);
 	bool IsKeyPressed(char*);
 
-	D3DXVECTOR3 GetDirectionMouse();
+	D3DXVECTOR3 GetDirectionMouse(int, int);
 	void InitializeMap();
 	void AutoMove();
 	bool SetUI(int, int, int, int);

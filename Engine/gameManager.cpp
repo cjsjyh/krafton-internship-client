@@ -71,7 +71,6 @@ projectileclass* gameManager::GetFromBossPool()
 
 void gameManager::RegisterToPlayerPool(projectileclass* item)
 {
-	cout << "register to player pool" << endl;
 	PlayerbulletPool.push_back(item);
 	return;
 }
