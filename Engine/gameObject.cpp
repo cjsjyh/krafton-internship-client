@@ -21,7 +21,8 @@ gameObject::gameObject(string objname, CollisionChannel _channel, ColliderType c
 	collider = col;
 	channel = _channel;
 	objType = UNMOVABLE;
-	
+	scene = 1;
+
 	InitializeObject();
 }
 
@@ -40,6 +41,7 @@ gameObject::gameObject(string objname, D3DXVECTOR3 _pos, CollisionChannel _chann
 	collider = col;
 	channel = _channel;
 	objType = UNMOVABLE;
+	scene = 1;
 
 	InitializeObject();
 }
@@ -88,7 +90,7 @@ gameObject::ColliderType gameObject::GetColliderType()
 	return collider;
 }
 
-D3DXVECTOR3 gameObject::GetSize()
+D3DXVECTOR3 gameObject::GetCollSize()
 {
 	return D3DXVECTOR3(box_collSize.x, box_collSize.y, box_collSize.z);
 }
@@ -136,18 +138,23 @@ void gameObject::SetScale(D3DXVECTOR3 _scale)
 {
 	//width
 	scale.x = _scale.x;
-	box_collSize.x *= _scale.x;
 
 	//height
 	scale.y = _scale.y;
-	box_collSize.y *= _scale.y;
 
 	//length
 	scale.z = _scale.z;
-	box_collSize.z *= _scale.z;
-	
-	sphere_collSize = min(min(_scale.x, _scale.y), _scale.z) * 0.75;
+
 	return;
+}
+
+void gameObject::SetCollSize(D3DXVECTOR3 _size)
+{
+	box_collSize.x = _size.x;
+	box_collSize.y = _size.y;
+	box_collSize.z = _size.z;
+
+	sphere_collSize = min(min(_size.x, _size.y), _size.z) * 0.75;
 }
 
 void gameObject::AdjustPosition(D3DXVECTOR3 _pos)

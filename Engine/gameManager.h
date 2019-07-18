@@ -18,28 +18,28 @@ public:
 		}
 	};
 
-	gameManager();
+	gameManager(int);
 	~gameManager();
 
-	void RegisterObjectToRender(gameObject *item);
-	void UnregisterObjectToRender(gameObject *item);
-	void RemoveObjectToRender(gameObject* item);
-	int FindObjectIndex(gameObject *item);
+	void RegisterObjectToRender(gameObject *item, int scene = 0);
+	void UnregisterObjectToRender(gameObject *item, int scene = 0);
+	void RemoveObjectToRender(gameObject* item, int scene = 0);
+	int FindObjectIndex(gameObject *item, int scene = 0);
 	
 	void RegisterToBossPool(projectileclass* item);
 	projectileclass* GetFromBossPool();
 	void RegisterToPlayerPool(projectileclass* item);
 	projectileclass* GetFromPlayerPool();
 
-	int GetRenderObjectCount();
-	gameObject* GetGameObject(int index);
+	int GetRenderObjectCount(int scene = 0);
+	gameObject* GetGameObject(int index, int scene = 0);
 	
-	void CheckCollision();
+	void CheckCollision(int scene = 0);
 
-	void AlphaSort(D3DXVECTOR3);
+	void AlphaSort(D3DXVECTOR3, int scene = 0);
 
 private:
-	vector <gameObject*> renderObjects;
+	vector< vector<gameObject*> > renderObjects;
 	vector <projectileclass*> BossbulletPool;
 	vector <projectileclass*> PlayerbulletPool;
 

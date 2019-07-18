@@ -24,6 +24,7 @@ using namespace DirectX;
 #include <map>
 #include <algorithm>
 #include <math.h>
+#include <limits>
 #include <string>
 #include <fstream>
 #include "iostream"

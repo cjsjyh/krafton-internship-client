@@ -4,6 +4,7 @@
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
 
+#define SCENE_COUNT 2
 
 ///////////////////////
 // MY CLASS INCLUDES //

@@ -21,6 +21,7 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	dashFrame = dashPauseFrame = -1;
 	dashDir = -1;
 
+	playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
 	InitializeModels();
 }
 
@@ -132,6 +133,7 @@ void playerclass::SetDirection(int* keys)
 		direction = 7;
 	}
 
+	SetImage();
 	return;
 }
 
@@ -211,4 +213,26 @@ void playerclass::Move(int* keys, int frame)
 void playerclass::SetImage()
 {
 	m_model = model_list[direction];
+}
+
+void playerclass::SavePlayerPos(int scene)
+{
+	int curSize = playerPosSave.size();
+	if (curSize < scene)
+	{
+		for (int i = curSize; i < scene + 1; i++)
+			playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
+	}
+	playerPosSave[scene] = GetPosition();
+}
+
+D3DXVECTOR3 playerclass::GetPlayerPos(int scene)
+{
+	int curSize = playerPosSave.size();
+	if (curSize < scene)
+	{
+		for (int i = curSize; i < scene + 1; i++)
+			playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
+	}
+	return playerPosSave[scene];
 }

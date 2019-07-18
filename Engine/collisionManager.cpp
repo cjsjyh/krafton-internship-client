@@ -185,10 +185,10 @@ bool collisionManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 {
 	D3DXVECTOR3 pos, len;
 	pos = src->GetPosition();
-	len = src->GetSize();
+	len = src->GetCollSize();
 	D3DXVECTOR3 pos2, len2;
 	pos2 = dest->GetPosition();
-	len2 = dest->GetSize();
+	len2 = dest->GetCollSize();
 
 	if ((pos2.x - len2.x <= pos.x + len.x && pos2.x + len2.x >= pos.x - len.x) &&
 		(pos2.z - len2.z <= pos.z + len.z && pos2.z + len2.z >= pos.z - len.z))
@@ -239,7 +239,7 @@ bool collisionManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::
 {
 	D3DXVECTOR3 pos, len;
 	pos = simple->GetPosition();
-	len = simple->GetSize();
+	len = simple->GetCollSize();
 	if ((check->x - colliderSize <= pos.x + len.x && check->x + colliderSize >= pos.x - len.x) &&
 		(check->z - colliderSize <= pos.z + len.z && check->z + colliderSize >= pos.z - len.z))
 		return true;

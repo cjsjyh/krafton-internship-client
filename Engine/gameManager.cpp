@@ -7,8 +7,13 @@
 
 #include "gameManager.h"
 
-gameManager::gameManager()
+gameManager::gameManager(int sceneCount)
 {
+	for (int i = 0; i < sceneCount; i++)
+	{
+		vector<gameObject*> temp;
+		renderObjects.push_back(temp);
+	}
 	m_CM = new collisionManager(this);
 }
 
@@ -17,35 +22,40 @@ gameManager::~gameManager()
 	delete m_CM;
 }
 
-void gameManager::RegisterObjectToRender(gameObject *item)
+void gameManager::RegisterObjectToRender(gameObject *item, int scene)
 {
-	renderObjects.push_back(item);
+	renderObjects[scene].push_back(item);
 	return;
 }
 
-void gameManager::UnregisterObjectToRender(gameObject *item)
+void gameManager::UnregisterObjectToRender(gameObject *item, int scene)
 {
 	int index = FindObjectIndex(item);
-	gameObject* temp =  renderObjects[index];
-	renderObjects.erase(renderObjects.begin() + index);
+	gameObject* temp =  renderObjects[scene][index];
+	renderObjects[scene].erase(renderObjects[scene].begin() + index);
 	return;
 }
 
-void gameManager::RemoveObjectToRender(gameObject* item)
+void gameManager::RemoveObjectToRender(gameObject* item, int scene)
 {
 	int index = FindObjectIndex(item);
-	gameObject* temp = renderObjects[index];
-	renderObjects.erase(renderObjects.begin() + index);
+	gameObject* temp = renderObjects[scene][index];
+	renderObjects[scene].erase(renderObjects[scene].begin() + index);
 	delete temp;
 	return;
 }
 
-void gameManager::AlphaSort(D3DXVECTOR3 _camPos)
+void gameManager::AlphaSort(D3DXVECTOR3 _camPos, int scene)
 {
 	camPos = _camPos;
-	for (auto iter = renderObjects.begin(); iter != renderObjects.end(); iter++)
-		(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), _camPos);
-	std::sort(renderObjects.begin(), renderObjects.end(), CompareDist());
+	for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
+	{
+		if ((*iter)->GetName() == "floor")
+			(*iter)->w = 9999999;
+		else
+			(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), _camPos);
+	}
+	std::sort(renderObjects[scene].begin(), renderObjects[scene].end(), CompareDist());
 }
 
 void gameManager::RegisterToBossPool(projectileclass* item)
@@ -91,23 +101,23 @@ projectileclass* gameManager::GetFromPlayerPool()
 }
 
 
-int gameManager::FindObjectIndex(gameObject *item)
+int gameManager::FindObjectIndex(gameObject *item, int scene)
 {
-	vector<gameObject*>::iterator itr = find(renderObjects.begin(), renderObjects.end(), item);
-	return distance(renderObjects.begin(), itr);
+	vector<gameObject*>::iterator itr = find(renderObjects[scene].begin(), renderObjects[scene].end(), item);
+	return distance(renderObjects[scene].begin(), itr);
 }
 
-int gameManager::GetRenderObjectCount()
+int gameManager::GetRenderObjectCount(int scene)
 {
-	return renderObjects.size();
+	return renderObjects[scene].size();
 }
 
-gameObject* gameManager::GetGameObject(int index)
+gameObject* gameManager::GetGameObject(int index, int scene)
 {
-	return renderObjects[index];
+	return renderObjects[scene][index];
 }
 
-void gameManager::CheckCollision()
+void gameManager::CheckCollision(int scene)
 {
 	vector<gameObject*> coll1, coll2;
 	m_CM->CollisionManager(coll1, coll2);

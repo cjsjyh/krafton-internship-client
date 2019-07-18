@@ -36,11 +36,12 @@ public:
 	D3DXVECTOR3 GetPosition();
 	D3DXVECTOR3 GetRotation();
 	D3DXVECTOR3 GetScale();
-	D3DXVECTOR3 GetSize();
+	D3DXVECTOR3 GetCollSize();
 
 	void SetPosition(D3DXVECTOR3 z);
 	void SetRotation(D3DXVECTOR3 z);
 	void SetScale(D3DXVECTOR3 z);
+	void SetCollSize(D3DXVECTOR3 z);
 
 	void AdjustPosition(D3DXVECTOR3);
 	void AdjustRotation(D3DXVECTOR3);
@@ -55,10 +56,11 @@ public:
 	ColliderType GetColliderType();
 	ModelClass* GetModel();
 
-	float sphere_collSize;
 	CollisionChannel channel;
 	ObjectType objType;
+	float sphere_collSize;
 	float w;
+	int scene;
 
 protected:
 	string name;

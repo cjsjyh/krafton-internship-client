@@ -32,6 +32,9 @@ public:
 	void SetImage();
 	void Move(int*, int);
 
+	void SavePlayerPos(int scene);
+	D3DXVECTOR3 GetPlayerPos(int scene);
+
 	//player movement parameters
 	float PLAYER_SPEED;
 	int PLAYER_DASH_SPEED;
@@ -49,6 +52,7 @@ private:
 	int direction;
 	int dashFrame, dashPauseFrame;
 	int dashDir;
+	vector<D3DXVECTOR3> playerPosSave;
 	gameManager* GM;
 };
 

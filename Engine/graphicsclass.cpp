@@ -111,7 +111,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create gameManager object
-	m_GM = new gameManager;
+	m_GM = new gameManager(SCENE_COUNT);
 	if (!m_GM)
 	{
 		return false;
@@ -168,6 +168,29 @@ void GraphicsClass::InitializeParameters()
 	player->PLAYER_BULLET_DISTANCE = m_filereader->paramInt.find("PLAYER_BULLET_DISTANCE")->second;
 	player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
 	
+	D3DXVECTOR3 playerSize;
+	playerSize.x = m_filereader->paramFloat.find("PLAYER_SIZE_X")->second;
+	playerSize.y = m_filereader->paramFloat.find("PLAYER_SIZE_Y")->second;
+	playerSize.z = m_filereader->paramFloat.find("PLAYER_SIZE_Z")->second;
+	player->SetScale(playerSize);
+
+	D3DXVECTOR3 playerCollSize;
+	playerCollSize.x = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_X")->second;
+	playerCollSize.y = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_Y")->second;
+	playerCollSize.z = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_Z")->second;
+	player->SetCollSize(playerCollSize);
+
+	D3DXVECTOR3 bossSize;
+	bossSize.x = m_filereader->paramFloat.find("BOSS_SIZE_X")->second;
+	bossSize.y = m_filereader->paramFloat.find("BOSS_SIZE_Y")->second;
+	bossSize.z = m_filereader->paramFloat.find("BOSS_SIZE_Z")->second;
+	boss->SetScale(bossSize);
+	
+	D3DXVECTOR3 bossCollSize;
+	bossCollSize.x = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_X")->second;
+	bossCollSize.y = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_Y")->second;
+	bossCollSize.z = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_Z")->second;
+	boss->SetCollSize(bossCollSize);
 }
 
 void GraphicsClass::InitializeMap() 
@@ -176,7 +199,7 @@ void GraphicsClass::InitializeMap()
 	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
-	//m_GM->RegisterObjectToRender(temp);
+	m_GM->RegisterObjectToRender(floor);
 	
 	
 	player = new playerclass(100, m_D3D);
@@ -375,12 +398,13 @@ bool GraphicsClass::Render()
 	m_D3D->TurnOnAlphaBlending();
 
 	//render floor first
+	/*
 	floor->GetModel()->Render(m_D3D->GetDeviceContext());
 	floor->GetWorldMatrix(worldMatrix);
 	m_LightShader->Render(m_D3D->GetDeviceContext(), floor->GetModel()->GetIndexCount(), worldMatrix,
 		viewMatrix, projectionMatrix, floor->GetModel()->GetTexture(), m_Light->GetDirection(),
 		m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
-
+	*/
 	int size = m_GM->GetRenderObjectCount();
 	for (int i = 0; i < size; i++)
 	{
