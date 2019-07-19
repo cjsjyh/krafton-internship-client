@@ -15,7 +15,7 @@ class collisionManager
 public:
 	collisionManager(gameManager*);
 	bool CollisionManager(vector<gameObject*>&, vector<gameObject*>&);
-
+	gameObject* InteractionManager(D3DXVECTOR3);
 private:
 	bool CheckMatch(gameObject*, gameObject*, int, int);
 	bool CheckInOne(gameObject*, int, int);
@@ -27,9 +27,7 @@ private:
 	bool CheckCollisionChannel(gameObject*, gameObject*);
 	int CollisionHandler(gameObject*, gameObject*);
 	bool SimpleBoxCollision(gameObject*, gameObject*);
-	bool SimpleDetection(gameObject*, vector<D3DXVECTOR3>::iterator, float);
-
-
+	bool SimpleBoxCollision(D3DXVECTOR3, gameObject*);
 
 	gameManager* GM;
 };

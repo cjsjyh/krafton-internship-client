@@ -20,10 +20,7 @@ void CameraClass::Move(D3DXVECTOR3 midpoint, float distance)
 	if (distance < 40)
 		SetPosition(D3DXVECTOR3(midpoint.x, midpoint.y + 30, midpoint.z - 30));
 	else
-	{
-		cout << "over!" << endl;
 		SetPosition(D3DXVECTOR3(midpoint.x, (midpoint.y + 30) * (distance / 40), (midpoint.z - 30) * (distance / 40)));
-	}
 }
 
 CameraClass::CameraClass(const CameraClass& other)

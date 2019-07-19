@@ -57,7 +57,8 @@ public:
 	void UninitializeBasic();
 	void InitializeMap();
 	void UninitializeMap();
-	void InitializeParameters();
+	void InitializePlayerParameters();
+	void InitializeBossParameters();
 	void InitializeRewardMap();
 	void Shutdown();
 	bool Frame(int, int, bool*, int*, int, int);

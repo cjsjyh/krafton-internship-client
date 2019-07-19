@@ -128,14 +128,24 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Initialize the light object.
+	// Initialize the light object.	
 	m_Light->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
+	m_filereader = new textfilereader;
+	result = m_filereader->ReadFile("../Engine/data/player_parameter.csv");
+	if (!result)
+		return false;
+		
+	result = m_filereader->ReadFile("../Engine/data/boss_parameter.csv");
+	if (!result)
+		return false;
+		
 	InitializeBasic();
 	InitializeMap();
-	InitializeParameters();
+	InitializePlayerParameters();
+	InitializeBossParameters();
 	InitializeRewardMap();
 	return true;
 }
@@ -148,22 +158,20 @@ void GraphicsClass::InitializeBasic()
 
 	// Create gameManager object
 	m_GM = new gameManager(SCENE_COUNT);
+
+	return;
 }
 
 void GraphicsClass::UninitializeBasic()
 {
 	delete m_GM;
 	m_GM = 0;
+
+	return;
 }
 
-void GraphicsClass::InitializeParameters()
-{
-	m_filereader = new textfilereader;
-	bool result = m_filereader->ReadFile("../Engine/data/parameter.csv");
-	
-	if (!result)
-		return;
-
+void GraphicsClass::InitializePlayerParameters()
+{		
 	player->PLAYER_SPEED = m_filereader->paramFloat.find("PLAYER_SPEED")->second;
 	player->PLAYER_DASH_SPEED = m_filereader->paramFloat.find("PLAYER_DASH_SPEED")->second;
 	player->PLAYER_DASH_FRAME = m_filereader->paramInt.find("PLAYER_DASH_FRAME")->second;
@@ -173,6 +181,9 @@ void GraphicsClass::InitializeParameters()
 	player->PLAYER_BULLET_SPEED = m_filereader->paramFloat.find("PLAYER_BULLET_SPEED")->second;
 	player->PLAYER_BULLET_DISTANCE = m_filereader->paramInt.find("PLAYER_BULLET_DISTANCE")->second;
 	player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
+	
+	player->SetHp(m_filereader->paramInt.find("PLAYER_HP")->second);
+	player->PLAYER_INTERACTION_RANGE = m_filereader->paramFloat.find("PLAYER_INTERACTION_RANGE")->second;
 	
 	D3DXVECTOR3 playerSize;
 	playerSize.x = m_filereader->paramFloat.find("PLAYER_SIZE_X")->second;
@@ -186,17 +197,39 @@ void GraphicsClass::InitializeParameters()
 	playerCollSize.z = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_Z")->second;
 	player->SetCollSize(playerCollSize);
 
+	return;
+}
+
+void GraphicsClass::InitializeBossParameters()
+{
 	D3DXVECTOR3 bossSize;
-	bossSize.x = m_filereader->paramFloat.find("BOSS_SIZE_X")->second;
-	bossSize.y = m_filereader->paramFloat.find("BOSS_SIZE_Y")->second;
-	bossSize.z = m_filereader->paramFloat.find("BOSS_SIZE_Z")->second;
+	bossSize.x = m_filereader->paramFloat.find("BOSS_PHASE1_SIZE_X")->second;
+	bossSize.y = m_filereader->paramFloat.find("BOSS_PHASE1_SIZE_Y")->second;
+	bossSize.z = m_filereader->paramFloat.find("BOSS_PHASE1_SIZE_Z")->second;
 	boss->SetScale(bossSize);
-	
+	boss->BOSS_SIZE[0] = bossSize;
+
+	bossSize.x = m_filereader->paramFloat.find("BOSS_PHASE2_SIZE_X")->second;
+	bossSize.y = m_filereader->paramFloat.find("BOSS_PHASE2_SIZE_Y")->second;
+	bossSize.z = m_filereader->paramFloat.find("BOSS_PHASE2_SIZE_Z")->second;
+	boss->BOSS_SIZE[1] = bossSize;
+
+	bossSize.x = m_filereader->paramFloat.find("BOSS_PHASE3_SIZE_X")->second;
+	bossSize.y = m_filereader->paramFloat.find("BOSS_PHASE3_SIZE_Y")->second;
+	bossSize.z = m_filereader->paramFloat.find("BOSS_PHASE3_SIZE_Z")->second;
+	boss->BOSS_SIZE[2] = bossSize;
+
 	D3DXVECTOR3 bossCollSize;
 	bossCollSize.x = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_X")->second;
 	bossCollSize.y = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_Y")->second;
 	bossCollSize.z = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_Z")->second;
 	boss->SetCollSize(bossCollSize);
+
+	boss->SetHp(m_filereader->paramInt.find("BOSS_HP")->second);
+	boss->BOSS_PHASE3_HP = m_filereader->paramFloat.find("BOSS_PHASE3_HP")->second;
+	boss->BOSS_PHASE2_HP = m_filereader->paramFloat.find("BOSS_PHASE2_HP")->second;
+
+	return;
 }
 
 void GraphicsClass::InitializeMap() 
@@ -205,6 +238,7 @@ void GraphicsClass::InitializeMap()
 	sceneChangeFrame = 0;
 
 	floor = new staticobjclass("floor",m_D3D, gameObject::NO_COLLISION, gameObject::COLLIDER_BOX);
+	((staticobjclass*)floor)->InitializeStatic3D();
 	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
@@ -221,6 +255,8 @@ void GraphicsClass::InitializeMap()
 	m_GM->RegisterObjectToRender(boss);
 
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
+
+	return;
 }
 
 void GraphicsClass::UninitializeMap()
@@ -232,18 +268,33 @@ void GraphicsClass::UninitializeMap()
 	player = 0;
 	boss = 0;
 	floor = 0;
+	
+	return;
 }
 
 
 void GraphicsClass::InitializeRewardMap()
 {
 	floor = new staticobjclass("floor", m_D3D, gameObject::NO_COLLISION,gameObject::COLLIDER_BOX);
+	((staticobjclass*)floor)->InitializeStatic3D();
 	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(floor, 1);
+
+	//add box
+	
+	gameObject* temp;
+	temp = new staticobjclass("box", m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
+	((staticobjclass*)temp)->InitializeStatic2D();
+	temp->SetScale(D3DXVECTOR3(1, 1, 1));
+	temp->SetPosition(D3DXVECTOR3(-10, 0, 10));
+	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
+	m_GM->RegisterObjectToRender(temp, 1);
 	
 	m_GM->RegisterObjectToRender(player, 1);
+
+	return;
 }
 
 void GraphicsClass::Shutdown()
@@ -341,16 +392,29 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//-------------------
 	frame++;
 	
-	//BOSS Attack
+	//BOSS
 	if (m_GM->scene == 0)
 	{
 		vector<projectileclass*> bossBullet = boss->Frame(frame);
 		for (unsigned int i = 0; i < bossBullet.size(); i++)
 			m_GM->RegisterObjectToRender(bossBullet[i]);
 	}
+	
+	//Collision Detection
+	m_GM->CheckCollision();
 
-	if (frame % COLL_CHECK_RATE)
-		m_GM->CheckCollision();
+	//Frame
+	player->Frame(key, frame);
+
+	//AutoMoving(bullets)
+	AutoMove();
+	
+	//Camera
+	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
+	float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
+	m_Camera->Move(midPoint, distance);
+
+	
 
 	//CAN CLICK AGAIN!
 	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
@@ -364,7 +428,9 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 
 		InitializeBasic();
 		InitializeMap();
-		InitializeParameters();
+		InitializeRewardMap();
+		InitializePlayerParameters();
+		InitializeBossParameters();
 		return true;
 	}
 
@@ -375,7 +441,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	{
 		if (!lastLeftClick)
 		{
-			m_GM->RegisterObjectToRender(player->Fire(GetDirectionMouse(_mouseX,_mouseY)));
+			m_GM->RegisterObjectToRender(player->Fire(GetDirectionMouse(_mouseX,_mouseY)),m_GM->scene);
 			lastLeftClick = frame;
 		}
 	}
@@ -399,19 +465,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			}
 		}
 	}
-	//-------------
-	//  player
-	//-------------
-	AutoMove();
-	player->Move(key, frame);
-
-	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
-	float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
-	m_Camera->Move(midPoint, distance);
-
-	//-------------
-	//  object
-	//-------------
 
 	// Render the graphics scene.
 	result = Render();
@@ -455,14 +508,12 @@ bool GraphicsClass::Render()
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
-
 		temp->GetWorldMatrix(worldMatrix);
 		if (temp->GetName() == "player" || temp->GetName() == "boss")
 			worldMatrix = MatrixToFaceCamera *  worldMatrix;
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(),worldMatrix,
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
 									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
-		
 		if (!result)
 		{
 			return false;
@@ -523,20 +574,26 @@ void GraphicsClass::AutoMove()
 				{
 					if (temp->GetName() == "bossbullet")
 					{
-						m_GM->UnregisterObjectToRender(temp);
+						m_GM->UnregisterObjectToRender(temp,m_GM->scene);
 						m_GM->RegisterToBossPool((projectileclass*)temp);
+						cout << "bullet unregister" << endl;
 					}
 					else if (temp->GetName() == "playerbullet")
 					{
-						m_GM->UnregisterObjectToRender(temp);
+						m_GM->UnregisterObjectToRender(temp, m_GM->scene);
 						m_GM->RegisterToPlayerPool((projectileclass*)temp);
+						cout << "bullet unregister" << endl;
 					}
 					else
-						m_GM->RemoveObjectToRender(temp);
+					{
+						m_GM->RemoveObjectToRender(temp, m_GM->scene);
+						cout << "bullet unregister" << endl;
+					}
 				}
 			}
 		}
 	}
+	return;
 }
 
 bool GraphicsClass::SetUI(int mouseX, int mouseY, int fps, int cpu)
@@ -564,4 +621,6 @@ bool GraphicsClass::SetUI(int mouseX, int mouseY, int fps, int cpu)
 	{
 		return false;
 	}
+
+	return true;
 }

@@ -26,6 +26,9 @@ public:
 	vector<projectileclass*> Frame(int);
 	void SetGameManager(gameManager*);
 
+	float BOSS_PHASE2_HP;
+	float BOSS_PHASE3_HP;
+	D3DXVECTOR3 BOSS_SIZE[3];
 private:
 	int phase;
 	int damage;
@@ -34,6 +37,7 @@ private:
 	ModelClass* bullet_model;
 
 	void InitializeModels();
+	void CheckHp();
 
 	projectileclass* Fire();
 	void FireDirections(int,int);

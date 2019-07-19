@@ -19,7 +19,7 @@ D3DXVECTOR3 stdafx::normalizeVec3(D3DXVECTOR3 vec)
 
 void stdafx::PrintVector3(D3DXVECTOR3 vec)
 {
-	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
+	cout << "x: " + to_string(vec.x) << " y: " + to_string(vec.y) << " z: " + to_string(vec.z) << endl;
 }
 
 

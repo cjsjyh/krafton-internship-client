@@ -19,19 +19,22 @@ public:
 	~playerclass();
 
 	void InitializeModels();
-	projectileclass* Fire(D3DXVECTOR3);
 	
+	void Frame(int*, int);
+
 	void SetGameManager(gameManager*);
 	void SetDirection(int*);
 	void SetDirection(int);
 	int GetDirection();
-	D3DXVECTOR3 GetDirectionVector(int);
-
-	void SetBullet(projectileclass*, D3DXVECTOR3);
-	void SetSpeed(float);
-	
 	void SetImage();
-	void Move(int*, int);
+	
+	D3DXVECTOR3 GetDirectionVector(int);
+	projectileclass* Fire(D3DXVECTOR3);
+	void SetBullet(projectileclass*, D3DXVECTOR3);
+	int ObjectInteraction(int*);
+
+	bool Dash(int*, int);
+	void SetSpeed(float);
 
 	void SavePlayerPos(int scene);
 	D3DXVECTOR3 GetSavedPlayerPos(int scene);
@@ -41,6 +44,7 @@ public:
 	int PLAYER_DASH_SPEED;
 	int PLAYER_DASH_FRAME;
 	int PLAYER_DASH_PAUSE_FRAME;
+	float PLAYER_INTERACTION_RANGE;
 
 	//player bullet parameters
 	int PLAYER_BULLET_DAMAGE;

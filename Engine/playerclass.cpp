@@ -168,11 +168,20 @@ D3DXVECTOR3 playerclass::GetDirectionVector(int dir)
 	}
 }
 
-void playerclass::Move(int* keys, int frame)
+void playerclass::Frame(int* keys, int frame)
 {
 	SetDirection(keys);
 	
 	//Dashing
+	if (Dash(keys, frame));
+	else if(InputClass::IsWASDKeyPressed(keys))
+		AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
+
+	ObjectInteraction(keys);
+}
+
+bool playerclass::Dash(int* keys, int frame)
+{
 	if (keys[4] == DIK_SPACE || dashFrame != -1)
 	{
 		if (dashFrame == -1)
@@ -202,17 +211,30 @@ void playerclass::Move(int* keys, int frame)
 			}
 			//KEEP ON DASHING
 			else
-			{	
+			{
 				AdjustPosition(GetDirectionVector(dashDir) * PLAYER_DASH_SPEED);
 			}
 		}
+		return true;
 	}
-	
-	else if(InputClass::IsWASDKeyPressed(keys))
+	return false;
+}
+
+int playerclass::ObjectInteraction(int* keys)
+{
+	if (keys[6] == DIK_F)
 	{
-		AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
+		D3DXVECTOR3 checkPos = GetPosition();
+		checkPos += GetDirectionVector(direction) * PLAYER_INTERACTION_RANGE;
+		gameObject* hitObj = GM->CheckInteraction(checkPos);
+
+		if (!hitObj)
+			cout << "null!" << endl;
+		else
+			cout << "hiit obj: " + hitObj->GetName() << endl;
 	}
 
+	return 1;
 }
 
 void playerclass::SetImage()

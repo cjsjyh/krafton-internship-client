@@ -11,8 +11,6 @@ staticobjclass::staticobjclass(string objname, D3DClass* _device, CollisionChann
 {
 	objType = UNMOVABLE;
 	device = _device;
-
-	InitializeStatic();
 }
 
 staticobjclass::~staticobjclass()
@@ -20,7 +18,15 @@ staticobjclass::~staticobjclass()
 
 }
 
-void staticobjclass::InitializeStatic()
+void staticobjclass::InitializeStatic2D()
+{
+	string tName = "../Engine/data/" + GetName() + ".png";
+	cout << "texture anem: " + tName << endl;
+	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", StringToWchar(tName));
+	cout << "intialize result: " + to_string(result) << endl;
+}
+
+void staticobjclass::InitializeStatic3D()
 {
 	string tName = "../Engine/data/" + GetName() + ".png";
 	m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", StringToWchar(tName));

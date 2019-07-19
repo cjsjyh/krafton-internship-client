@@ -12,7 +12,7 @@
 bossclass::bossclass(int _hp, int _damage, D3DClass* _device, playerclass* _player, ColliderType col)
 	:hpobjects("boss", _hp, _device, BOSS, col)
 {
-	hp = _hp;
+	curHp = _hp;
 	damage = _hp;
 	phase = 1;
 	player = _player;
@@ -53,7 +53,24 @@ vector<projectileclass*> bossclass::Frame(int frame)
 		//bossBullets.push_back(Fire());
 	}
 	PopQueue(shootBullets);
+
+	CheckHp();
+
 	return shootBullets;
+}
+
+void bossclass::CheckHp()
+{
+	if ((float)curHp / maxHp < BOSS_PHASE3_HP)
+	{
+		m_model = model_list[2];
+		SetScale(BOSS_SIZE[1]);
+	}
+	else if ((float)curHp / maxHp < BOSS_PHASE2_HP)
+	{
+		m_model = model_list[1];
+		SetScale(BOSS_SIZE[2]);
+	}
 }
 
 projectileclass* bossclass::Fire()

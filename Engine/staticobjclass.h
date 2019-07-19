@@ -12,7 +12,8 @@ public:
 	staticobjclass(string objname, D3DClass* _device, CollisionChannel _channel = PLAYER, ColliderType _col=COLLIDER_BOX);
 	~staticobjclass();
 	
-	void InitializeStatic();
+	void InitializeStatic2D();
+	void InitializeStatic3D();
 	bool CheckDestroy();
 private:
 	

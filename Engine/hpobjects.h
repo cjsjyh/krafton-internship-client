@@ -11,12 +11,15 @@ class hpobjects : public gameObject
 public:
 	hpobjects(string,  int, D3DClass*, CollisionChannel, ColliderType = COLLIDER_BOX);
 	void HpObjectInitialize();
+	void SetHp(int);
+
 	void Hit(int);
 	bool CheckDestroy();
 	
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
 protected:
-	int hp;
+	int maxHp;
+	int curHp;
 	vector<ModelClass*> model_list;
 };
 

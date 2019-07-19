@@ -11,7 +11,7 @@ gameManager::gameManager(int sceneCount)
 {
 	for (int i = 0; i < sceneCount; i++)
 	{
-		vector<gameObject*> temp;
+		vector<gameObject*> temp, temp2;
 		renderObjects.push_back(temp);
 	}
 	m_CM = new collisionManager(this);
@@ -31,7 +31,7 @@ void gameManager::RegisterObjectToRender(gameObject *item, int _scene)
 
 void gameManager::UnregisterObjectToRender(gameObject *item, int _scene)
 {
-	int index = FindObjectIndex(item);
+	int index = FindObjectIndex(item, _scene);
 	gameObject* temp =  renderObjects[_scene][index];
 	renderObjects[_scene].erase(renderObjects[_scene].begin() + index);
 	return;
@@ -39,7 +39,7 @@ void gameManager::UnregisterObjectToRender(gameObject *item, int _scene)
 
 void gameManager::RemoveObjectToRender(gameObject* item, int _scene)
 {
-	int index = FindObjectIndex(item);
+	int index = FindObjectIndex(item, _scene);
 	gameObject* temp = renderObjects[_scene][index];
 	renderObjects[_scene].erase(renderObjects[_scene].begin() + index);
 	delete temp;
@@ -104,7 +104,7 @@ projectileclass* gameManager::GetFromPlayerPool()
 
 int gameManager::FindObjectIndex(gameObject *item, int _scene)
 {
-	vector<gameObject*>::iterator itr = find(renderObjects[_scene].begin(), renderObjects[scene].end(), item);
+	vector<gameObject*>::iterator itr = find(renderObjects[_scene].begin(), renderObjects[_scene].end(), item);
 	return distance(renderObjects[_scene].begin(), itr);
 }
 
@@ -122,4 +122,10 @@ void gameManager::CheckCollision()
 {
 	vector<gameObject*> coll1, coll2;
 	m_CM->CollisionManager(coll1, coll2);
+	return;
+}
+
+gameObject* gameManager::CheckInteraction(D3DXVECTOR3 point)
+{
+	return m_CM->InteractionManager(point);
 }

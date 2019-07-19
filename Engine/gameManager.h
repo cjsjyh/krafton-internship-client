@@ -35,11 +35,12 @@ public:
 	gameObject* GetGameObject(int index);
 	
 	void CheckCollision();
+	gameObject* CheckInteraction(D3DXVECTOR3);
 	void AlphaSort(D3DXVECTOR3);
 	int scene;
 
 private:
-	vector< vector<gameObject*> > renderObjects;
+	vector<vector<gameObject*>> renderObjects;
 	vector <projectileclass*> BossbulletPool;
 	vector <projectileclass*> PlayerbulletPool;
 
