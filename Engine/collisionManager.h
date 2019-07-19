@@ -25,10 +25,11 @@ private:
 	bool IsBoss(gameObject*, gameObject*);
 
 	bool CheckCollisionChannel(gameObject*, gameObject*);
-
 	int CollisionHandler(gameObject*, gameObject*);
 	bool SimpleBoxCollision(gameObject*, gameObject*);
 	bool SimpleDetection(gameObject*, vector<D3DXVECTOR3>::iterator, float);
+
+
 
 	gameManager* GM;
 };

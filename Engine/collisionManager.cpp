@@ -74,7 +74,6 @@ bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 	return false;
 }
 
-
 int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 {
 	if (CheckAnyInOne(obj1,obj2,gameObject::PLAYER_BULLET, gameObject::BOSS_BULLET))

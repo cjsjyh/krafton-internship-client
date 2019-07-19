@@ -211,7 +211,7 @@ void GraphicsClass::InitializeMap()
 	m_GM->RegisterObjectToRender(floor);
 	
 	
-	player = new playerclass(100, m_D3D);
+	player = new playerclass(10, m_D3D);
 	player->SetGameManager(m_GM);
 	m_GM->RegisterObjectToRender(player);
 
@@ -332,6 +332,10 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	mouseX = _mouseX - screenW / 2;
 	mouseY = -(_mouseY - screenH / 2);
 
+	//UI
+	if (!SetUI(mouseX, mouseY, fps, cpu))
+		return false;
+
 	//-------------------
 	//   Frame Action
 	//-------------------
@@ -352,9 +356,17 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
 		lastLeftClick = 0;
 	
-	//UI
-	if (!SetUI(mouseX, mouseY, fps, cpu))
-		return false;
+	//PLAYER DEAD
+	if (player->CheckDestroy())
+	{
+		UninitializeMap();
+		UninitializeBasic();
+
+		InitializeBasic();
+		InitializeMap();
+		InitializeParameters();
+		return true;
+	}
 
 	//-------------------
 	//  Input Handler
