@@ -239,7 +239,7 @@ void GraphicsClass::InitializeMap()
 
 	floor = new staticobjclass("floor",m_D3D, gameObject::NO_COLLISION, gameObject::COLLIDER_BOX);
 	((staticobjclass*)floor)->InitializeStatic3D();
-	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
+	floor->SetScale(D3DXVECTOR3(40, 0.1, 40));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(floor);
@@ -275,9 +275,11 @@ void GraphicsClass::UninitializeMap()
 
 void GraphicsClass::InitializeRewardMap()
 {
+	m_GM->RegisterObjectToRender(player, 1);
+
 	floor = new staticobjclass("floor", m_D3D, gameObject::NO_COLLISION,gameObject::COLLIDER_BOX);
 	((staticobjclass*)floor)->InitializeStatic3D();
-	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
+	floor->SetScale(D3DXVECTOR3(40, 0.1, 40));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(floor, 1);
@@ -292,7 +294,13 @@ void GraphicsClass::InitializeRewardMap()
 	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(temp, 1);
 	
-	m_GM->RegisterObjectToRender(player, 1);
+	temp = new staticobjclass("box", m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
+	((staticobjclass*)temp)->InitializeStatic2D();
+	temp->SetScale(D3DXVECTOR3(1, 1, 1));
+	temp->SetPosition(D3DXVECTOR3(10, 0, 10));
+	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
+	m_GM->RegisterObjectToRender(temp, 1);
+	
 
 	return;
 }
@@ -509,7 +517,7 @@ bool GraphicsClass::Render()
 		gameObject* temp = m_GM->GetGameObject(i);
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 		temp->GetWorldMatrix(worldMatrix);
-		if (temp->GetName() == "player" || temp->GetName() == "boss")
+		if (temp->GetName() == "player" || temp->GetName() == "boss" || temp->GetName() == "box")
 			worldMatrix = MatrixToFaceCamera *  worldMatrix;
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(),worldMatrix,
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),

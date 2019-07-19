@@ -224,9 +224,7 @@ int playerclass::ObjectInteraction(int* keys)
 {
 	if (keys[6] == DIK_F)
 	{
-		D3DXVECTOR3 checkPos = GetPosition();
-		checkPos += GetDirectionVector(direction) * PLAYER_INTERACTION_RANGE;
-		gameObject* hitObj = GM->CheckInteraction(checkPos);
+		gameObject* hitObj = GM->CheckInteraction(GetPosition(), PLAYER_INTERACTION_RANGE);
 
 		if (!hitObj)
 			cout << "null!" << endl;

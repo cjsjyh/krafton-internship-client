@@ -39,7 +39,6 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 				}
 			}
 
-
 			//pop된게 없으므로 서로 충돌된 물체를 등록
 			if (flag == 0)
 			{
@@ -54,6 +53,7 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 			//j가 pop되었을 경우
 			else if (flag == 2)
 			{
+				i--;
 				continue;
 			}
 			//i와 j둘다 pop
@@ -73,13 +73,13 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 		return true;
 }
 
-gameObject* collisionManager::InteractionManager(D3DXVECTOR3 point)
+gameObject* collisionManager::InteractionManager(D3DXVECTOR3 point, int range)
 {
 	int size = GM->GetRenderObjectCount();
 	for (int i = 0; i <size; i++) {
 		if (GM->GetGameObject(i)->channel != gameObject::INTERACTION)
 			continue;
-		if (SimpleBoxCollision(point, GM->GetGameObject(i)))
+		if (InteractionCircularDetection(point, range, GM->GetGameObject(i)))
 			return GM->GetGameObject(i);
 	}
 	return NULL;
@@ -241,13 +241,12 @@ bool collisionManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 	return false;
 }
 
-bool collisionManager::SimpleBoxCollision(D3DXVECTOR3 point, gameObject* src)
+bool collisionManager::InteractionCircularDetection(D3DXVECTOR3 point, int range, gameObject* src)
 {
 	D3DXVECTOR3 pos, len;
 	pos = src->GetPosition();
 	len = src->GetCollSize();
-	if ((point.x <= pos.x + len.x && point.x >= pos.x - len.x) &&
-		(point.z <= pos.z + len.z && point.z >= pos.z - len.z))
+	if (stdafx::GetDistance(point,pos) < range)
 		return true;
 	return false;
 }

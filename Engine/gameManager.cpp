@@ -125,7 +125,7 @@ void gameManager::CheckCollision()
 	return;
 }
 
-gameObject* gameManager::CheckInteraction(D3DXVECTOR3 point)
+gameObject* gameManager::CheckInteraction(D3DXVECTOR3 point, int range)
 {
-	return m_CM->InteractionManager(point);
+	return m_CM->InteractionManager(point, range);
 }
