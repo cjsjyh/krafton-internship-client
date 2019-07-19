@@ -136,13 +136,8 @@ void gameObject::SetRotation(D3DXVECTOR3 _rot)
 
 void gameObject::SetScale(D3DXVECTOR3 _scale)
 {
-	//width
 	scale.x = _scale.x;
-
-	//height
 	scale.y = _scale.y;
-
-	//length
 	scale.z = _scale.z;
 
 	return;

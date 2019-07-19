@@ -10,7 +10,7 @@
 #include "bossclass.h"
 
 bossclass::bossclass(int _hp, int _damage, D3DClass* _device, playerclass* _player, ColliderType col)
-	:hpobjects("boss", _hp, _device, HIT_BOSS, col)
+	:hpobjects("boss", _hp, _device, BOSS, col)
 {
 	hp = _hp;
 	damage = _hp;
@@ -58,7 +58,7 @@ vector<projectileclass*> bossclass::Frame(int frame)
 
 projectileclass* bossclass::Fire()
 {
-	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 3, device, 50, 100,gameObject::HIT_PLAYER);
+	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 3, device, gameObject::PLAYER);
 	temp->SetDirVector(normalizeVec3(player->GetPosition() - GetPosition()));
 	temp->AdjustPosition(temp->GetDirVector());
 
@@ -90,7 +90,7 @@ void bossclass::FireDirections(int dir, int frame)
 		if (!temp)
 		{
 			//cout << "temp NULL" << endl;
-			temp = new projectileclass("bossbullet", GetPosition() + dirVec, 1, 3, device, 5, 100, gameObject::HIT_PLAYER);
+			temp = new projectileclass("bossbullet", GetPosition() + dirVec, 1, 3, device, gameObject::BOSS_BULLET);
 			temp->SetDirVector(dirVec);
 		}
 		else

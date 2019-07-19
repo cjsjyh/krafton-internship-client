@@ -9,7 +9,7 @@ class ModelClass;
 class staticobjclass : public gameObject
 {
 public:
-	staticobjclass(string objname, D3DClass* _device, ColliderType _col=COLLIDER_BOX, CollisionChannel _channel=HIT_PLAYER);
+	staticobjclass(string objname, D3DClass* _device, CollisionChannel _channel = PLAYER, ColliderType _col=COLLIDER_BOX);
 	~staticobjclass();
 	
 	void InitializeStatic();

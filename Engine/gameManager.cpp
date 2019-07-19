@@ -21,20 +21,7 @@ gameManager::~gameManager()
 {
 	delete m_CM;
 }
-/*
-void gameManager::DisableSceneObjects(int scene)
-{
-	for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
-	{
-		(*iter)->
-	}
-}
 
-void gameManager::EnableSceneObjects(int scene)
-{
-
-}
-*/
 
 void gameManager::RegisterObjectToRender(gameObject *item, int _scene)
 {

@@ -13,30 +13,29 @@ collisionManager::collisionManager(gameManager* _GM)
 	GM = _GM;
 }
 
-bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
+bool collisionManager::CheckMatch(gameObject* obj1, gameObject* obj2, int channel1, int channel2)
 {
-	if (obj1->channel == gameObject::NO_COLLISION)
-		return false;
-
-	if (obj2->channel == gameObject::NO_COLLISION)
-		return false;
-
-	if (IsBullet(obj1) && IsBullet(obj2))
-	{
-		if (obj2->channel != obj1->channel)
+	if (obj1->channel == channel1)
+		if (obj2->channel == channel2)
 			return true;
-		return false;
-	}
-
-	if (obj2->channel != obj1->channel)
-		return false;
-
-	return true;
+	else if (obj1->channel == channel2)
+		if (obj2->channel == channel1)
+			return true;
+	return false;
 }
 
-bool collisionManager::IsBullet(gameObject* obj)
+bool collisionManager::CheckAnyInOne(gameObject* obj1, gameObject* obj2, int channel1, int channel2)
 {
-	if (obj->GetName() == "playerbullet" || obj->GetName() == "bossbullet")
+	if (obj1->channel == channel1 || obj1->channel == channel2)
+		return true;
+	if (obj2->channel == channel1 || obj2->channel == channel2)
+			return true;
+	return false;
+}
+
+bool collisionManager::CheckInOne(gameObject* obj, int channel1, int channel2)
+{
+	if (obj->channel == channel1 || obj->channel == channel2)
 		return true;
 	return false;
 }
@@ -55,12 +54,33 @@ bool collisionManager::IsBoss(gameObject* obj1, gameObject* obj2)
 	return 0;
 }
 
+bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
+{
+	if (obj1->channel == gameObject::NO_COLLISION)
+		return false;
+
+	if (obj2->channel == gameObject::NO_COLLISION)
+		return false;
+
+	if (CheckMatch(obj1, obj2, gameObject::PLAYER, gameObject::BOSS_BULLET))
+		return true;
+
+	if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET, gameObject::PLAYER_BULLET))
+		return true;
+
+	if (CheckMatch(obj1, obj2, gameObject::BOSS, gameObject::PLAYER_BULLET))
+		return true;
+
+	return false;
+}
+
+
 int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 {
-	if (IsBullet(obj1) || IsBullet(obj2))
+	if (CheckAnyInOne(obj1,obj2,gameObject::PLAYER_BULLET, gameObject::BOSS_BULLET))
 	{
-		
-		if (IsBullet(obj1) && IsBullet(obj2))
+		//BOTH ARE BULLETS
+		if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET, gameObject::PLAYER_BULLET))
 		{
 			GM->UnregisterObjectToRender(obj1);
 			GM->UnregisterObjectToRender(obj2);
@@ -196,45 +216,6 @@ bool collisionManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 	return false;
 }
 
-bool collisionManager::ComplexCollision(gameObject* objSrc, gameObject* objDest)
-{
-	vector<D3DXVECTOR3> SrcCollPts = ComplexCollisionInitialize(objSrc);
-	vector<D3DXVECTOR3> DestCollPts = ComplexCollisionInitialize(objDest);
-	float distance = objSrc->sphere_collSize + objDest->sphere_collSize;
-
-	vector<D3DXVECTOR3>::iterator iter1, iter2;
-
-	for (iter1 = SrcCollPts.begin(); iter1 < SrcCollPts.end(); iter1++)
-	{
-		for (iter2 = DestCollPts.begin(); iter2 < DestCollPts.end(); iter2++)
-		{
-			float result = pow(iter1->x - iter2->x, 2) + pow(iter1->z - iter2->z, 2);
-			if (result <= pow(distance, 2)) {
-				cout << "HIT!!" << endl;
-				return true;
-			}
-			else if (result >= pow(distance * 2, 2)) {
-				return false;
-			}
-		}
-	}
-	return false;
-}
-
-bool collisionManager::SimpleComplexCollision(gameObject* objSimple, gameObject* objComplex)
-{
-	float collider_size = objComplex->sphere_collSize;
-	vector<D3DXVECTOR3> objComplexPts = ComplexCollisionInitialize(objComplex);
-
-	vector<D3DXVECTOR3>::iterator iter1;
-	for (iter1 = objComplexPts.begin(); iter1 < objComplexPts.end(); iter1++)
-	{
-		if (SimpleDetection(objSimple, iter1, collider_size))
-			return true;
-	}
-
-}
-
 bool collisionManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::iterator check, float colliderSize)
 {
 	D3DXVECTOR3 pos, len;
@@ -245,36 +226,3 @@ bool collisionManager::SimpleDetection(gameObject* simple, vector<D3DXVECTOR3>::
 		return true;
 	return false;
 }
-
-vector <D3DXVECTOR3> collisionManager::ComplexCollisionInitialize(gameObject* obj)
-{
-	vector <D3DXVECTOR3> points;
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 size;
-	//from object
-	float minVertex;
-	float collider_size = obj->sphere_collSize;
-
-
-	pos = obj->GetPosition();
-	size = obj->GetScale();
-	minVertex = min(min(size.x, size.y), size.z);
-	minVertex -= collider_size;
-
-	for (int i = 1; i < (size.x / collider_size) * 2; i += 2) {
-		for (int k = 1; k < (size.z / collider_size) * 2; k += 2) {
-			D3DXVECTOR3 temp;
-			float maxVertex;
-			temp.x = pos.x - size.x + i * collider_size;
-			temp.z = pos.z - size.z + k * collider_size;
-			maxVertex = max(abs(temp.x), abs(temp.z));
-			if (maxVertex < minVertex) {
-				continue;
-			}
-			points.push_back(temp);
-		}
-	}
-
-	return points;
-}
-

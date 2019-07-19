@@ -10,7 +10,7 @@
 #include "playerclass.h"
 
 playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
-	:hpobjects("player", _hp, _device, HIT_PLAYER)
+	:hpobjects("player", _hp, _device, PLAYER)
 {
 	objType = MOVEABLE;
 	direction = 1;
@@ -57,8 +57,8 @@ projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
 	if (!temp)
 	{
 		temp = new projectileclass("playerbullet", GetPosition(), PLAYER_BULLET_SPEED,
-									PLAYER_BULLET_DAMAGE, device, PLAYER_BULLET_DELAY, 
-									PLAYER_BULLET_DISTANCE, gameObject::HIT_BOSS);
+									PLAYER_BULLET_DAMAGE, device, gameObject::PLAYER_BULLET,PLAYER_BULLET_DELAY,
+									PLAYER_BULLET_DISTANCE);
 		temp->SetDirVector(dirVec);
 	}
 	else

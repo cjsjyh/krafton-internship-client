@@ -53,14 +53,15 @@ public:
 	~GraphicsClass();
 
 	bool Initialize(int, int, HWND);
+	void InitializeBasic();
+	void UninitializeBasic();
 	void InitializeMap();
+	void UninitializeMap();
 	void InitializeParameters();
 	void InitializeRewardMap();
 	void Shutdown();
 	bool Frame(int, int, bool*, int*, int, int);
 	bool Render();
-
-	float clamp(float, float, float);
 
 private:
 	D3DXVECTOR3 GetDirectionMouse(int, int);

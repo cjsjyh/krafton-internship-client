@@ -5,7 +5,7 @@
 
 #include "projectileclass.h"
 
-projectileclass::projectileclass(string name, D3DXVECTOR3 pos, float _speed, int _damage, D3DClass* _device, int _delay, int _distance, CollisionChannel _channel, ColliderType coll)
+projectileclass::projectileclass(string name, D3DXVECTOR3 pos, float _speed, int _damage, D3DClass* _device, CollisionChannel _channel, int _delay, int _distance, ColliderType coll)
 	:gameObject(name, pos,_channel, coll)
 {
 	D3DXVECTOR3 position = GetPosition();

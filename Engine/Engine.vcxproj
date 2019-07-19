@@ -79,7 +79,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bossclass.cpp" />
-    <ClCompile Include="bulletqueueclass.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="collisionManager.cpp" />
     <ClCompile Include="cpuclass.cpp" />
@@ -110,7 +109,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bossclass.h" />
-    <ClInclude Include="bulletqueueclass.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="collisionManager.h" />
     <ClInclude Include="cpuclass.h" />

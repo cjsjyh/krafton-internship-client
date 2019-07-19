@@ -6,7 +6,7 @@
 
 #include "staticobjclass.h"
 
-staticobjclass::staticobjclass(string objname, D3DClass* _device, ColliderType _col, CollisionChannel _channel)
+staticobjclass::staticobjclass(string objname, D3DClass* _device, CollisionChannel _channel, ColliderType _col)
 	:gameObject(objname, _channel, _col)
 {
 	objType = UNMOVABLE;
@@ -22,7 +22,7 @@ staticobjclass::~staticobjclass()
 
 void staticobjclass::InitializeStatic()
 {
-	string tName = "../Engine/data/" + GetName() + ".dds";
+	string tName = "../Engine/data/" + GetName() + ".png";
 	m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", StringToWchar(tName));
 }
 

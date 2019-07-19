@@ -55,9 +55,22 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
 	D3DXMATRIX baseViewMatrix;
-
+	
 	screenW = screenWidth;
 	screenH = screenHeight;
+
+	// Create the camera object.
+	m_Camera = new CameraClass;
+	if (!m_Camera)
+	{
+		return false;
+	}
+
+	// Set the initial position of the camera.
+
+	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
+	m_Camera->Render(D3DXVECTOR3(0, 0, 0));
+	m_Camera->GetViewMatrix(baseViewMatrix);
 
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
@@ -73,23 +86,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
 		return false;
 	}
-
-	// Create the camera object.
-	m_Camera = new CameraClass;
-	if(!m_Camera)
-	{
-		return false;
-	}
-
-	// Set the initial position of the camera.
-	
-	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
-	m_Camera->Render(D3DXVECTOR3(0,0,0));
-	m_Camera->GetViewMatrix(baseViewMatrix);
-
-	//initial camera setup
-	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
-	m_Camera->SetRotation(D3DXVECTOR3(45, 0, 0));
 
 	//------------
 	//   text
@@ -107,13 +103,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create gameManager object
-	m_GM = new gameManager(SCENE_COUNT);
-	if (!m_GM)
-	{
 		return false;
 	}
 	
@@ -144,10 +133,27 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
+	InitializeBasic();
 	InitializeMap();
 	InitializeParameters();
 	InitializeRewardMap();
 	return true;
+}
+
+void GraphicsClass::InitializeBasic()
+{
+	//initial camera setup
+	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+	m_Camera->SetRotation(D3DXVECTOR3(45, 0, 0));
+
+	// Create gameManager object
+	m_GM = new gameManager(SCENE_COUNT);
+}
+
+void GraphicsClass::UninitializeBasic()
+{
+	delete m_GM;
+	m_GM = 0;
 }
 
 void GraphicsClass::InitializeParameters()
@@ -198,7 +204,7 @@ void GraphicsClass::InitializeMap()
 	m_GM->scene = 0;
 	sceneChangeFrame = 0;
 
-	floor = new staticobjclass("floor",m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
+	floor = new staticobjclass("floor",m_D3D, gameObject::NO_COLLISION, gameObject::COLLIDER_BOX);
 	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
@@ -217,9 +223,21 @@ void GraphicsClass::InitializeMap()
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
 }
 
+void GraphicsClass::UninitializeMap()
+{
+	delete player;
+	delete boss;
+	delete floor;
+
+	player = 0;
+	boss = 0;
+	floor = 0;
+}
+
+
 void GraphicsClass::InitializeRewardMap()
 {
-	floor = new staticobjclass("floor", m_D3D, gameObject::COLLIDER_BOX, gameObject::NO_COLLISION);
+	floor = new staticobjclass("floor", m_D3D, gameObject::NO_COLLISION,gameObject::COLLIDER_BOX);
 	floor->SetScale(D3DXVECTOR3(20, 0.1, 20));
 	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
@@ -307,7 +325,6 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse(int _mouseX, int _mouseY)
 	return stdafx::normalizeVec3(projectedPt);
 }
 
-
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, int fps, int cpu)
 {
 	
@@ -319,9 +336,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//   Frame Action
 	//-------------------
 	frame++;
-	if (frame > 10000)
-		frame = lastLeftClick = 0;
-
 	
 	//BOSS Attack
 	if (m_GM->scene == 0)
@@ -345,12 +359,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//-------------------
 	//  Input Handler
 	//-------------------
-	if (InputClass::RightMouseClicked(mousePress))
-	{
-
-
-	}
-
 	if (InputClass::LeftMouseClicked(mousePress))
 	{
 		if (!lastLeftClick)
@@ -371,14 +379,11 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 				player->SetPosition(D3DXVECTOR3(0, 0, 0));
 				player->SetDirection(1);
 				m_GM->scene = 1;
-				
-				cout << "scene 1" << endl;
 			}
 			else
 			{
 				m_GM->scene = 0;
 				player->SetPosition(player->GetSavedPlayerPos(m_GM->scene));
-				cout << "scene 0" << endl;
 			}
 		}
 	}
@@ -390,9 +395,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 
 	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
 	float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
-
 	m_Camera->Move(midPoint, distance);
-	
 
 	//-------------
 	//  object
@@ -436,7 +439,6 @@ bool GraphicsClass::Render()
 	//render floor first
 	m_GM->AlphaSort(m_Camera->GetPosition());
 	int size = m_GM->GetRenderObjectCount();
-	cout << "size " + to_string(size) << endl;
 	for (int i = 0; i < size; i++)
 	{
 		gameObject* temp = m_GM->GetGameObject(i);
@@ -463,9 +465,6 @@ bool GraphicsClass::Render()
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
 
-	// Turn on the alpha blending before rendering the text.
-	//m_D3D->TurnOnAlphaBlending();
-
 	// Render the text strings.
 	D3DXMatrixIdentity(&worldMatrix);
 	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
@@ -487,18 +486,6 @@ bool GraphicsClass::Render()
 	return true;
 }
 
-
-
-
-float GraphicsClass::clamp(float value, float min, float max)
-{
-	if (value < min)
-		return min;
-	else if (value > max)
-		return max;
-	else
-		return value;
-}
 
 void GraphicsClass::AutoMove()
 {

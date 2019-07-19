@@ -15,8 +15,11 @@ public:
 	};
 	enum CollisionChannel
 	{
-		HIT_PLAYER,
-		HIT_BOSS,
+		PLAYER,
+		PLAYER_BULLET,
+		BOSS,
+		BOSS_BULLET,
+		INTERACTION,
 		NO_COLLISION,
 	};
 	enum ObjectType
@@ -26,8 +29,8 @@ public:
 		UNMOVABLE
 	};
 
-	gameObject(string, CollisionChannel=HIT_PLAYER, ColliderType=COLLIDER_BOX);
-	gameObject(string, D3DXVECTOR3, CollisionChannel=HIT_PLAYER, ColliderType = COLLIDER_BOX);
+	gameObject(string, CollisionChannel, ColliderType=COLLIDER_BOX);
+	gameObject(string, D3DXVECTOR3, CollisionChannel, ColliderType = COLLIDER_BOX);
 	~gameObject();
 
 	void InitializeObject();

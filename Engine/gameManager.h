@@ -21,9 +21,6 @@ public:
 	gameManager(int);
 	~gameManager();
 
-	//void DisableSceneObjects(int scene);
-	//void EnableSceneObjects(int scene);
-
 	void RegisterObjectToRender(gameObject *item, int _scene=0);
 	void UnregisterObjectToRender(gameObject *item, int _scene=0);
 	void RemoveObjectToRender(gameObject* item, int _scene=0);
