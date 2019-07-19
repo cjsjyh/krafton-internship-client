@@ -517,7 +517,7 @@ bool GraphicsClass::Render()
 		gameObject* temp = m_GM->GetGameObject(i);
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 		temp->GetWorldMatrix(worldMatrix);
-		if (temp->GetName() == "player" || temp->GetName() == "boss" || temp->GetName() == "box")
+		if (temp->GetName() != "floor")
 			worldMatrix = MatrixToFaceCamera *  worldMatrix;
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(),worldMatrix,
 									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
@@ -584,18 +584,15 @@ void GraphicsClass::AutoMove()
 					{
 						m_GM->UnregisterObjectToRender(temp,m_GM->scene);
 						m_GM->RegisterToBossPool((projectileclass*)temp);
-						cout << "bullet unregister" << endl;
 					}
 					else if (temp->GetName() == "playerbullet")
 					{
 						m_GM->UnregisterObjectToRender(temp, m_GM->scene);
 						m_GM->RegisterToPlayerPool((projectileclass*)temp);
-						cout << "bullet unregister" << endl;
 					}
 					else
 					{
 						m_GM->RemoveObjectToRender(temp, m_GM->scene);
-						cout << "bullet unregister" << endl;
 					}
 				}
 			}

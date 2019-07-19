@@ -57,6 +57,8 @@ void gameManager::AlphaSort(D3DXVECTOR3 _camPos)
 			(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), _camPos);
 	}
 	std::sort(renderObjects[scene].begin(), renderObjects[scene].end(), CompareDist());
+
+	return;
 }
 
 void gameManager::RegisterToBossPool(projectileclass* item)

@@ -17,7 +17,6 @@ class CameraClass
 {
 public:
 	CameraClass();
-	CameraClass(const CameraClass&);
 	~CameraClass();
 
 	void Move(D3DXVECTOR3, float);

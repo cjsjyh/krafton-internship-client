@@ -14,6 +14,10 @@ CameraClass::CameraClass()
 	m_rotationZ = 0.0f;
 }
 
+CameraClass::~CameraClass()
+{
+
+}
 
 void CameraClass::Move(D3DXVECTOR3 midpoint, float distance)
 {

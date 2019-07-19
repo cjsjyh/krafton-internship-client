@@ -17,7 +17,7 @@ class playerclass : public hpobjects
 public:
 	playerclass(int, D3DClass* ,D3DXVECTOR3 pos = D3DXVECTOR3(0, 0, 0));
 	~playerclass();
-
+	
 	void InitializeModels();
 	
 	void Frame(int*, int);

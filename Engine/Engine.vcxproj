@@ -98,6 +98,7 @@
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="playerclass.cpp" />
     <ClCompile Include="projectileclass.cpp" />
+    <ClCompile Include="skillpatternclass.cpp" />
     <ClCompile Include="staticobjclass.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="systemclass.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="playerclass.h" />
     <ClInclude Include="projectileclass.h" />
+    <ClInclude Include="skillpatternclass.h" />
     <ClInclude Include="staticobjclass.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="systemclass.h" />

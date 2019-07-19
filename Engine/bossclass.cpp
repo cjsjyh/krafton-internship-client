@@ -6,6 +6,7 @@
 #include "gameObject.h"
 #include "modelclass.h"
 #include "gameManager.h"
+#include "skillpatternclass.h"
 
 #include "bossclass.h"
 
@@ -49,11 +50,10 @@ vector<projectileclass*> bossclass::Frame(int frame)
 	vector<projectileclass*> shootBullets;
 	if (frame % 60 == 0)
 	{
-		FireDirections(10, frame);
+		FireDirections(3, frame);
 		//bossBullets.push_back(Fire());
 	}
 	PopQueue(shootBullets);
-
 	CheckHp();
 
 	return shootBullets;
@@ -76,7 +76,7 @@ void bossclass::CheckHp()
 projectileclass* bossclass::Fire()
 {
 	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 3, device, gameObject::PLAYER);
-	temp->SetDirVector(normalizeVec3(player->GetPosition() - GetPosition()));
+	temp->SetDirVector(skillpatternclass::FireAt(player->GetPosition(),GetPosition()));
 	temp->AdjustPosition(temp->GetDirVector());
 
 	return temp;
@@ -84,40 +84,24 @@ projectileclass* bossclass::Fire()
 
 void bossclass::FireDirections(int dir, int frame)
 {
-	D3DXMATRIX rotMatrix;
-	D3DXVECTOR3 dirVec = D3DXVECTOR3(1, 0, 1);
-	D3DXVECTOR4 result;
-	float angle;
-	
-	
-	for(int i=0;i < dir; i++)
-	{			
-		dirVec = D3DXVECTOR3(1, 0, 1);
-		angle = 360 / dir * i;
-		angle *= 0.0174532925f;
-
-		D3DXMatrixIdentity(&rotMatrix);
-		D3DXMatrixRotationY(&rotMatrix, angle);
-
-		D3DXVec3Transform(&result, &dirVec, &rotMatrix);
-
-		dirVec = normalizeVec3(D3DXVECTOR3(result.x, result.y, result.z));
-
+	//vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInCircle(dir);
+	vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInFan(dir,5,GetPosition(), player->GetPosition());
+	for (auto iter = dirVectors.begin(); iter != dirVectors.end(); iter++)
+	{
 		projectileclass* temp = GM->GetFromBossPool();
 		if (!temp)
 		{
 			//cout << "temp NULL" << endl;
-			temp = new projectileclass("bossbullet", GetPosition() + dirVec, 1, 3, device, gameObject::BOSS_BULLET);
-			temp->SetDirVector(dirVec);
+			temp = new projectileclass("bossbullet", GetPosition() + (*iter), 1, 3, device, gameObject::BOSS_BULLET);
+			temp->SetDirVector(*iter);
 		}
 		else
 		{
-			SetBullet((projectileclass*)temp, dirVec);
+			SetBullet((projectileclass*)temp, *iter);
 		}
 
 		PushQueue(temp, 0);
 	}
-	
 }
 
 void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec)
@@ -125,6 +109,7 @@ void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec)
 	bullet->SetPosition(GetPosition() + dirVec);
 	bullet->SetDirVector(dirVec);
 	bullet->SetDistance(100);
+	bullet->SetDelay(20);
 }
 
 

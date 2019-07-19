@@ -23,7 +23,7 @@ projectileclass::projectileclass(string name, D3DXVECTOR3 pos, float _speed, int
 void projectileclass::InitializeProjectile()
 {
 	bool result;
-	result = m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
+	result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/bullet.png");
 }
 
 bool projectileclass::checkDistance()
@@ -46,6 +46,11 @@ void projectileclass::SetDirVector(D3DXVECTOR3 dir)
 D3DXVECTOR3 projectileclass::GetDirVector()
 {
 	return dirVector;
+}
+
+void projectileclass::SetDelay(int _delay)
+{
+	delay = _delay;
 }
 
 void projectileclass::Move(float multiplier)
