@@ -63,8 +63,13 @@ vector<D3DXVECTOR3> skillpatternclass::FireInFan(int dirCount, int angle, D3DXVE
 		dirVectors.push_back(middleVec);
 		for (int i = 1; i <= (dirCount - 1) / 2; i++)
 		{
-			D3DXMatrixRotationY(&rotleft, -angle*i);
-			D3DXMatrixRotationY(&rotright, angle*i);
+			angleright = angle * i;
+			angleright *= 0.0174532925f;
+			angleleft = -angle * i;
+			angleleft *= 0.0174532925f;
+
+			D3DXMatrixRotationY(&rotleft, angleleft);
+			D3DXMatrixRotationY(&rotright, angleright);
 
 			D3DXVec3TransformCoord(&dirVec, &middleVec, &rotleft);
 			dirVectors.push_back(dirVec);
