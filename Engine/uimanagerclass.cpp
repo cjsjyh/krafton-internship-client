@@ -29,7 +29,6 @@ bool uimanagerclass::InitializeUI()
 
 	m_ImageDecoder = new imagedecoderclass;
 
-	
 	for (int i = 0; i <parameters.size(); i++)
 	{
 		BitmapClass* temp = new BitmapClass;
@@ -37,8 +36,6 @@ bool uimanagerclass::InitializeUI()
 			return false;
 		//get file resolution
 		uiinfo = parameters[i];
-		if (parameters[i].uiname == "BOSSHPBAR_FRONT")
-			bossUI = parameters[i];
 
 		m_ImageDecoder->GetImageSize(stdafx::StringToWchar(uiinfo.filename), width, height);
 		if (uiinfo.size_x == 0 || uiinfo.size_y == 0)
@@ -55,6 +52,7 @@ bool uimanagerclass::InitializeUI()
 			return false;
 		}
 		m_UI.push_back(temp);
+
 	}
 	return true;
 }
@@ -64,8 +62,11 @@ void uimanagerclass::UpdateUI()
 
 }
 
+/*
 void uimanagerclass::UpdateBossHpUI(float hpPercent)
 {
-
+	m_UI[bossUI.index]->Initialize(device->GetDevice(), screenWidth, screenHeight,
+									stdafx::StringToWchar(bossUI.parameters.filename),
+									bossUI.parameters.size_x * hpPercent, bossUI.parameters.size_y);
 }
-
+*/

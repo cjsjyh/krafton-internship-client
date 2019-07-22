@@ -569,6 +569,7 @@ bool GraphicsClass::Render()
 
 	for (int i=0;i < m_UIManager->m_UI.size(); i++)
 	{
+		D3DXMatrixIdentity(&worldMatrix);
 		int x = m_UIManager->parameters[i].pos_x;
 		int y = m_UIManager->parameters[i].pos_y;
 		result = m_UIManager->m_UI[i]->Render(m_D3D->GetDeviceContext(), x, y);
@@ -576,6 +577,13 @@ bool GraphicsClass::Render()
 		{
 			return false;
 		}
+		
+		if (m_UIManager->parameters[i].uiname == "BOSSHPBAR_FRONT")
+		{
+			float bossHp = boss->GetHpPercent();
+			D3DXMatrixScaling(&worldMatrix,1*bossHp,1,1);
+		}
+
 		// Render the bitmap with the texture shader.
 		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_UIManager->m_UI[i]->GetIndexCount(), worldMatrix, 
 										baseViewMatrix, orthoMatrix, m_UIManager->m_UI[i]->GetTexture());
