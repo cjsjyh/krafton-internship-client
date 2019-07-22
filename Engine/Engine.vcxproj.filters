@@ -123,6 +123,9 @@
     <ClCompile Include="bitmapclass.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="imagedecoderclass.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inputclass.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="graphicsclass.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imagedecoderclass.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

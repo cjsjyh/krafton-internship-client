@@ -37,7 +37,7 @@ void playerclass::InitializeModels()
 	{
 		string tName = "../Engine/data/player/player" + to_string(i) + ".png";
 		ModelClass* temp = new ModelClass();
-		temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", StringToWchar(tName));
+		temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
 
 		model_list.push_back(temp);
 	}

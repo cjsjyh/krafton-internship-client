@@ -17,7 +17,7 @@ hpobjects::hpobjects(string name, int _hp, D3DClass* _device, CollisionChannel c
 void hpobjects::HpObjectInitialize()
 {
 	string tName = "../Engine/data/" + GetName() + ".dds";
-	m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", StringToWchar(tName));
+	m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
 }
 
 void hpobjects::SetHp(int hp)

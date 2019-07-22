@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include <atlconv.h>
 #include "modelclass.h"
 #include "d3dclass.h"
 
@@ -69,20 +68,6 @@ ModelClass* gameObject::GetModel()
 string gameObject::GetName()
 {
 	return name;
-}
-
-WCHAR* gameObject::StringToWchar(string str)
-{
-	USES_CONVERSION;
-	char* writeable = new char[str.size() + 1];
-	WCHAR* converted = new WCHAR[str.size() + 1];
-	//string -> char*
-	std::copy(str.begin(), str.end(), writeable);
-	writeable[str.size()] = '\0';
-	//char* -> WCHAR*
-
-	wcscpy(converted, A2W(writeable));
-	return converted;
 }
 
 gameObject::ColliderType gameObject::GetColliderType()

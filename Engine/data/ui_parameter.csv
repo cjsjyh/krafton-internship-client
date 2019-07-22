@@ -1,0 +1,10 @@
+FILENAME,floor.png,
+POSITION_X,0,
+POSITION_Y,0,
+SIZE_X,0,이미지 원래 사이즈를 사용하고 싶으면 0
+SIZE_Y,0,이미지 원래 사이즈를 사용하고 싶으면 0
+FILENAME,bullet.png,
+POSITION_X,100,
+POSITION_Y,100,
+SIZE_X,200,이미지 원래 사이즈를 사용하고 싶으면 0
+SIZE_Y,200,이미지 원래 사이즈를 사용하고 싶으면 0

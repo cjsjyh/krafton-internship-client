@@ -92,6 +92,7 @@
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="graphicsclass.cpp" />
     <ClCompile Include="hpobjects.cpp" />
+    <ClCompile Include="imagedecoderclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
     <ClCompile Include="lightclass.cpp" />
     <ClCompile Include="lightshaderclass.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="gameObject.h" />
     <ClInclude Include="graphicsclass.h" />
     <ClInclude Include="hpobjects.h" />
+    <ClInclude Include="imagedecoderclass.h" />
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />

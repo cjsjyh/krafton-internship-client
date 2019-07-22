@@ -20,7 +20,7 @@ bool textfilereader::ReadFile(string fname)
 	int pos;
 	if (!in.is_open())
 	{
-		cout << "Failed to open file" << endl;
+		std::cout << "Failed to open file" << endl;
 		return false;
 	}
 
@@ -53,7 +53,63 @@ bool textfilereader::ReadFile(string fname)
 		}
 		else
 			return false;
-		cout << fields[0] << endl;
+		std::cout << fields[0] << endl;
+	}
+	return true;
+}
+
+
+bool textfilereader::ReadUIFile(string fname)
+{
+	fstream in(fname);
+	string line;
+	int pos;
+
+	if (!in.is_open())
+	{
+		std::cout << "Failed to open file" << endl;
+		return false;
+	}
+
+	while (getline(in, line))
+	{
+		UIinfo temp;
+		for (int i = 0; i < 5; i++)
+		{
+			if (i != 0)
+				getline(in, line);
+			vector<string> fields;
+			if (line == "")
+				break;
+			cout << line << endl;
+			while ((pos = line.find(',')) >= 0)
+			{
+				fields.push_back(line.substr(0, pos));
+				line = line.substr(pos + 1);
+			}
+			fields.push_back(line);
+
+			
+			switch (i)
+			{
+			case 0:
+				temp.filename = "../Engine/data/" + fields[1];
+				break;
+			case 1:
+				temp.pos_x = stoi(fields[1]);
+				break;
+			case 2:
+				temp.pos_y = stoi(fields[1]);
+				break;
+			case 3:
+				temp.size_x = stoi(fields[1]);
+				break;
+			case 4:
+				temp.size_y = stoi(fields[1]);
+				break;
+			}
+		}
+		paramUI.push_back(temp);
 	}
 	return true;
 }

@@ -55,7 +55,6 @@ public:
 	virtual bool CheckDestroy() = 0;
 
 	string GetName();
-	WCHAR* StringToWchar(string);
 	ColliderType GetColliderType();
 	ModelClass* GetModel();
 

@@ -13,6 +13,7 @@
 #include "lightshaderclass.h"
 #include "lightclass.h"
 #include "bitmapclass.h"
+#include "imagedecoderclass.h"
 
 #include "gameObject.h"
 #include "staticobjclass.h"
@@ -33,7 +34,7 @@ GraphicsClass::GraphicsClass()
 	m_Text = 0;
 	
 	m_TextureShader = 0;
-	m_Bitmap = 0;
+	m_ImageDecoder = 0;
 
 	m_GM = 0;
 
@@ -153,11 +154,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_filereader->ReadFile("../Engine/data/boss_parameter.csv");
 	if (!result)
 		return false;
-	/*
+	
 	result = InitializeUI(screenWidth, screenHeight, hwnd);
 	if (!result)
 		return false;
-		*/
+		
 	InitializeBasic();
 	InitializeMap();
 	InitializePlayerParameters();
@@ -168,46 +169,37 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 bool GraphicsClass::InitializeUI(int screenWidth, int screenHeight, HWND hwnd)
 {
-	ID2D1Factory* g_ipD2DFactory = nullptr;
-	ID2D1HwndRenderTarget* g_ipRT = nullptr;
-	IWICImagingFactory* g_ipWICFactory = nullptr;
-	IWICFormatConverter* g_ipConvertedSrcBmp = nullptr;
-	ID2D1Bitmap* g_ipD2DBitmap = nullptr;
-
-	HRESULT hr = E_FAIL;
-
-	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &g_ipD2DFactory);
-	hr = CoCreateInstance(CLSID_WICImagingFactory,NULL, CLSCTX_INPROC_SERVER,IID_PPV_ARGS(&g_ipWICFactory));
-
-	IWICBitmapDecoder* ipDecoderPtr = nullptr;
-	hr = g_ipWICFactory->CreateDecoderFromFilename(L"../Engine/data/bullet.png", nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &ipDecoderPtr);
-	
-	IWICBitmapFrameDecode* ipFramePtr = nullptr;
-	hr = ipDecoderPtr->GetFrame(0, &ipFramePtr);
-	
-	UINT uiWidth, uiHeight;
-	ipFramePtr->GetSize(&uiWidth, &uiHeight);
-	cout << "width: " + to_string(uiWidth) << " height: " + to_string(uiHeight) << endl;
-
-
-	/*
 	bool result;
-	BitmapClass* temp;
-	// Create the bitmap object.
-	temp = new BitmapClass;
-	if (!temp)
-	{
-		return false;
-	}
+	int width, height;
+	textfilereader::UIinfo uiinfo;
 
-	// Initialize the bitmap object.
-	result = temp->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight, L"../Engine/data/bullet.png", 256, 256);
-	if (!result)
+	m_ImageDecoder = new imagedecoderclass;
+
+	m_filereader->ReadUIFile("../Engine/data/ui_parameter.csv");	
+	for (int i = 0; i < m_filereader->paramUI.size(); i++)
 	{
-		MessageBox(hwnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
-		return false;
+		BitmapClass* temp = new BitmapClass;
+		if (!temp)
+			return false;
+		//get file resolution
+		uiinfo = m_filereader->paramUI[i];
+		
+		m_ImageDecoder->GetImageSize(stdafx::StringToWchar(uiinfo.filename), width, height);
+		if (uiinfo.size_x == 0 || uiinfo.size_y == 0)
+		{
+			uiinfo.size_x = width;
+			uiinfo.size_y = height;
+		}
+
+		// Initialize the bitmap object.
+		result = temp->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight,stdafx::StringToWchar(uiinfo.filename) , uiinfo.size_x, uiinfo.size_y);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
+			return false;
+		}
+		m_UI.push_back(temp);
 	}
-	*/
 	return true;
 }
 
@@ -376,12 +368,13 @@ void GraphicsClass::Shutdown()
 	}
 
 	// Release the bitmap object.
-	if (m_Bitmap)
+	if (m_ImageDecoder)
 	{
-		m_Bitmap->Shutdown();
-		delete m_Bitmap;
-		m_Bitmap = 0;
+		delete m_ImageDecoder;
+		m_ImageDecoder = 0;
 	}
+	m_UI.clear();
+
 
 	// Release the light shader object.
 	if (m_LightShader)
@@ -615,16 +608,22 @@ bool GraphicsClass::Render()
 
 	
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 0, 0);
-	if (!result)
+
+	for (int i = 0; i < m_UI.size(); i++)
 	{
-		return false;
-	}
-	// Render the bitmap with the texture shader.
-	result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, baseViewMatrix, orthoMatrix, m_Bitmap->GetTexture());
-	if (!result)
-	{
-		return false;
+		int x = m_filereader->paramUI[i].pos_x;
+		int y = m_filereader->paramUI[i].pos_y;
+		result = m_UI[i]->Render(m_D3D->GetDeviceContext(), x, y);
+		if (!result)
+		{
+			return false;
+		}
+		// Render the bitmap with the texture shader.
+		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_UI[i]->GetIndexCount(), worldMatrix, baseViewMatrix, orthoMatrix, m_UI[i]->GetTexture());
+		if (!result)
+		{
+			return false;
+		}
 	}
 
 	// Turn off alpha blending after rendering the text.

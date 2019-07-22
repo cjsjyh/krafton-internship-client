@@ -1,3 +1,5 @@
+#include <atlconv.h>
+
 #include "stdafx.h"
 
 
@@ -22,4 +24,16 @@ void stdafx::PrintVector3(D3DXVECTOR3 vec)
 	cout << "x: " + to_string(vec.x) << " y: " + to_string(vec.y) << " z: " + to_string(vec.z) << endl;
 }
 
+WCHAR* stdafx::StringToWchar(string str)
+{
+	USES_CONVERSION;
+	char* writeable = new char[str.size() + 1];
+	WCHAR* converted = new WCHAR[str.size() + 1];
+	//string -> char*
+	std::copy(str.begin(), str.end(), writeable);
+	writeable[str.size()] = '\0';
+	//char* -> WCHAR*
 
+	wcscpy(converted, A2W(writeable));
+	return converted;
+}

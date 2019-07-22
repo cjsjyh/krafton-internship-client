@@ -22,14 +22,14 @@ void staticobjclass::InitializeStatic2D()
 {
 	string tName = "../Engine/data/" + GetName() + ".png";
 	cout << "texture anem: " + tName << endl;
-	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", StringToWchar(tName));
+	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
 	cout << "intialize result: " + to_string(result) << endl;
 }
 
 void staticobjclass::InitializeStatic3D()
 {
 	string tName = "../Engine/data/" + GetName() + ".png";
-	m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", StringToWchar(tName));
+	m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", stdafx::StringToWchar(tName));
 }
 
 
