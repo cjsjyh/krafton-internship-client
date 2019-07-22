@@ -18,6 +18,7 @@ class TextureShaderClass;
 class TextClass;
 class LightShaderClass;
 class LightClass;
+class BitmapClass;
 
 class gameObject;
 class staticobjclass;
@@ -77,7 +78,7 @@ private:
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-
+	BitmapClass* m_Bitmap;
 	
 	playerclass* player;
 	bossclass* boss;

@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="bossclass.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="collisionManager.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="WICTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="bossclass.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="collisionManager.h" />

@@ -84,8 +84,8 @@ projectileclass* bossclass::Fire()
 
 void bossclass::FireDirections(int dir, int frame)
 {
-	//vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInCircle(dir);
-	vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInFan(dir,10,GetPosition(), player->GetPosition());
+	vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInCircle(dir);
+	//vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInFan(dir,10,GetPosition(), player->GetPosition());
 	for (auto iter = dirVectors.begin(); iter != dirVectors.end(); iter++)
 	{
 		projectileclass* temp = GM->GetFromBossPool();
