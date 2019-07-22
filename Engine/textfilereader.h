@@ -6,6 +6,7 @@ class textfilereader
 {
 public:
 	typedef struct UIinfo {
+		string uiname;
 		string filename;
 		int pos_x;
 		int pos_y;

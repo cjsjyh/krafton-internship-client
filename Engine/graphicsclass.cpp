@@ -12,8 +12,8 @@
 #include "textclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+#include "uimanagerclass.h"
 #include "bitmapclass.h"
-#include "imagedecoderclass.h"
 
 #include "gameObject.h"
 #include "staticobjclass.h"
@@ -32,10 +32,9 @@ GraphicsClass::GraphicsClass()
 	m_Camera = 0;
 	
 	m_Text = 0;
-	
-	m_TextureShader = 0;
-	m_ImageDecoder = 0;
+	m_UIManager = 0;
 
+	m_TextureShader = 0;
 	m_GM = 0;
 
 	frame = 0;
@@ -155,7 +154,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!result)
 		return false;
 	
-	result = InitializeUI(screenWidth, screenHeight, hwnd);
+	m_filereader->ReadUIFile("../Engine/data/ui_parameter.csv");
+	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D);
+	m_UIManager->SetValues(screenWidth, screenHeight, hwnd);
+
+	result = m_UIManager->InitializeUI();
 	if (!result)
 		return false;
 		
@@ -167,41 +170,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	return true;
 }
 
-bool GraphicsClass::InitializeUI(int screenWidth, int screenHeight, HWND hwnd)
-{
-	bool result;
-	int width, height;
-	textfilereader::UIinfo uiinfo;
 
-	m_ImageDecoder = new imagedecoderclass;
-
-	m_filereader->ReadUIFile("../Engine/data/ui_parameter.csv");	
-	for (int i = 0; i < m_filereader->paramUI.size(); i++)
-	{
-		BitmapClass* temp = new BitmapClass;
-		if (!temp)
-			return false;
-		//get file resolution
-		uiinfo = m_filereader->paramUI[i];
-		
-		m_ImageDecoder->GetImageSize(stdafx::StringToWchar(uiinfo.filename), width, height);
-		if (uiinfo.size_x == 0 || uiinfo.size_y == 0)
-		{
-			uiinfo.size_x = width;
-			uiinfo.size_y = height;
-		}
-
-		// Initialize the bitmap object.
-		result = temp->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight,stdafx::StringToWchar(uiinfo.filename) , uiinfo.size_x, uiinfo.size_y);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
-			return false;
-		}
-		m_UI.push_back(temp);
-	}
-	return true;
-}
 
 void GraphicsClass::InitializeBasic()
 {
@@ -325,7 +294,6 @@ void GraphicsClass::UninitializeMap()
 	return;
 }
 
-
 void GraphicsClass::InitializeRewardMap()
 {
 	m_GM->RegisterObjectToRender(player, 1);
@@ -366,14 +334,6 @@ void GraphicsClass::Shutdown()
 		delete m_Light;
 		m_Light = 0;
 	}
-
-	// Release the bitmap object.
-	if (m_ImageDecoder)
-	{
-		delete m_ImageDecoder;
-		m_ImageDecoder = 0;
-	}
-	m_UI.clear();
 
 
 	// Release the light shader object.
@@ -546,8 +506,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	return true;
 }
 
-
-
 bool GraphicsClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
@@ -609,17 +567,18 @@ bool GraphicsClass::Render()
 	
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
 
-	for (int i = 0; i < m_UI.size(); i++)
+	for (int i=0;i < m_UIManager->m_UI.size(); i++)
 	{
-		int x = m_filereader->paramUI[i].pos_x;
-		int y = m_filereader->paramUI[i].pos_y;
-		result = m_UI[i]->Render(m_D3D->GetDeviceContext(), x, y);
+		int x = m_UIManager->parameters[i].pos_x;
+		int y = m_UIManager->parameters[i].pos_y;
+		result = m_UIManager->m_UI[i]->Render(m_D3D->GetDeviceContext(), x, y);
 		if (!result)
 		{
 			return false;
 		}
 		// Render the bitmap with the texture shader.
-		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_UI[i]->GetIndexCount(), worldMatrix, baseViewMatrix, orthoMatrix, m_UI[i]->GetTexture());
+		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_UIManager->m_UI[i]->GetIndexCount(), worldMatrix, 
+										baseViewMatrix, orthoMatrix, m_UIManager->m_UI[i]->GetTexture());
 		if (!result)
 		{
 			return false;
@@ -638,7 +597,6 @@ bool GraphicsClass::Render()
 
 	return true;
 }
-
 
 void GraphicsClass::AutoMove()
 {

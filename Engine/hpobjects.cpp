@@ -11,6 +11,7 @@ hpobjects::hpobjects(string name, int _hp, D3DClass* _device, CollisionChannel c
 {
 	curHp = _hp;
 	device = _device;
+	maxHp = 0;
 	//HpObjectInitialize();
 }
 
@@ -24,6 +25,17 @@ void hpobjects::SetHp(int hp)
 {
 	maxHp = curHp = hp;
 }
+
+int hpobjects::GetHp()
+{
+	return curHp;
+}
+
+float hpobjects::GetHpPercent()
+{
+	return (float)curHp / maxHp;
+}
+
 
 void hpobjects::Hit(int _damage)
 {

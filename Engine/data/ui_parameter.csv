@@ -1,10 +1,36 @@
-FILENAME,floor.png,
-POSITION_X,0,
-POSITION_Y,0,
-SIZE_X,0,이미지 원래 사이즈를 사용하고 싶으면 0
-SIZE_Y,0,이미지 원래 사이즈를 사용하고 싶으면 0
-FILENAME,bullet.png,
-POSITION_X,100,
-POSITION_Y,100,
-SIZE_X,200,이미지 원래 사이즈를 사용하고 싶으면 0
-SIZE_Y,200,이미지 원래 사이즈를 사용하고 싶으면 0
+Name,button1,
+Filename,button.png,
+Position_X,10,
+Position_Y,170,이미지 원래 사이즈를 사용하고 싶으면 0
+Size_X,50,이미지 원래 사이즈를 사용하고 싶으면 0
+Size_Y,50,
+Name,button2,
+Filename,bullet.png,
+Position_X,10,
+Position_Y,220,
+Size_X,50,이미지 원래 사이즈를 사용하고 싶으면 0
+Size_Y,50,이미지 원래 사이즈를 사용하고 싶으면 0
+Name,button3,
+Filename,button.png,
+Position_X,10,
+Position_Y,270,
+Size_X,50,
+Size_Y,50,
+Name,button4,
+Filename,bullet.png,
+Position_X,10,
+Position_Y,320,
+Size_X,50,
+Size_Y,50,
+Name,BOSSHPBAR_FRONT,
+Filename,button.png,
+Position_X,300,
+Position_Y,10,
+Size_X,100,
+Size_Y,20,
+Name,BOSSHPBAR_BACK,
+Filename,bullet.png,
+Position_X,300,
+Position_Y,10,
+Size_X,100,
+Size_Y,20,

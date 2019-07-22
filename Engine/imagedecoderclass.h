@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _IMAGEDECODERCLASS_H_
+#define _IMAGEDECODERCLASS_H_
+
 class imagedecoderclass
 {
 public:
@@ -13,3 +16,4 @@ private:
 	ID2D1Bitmap* g_ipD2DBitmap;
 };
 
+#endif

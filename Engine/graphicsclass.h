@@ -18,8 +18,8 @@ class TextureShaderClass;
 class TextClass;
 class LightShaderClass;
 class LightClass;
+class uimanagerclass;
 class BitmapClass;
-class imagedecoderclass;
 
 class gameObject;
 class staticobjclass;
@@ -80,9 +80,7 @@ private:
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-	vector<BitmapClass*> m_UI;
-	imagedecoderclass* m_ImageDecoder;
-	//BitmapClass* m_Bitmap;
+	uimanagerclass* m_UIManager;
 	
 	playerclass* player;
 	bossclass* boss;

@@ -12,6 +12,8 @@ public:
 	hpobjects(string,  int, D3DClass*, CollisionChannel, ColliderType = COLLIDER_BOX);
 	void HpObjectInitialize();
 	void SetHp(int);
+	int GetHp();
+	float GetHpPercent();
 
 	void Hit(int);
 	bool CheckDestroy();

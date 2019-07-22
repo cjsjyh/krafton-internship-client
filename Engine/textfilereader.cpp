@@ -74,7 +74,7 @@ bool textfilereader::ReadUIFile(string fname)
 	while (getline(in, line))
 	{
 		UIinfo temp;
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			if (i != 0)
 				getline(in, line);
@@ -93,18 +93,21 @@ bool textfilereader::ReadUIFile(string fname)
 			switch (i)
 			{
 			case 0:
-				temp.filename = "../Engine/data/" + fields[1];
+				temp.uiname = fields[1];
 				break;
 			case 1:
-				temp.pos_x = stoi(fields[1]);
+				temp.filename = "../Engine/data/" + fields[1];
 				break;
 			case 2:
-				temp.pos_y = stoi(fields[1]);
+				temp.pos_x = stoi(fields[1]);
 				break;
 			case 3:
-				temp.size_x = stoi(fields[1]);
+				temp.pos_y = stoi(fields[1]);
 				break;
 			case 4:
+				temp.size_x = stoi(fields[1]);
+				break;
+			case 5:
 				temp.size_y = stoi(fields[1]);
 				break;
 			}
