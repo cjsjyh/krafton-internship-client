@@ -11,10 +11,7 @@ class D3DClass;
 class uimanagerclass
 {
 public:
-	typedef struct UIComponent {
-		textfilereader::UIinfo parameters;
-		int index;
-	};
+
 
 	uimanagerclass(vector<textfilereader::UIinfo>, D3DClass*);
 	bool InitializeUI();
@@ -27,7 +24,6 @@ public:
 	vector<textfilereader::UIinfo> parameters;
 
 private:
-	UIComponent bossUI;
 	imagedecoderclass* m_ImageDecoder;
 	D3DClass* device;
 

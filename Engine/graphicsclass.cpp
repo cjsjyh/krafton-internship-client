@@ -558,6 +558,7 @@ bool GraphicsClass::Render()
 
 	// Render the text strings.
 	D3DXMatrixIdentity(&worldMatrix);
+	//D3DXMatrixScaling(&worldMatrix, 2, 1, 0);
 	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if (!result)
 	{
@@ -569,20 +570,27 @@ bool GraphicsClass::Render()
 
 	for (int i=0;i < m_UIManager->m_UI.size(); i++)
 	{
+		D3DXMATRIX temp;
 		D3DXMatrixIdentity(&worldMatrix);
 		int x = m_UIManager->parameters[i].pos_x;
 		int y = m_UIManager->parameters[i].pos_y;
-		result = m_UIManager->m_UI[i]->Render(m_D3D->GetDeviceContext(), x, y);
-		if (!result)
-		{
-			return false;
-		}
+		
 		
 		if (m_UIManager->parameters[i].uiname == "BOSSHPBAR_FRONT")
 		{
 			float bossHp = boss->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix,1*bossHp,1,1);
+			D3DXMatrixScaling(&worldMatrix, bossHp, 1, 1);
 		}
+		
+		result = m_UIManager->m_UI[i]->Render(m_D3D->GetDeviceContext(), 0, 0);
+		if (!result)
+		{
+			return false;
+		}
+		D3DXMatrixTranslation(&temp, -screenW / 2, screenH / 2, 0);
+		worldMatrix *= temp;
+		D3DXMatrixTranslation(&temp, x, -y, 0);
+		worldMatrix *= temp;
 
 		// Render the bitmap with the texture shader.
 		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_UIManager->m_UI[i]->GetIndexCount(), worldMatrix, 

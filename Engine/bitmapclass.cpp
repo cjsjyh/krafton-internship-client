@@ -234,6 +234,7 @@ bool BitmapClass::UpdateBuffers(ID3D11DeviceContext* deviceContext, int position
 	m_previousPosX = positionX;
 	m_previousPosY = positionY;
 
+	/*
 	// Calculate the screen coordinates of the left side of the bitmap.
 	left = (float)((m_screenWidth / 2) * -1) + (float)positionX;
 
@@ -244,6 +245,12 @@ bool BitmapClass::UpdateBuffers(ID3D11DeviceContext* deviceContext, int position
 	top = (float)(m_screenHeight / 2) - (float)positionY;
 
 	// Calculate the screen coordinates of the bottom of the bitmap.
+	bottom = top - (float)m_bitmapHeight;
+	*/
+
+	left = (float)positionX;
+	right = left + (float)m_bitmapWidth;
+	top = -(float)positionY;
 	bottom = top - (float)m_bitmapHeight;
 
 	// Create the vertex array.
