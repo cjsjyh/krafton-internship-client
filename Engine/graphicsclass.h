@@ -87,7 +87,7 @@ private:
 
 	vector<ModelClass*> m_Model;
 	
-
+	D3DXMATRIX baseViewMatrix;
 	D3DXVECTOR3 midPoint;
 	int mouseX, mouseY;
 	int frame;
