@@ -54,6 +54,7 @@ public:
 	~GraphicsClass();
 
 	bool Initialize(int, int, HWND);
+	bool InitializeUI(int, int, HWND);
 	void InitializeBasic();
 	void UninitializeBasic();
 	void InitializeMap();
@@ -78,6 +79,7 @@ private:
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	vector<BitmapClass*> m_UI;
 	BitmapClass* m_Bitmap;
 	
 	playerclass* player;

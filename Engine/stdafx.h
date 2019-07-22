@@ -10,6 +10,13 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
 
+//WIC
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "WindowsCodecs.lib")
+#include <wincodec.h>
+#include <d2d1.h>
+#include <d2d1helper.h>
+
 #include <d3d11_1.h>
 #include <dinput.h>
 #include <d3dcompiler.h>

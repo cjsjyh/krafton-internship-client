@@ -140,22 +140,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create the bitmap object.
-	m_Bitmap = new BitmapClass;
-	if (!m_Bitmap)
-	{
-		return false;
-	}
-
-	// Initialize the bitmap object.
-	result = m_Bitmap->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight, L"../Engine/data/seafloor.dds", 256, 256);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
-		return false;
-	}
-
-
 	// Initialize the light object.	
 	m_Light->SetAmbientColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -169,12 +153,61 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_filereader->ReadFile("../Engine/data/boss_parameter.csv");
 	if (!result)
 		return false;
-		
+	/*
+	result = InitializeUI(screenWidth, screenHeight, hwnd);
+	if (!result)
+		return false;
+		*/
 	InitializeBasic();
 	InitializeMap();
 	InitializePlayerParameters();
 	InitializeBossParameters();
 	InitializeRewardMap();
+	return true;
+}
+
+bool GraphicsClass::InitializeUI(int screenWidth, int screenHeight, HWND hwnd)
+{
+	ID2D1Factory* g_ipD2DFactory = nullptr;
+	ID2D1HwndRenderTarget* g_ipRT = nullptr;
+	IWICImagingFactory* g_ipWICFactory = nullptr;
+	IWICFormatConverter* g_ipConvertedSrcBmp = nullptr;
+	ID2D1Bitmap* g_ipD2DBitmap = nullptr;
+
+	HRESULT hr = E_FAIL;
+
+	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &g_ipD2DFactory);
+	hr = CoCreateInstance(CLSID_WICImagingFactory,NULL, CLSCTX_INPROC_SERVER,IID_PPV_ARGS(&g_ipWICFactory));
+
+	IWICBitmapDecoder* ipDecoderPtr = nullptr;
+	hr = g_ipWICFactory->CreateDecoderFromFilename(L"../Engine/data/bullet.png", nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &ipDecoderPtr);
+	
+	IWICBitmapFrameDecode* ipFramePtr = nullptr;
+	hr = ipDecoderPtr->GetFrame(0, &ipFramePtr);
+	
+	UINT uiWidth, uiHeight;
+	ipFramePtr->GetSize(&uiWidth, &uiHeight);
+	cout << "width: " + to_string(uiWidth) << " height: " + to_string(uiHeight) << endl;
+
+
+	/*
+	bool result;
+	BitmapClass* temp;
+	// Create the bitmap object.
+	temp = new BitmapClass;
+	if (!temp)
+	{
+		return false;
+	}
+
+	// Initialize the bitmap object.
+	result = temp->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight, L"../Engine/data/bullet.png", 256, 256);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
+		return false;
+	}
+	*/
 	return true;
 }
 
