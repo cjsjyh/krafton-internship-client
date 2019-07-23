@@ -430,8 +430,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			m_GM->RegisterObjectToRender(bossBullet[i]);
 	}
 	
-	//Collision Detection
-	m_GM->CheckCollision();
+	
 
 	//Frame
 	player->Frame(key, frame);
@@ -439,10 +438,21 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//AutoMoving(bullets)
 	AutoMove();
 	
+	//Collision Detection
+	m_GM->CheckCollision();
+
 	//Camera
-	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
-	float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
-	m_Camera->Move(midPoint, distance);
+	//If not in reward stage
+	if (m_GM->scene != 1)
+	{
+		midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
+		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
+		m_Camera->Move(midPoint, distance);
+	}
+	else
+	{
+		m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+	}
 
 	
 
@@ -451,6 +461,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 		lastLeftClick = 0;
 	
 	//PLAYER DEAD
+	/*
 	if (player->CheckDestroy())
 	{
 		UninitializeMap();
@@ -463,7 +474,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 		InitializeBossParameters();
 		return true;
 	}
-
+	*/
 	//-------------------
 	//  Input Handler
 	//-------------------

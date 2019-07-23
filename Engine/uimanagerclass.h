@@ -3,7 +3,6 @@
 #define _UIMANAGERCLASS_H_
 
 #include "textfilereader.h"
-//class textfilereader;
 class BitmapClass;
 class imagedecoderclass;
 class D3DClass;

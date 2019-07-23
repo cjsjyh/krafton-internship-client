@@ -127,6 +127,13 @@ void gameManager::CheckCollision()
 	return;
 }
 
+bool gameManager::CheckMovable(D3DXVECTOR3 pos, D3DXVECTOR3 len)
+{
+	vector<gameObject*> coll1, coll2;
+	return m_CM->CheckMovable(pos, len);
+}
+
+
 gameObject* gameManager::CheckInteraction(D3DXVECTOR3 point, int range)
 {
 	return m_CM->InteractionManager(point, range);

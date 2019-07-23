@@ -95,7 +95,7 @@ private:
 	int frame;
 	int screenW, screenH;
 	int lastLeftClick;
-	int currentScene, sceneChangeFrame;
+	int sceneChangeFrame;
 };
 
 #endif

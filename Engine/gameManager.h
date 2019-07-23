@@ -35,6 +35,7 @@ public:
 	gameObject* GetGameObject(int index);
 	
 	void CheckCollision();
+	bool CheckMovable(D3DXVECTOR3, D3DXVECTOR3);
 	gameObject* CheckInteraction(D3DXVECTOR3, int);
 	void AlphaSort(D3DXVECTOR3);
 	int scene;

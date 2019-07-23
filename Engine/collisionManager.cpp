@@ -241,6 +241,40 @@ bool collisionManager::SimpleBoxCollision(gameObject* src, gameObject* dest)
 	return false;
 }
 
+bool collisionManager::SimpleBoxCollision(D3DXVECTOR3 pos, D3DXVECTOR3 len,gameObject* dest)
+{
+	D3DXVECTOR3 pos2, len2;
+	pos2 = dest->GetPosition();
+	len2 = dest->GetCollSize();
+	if ((pos2.x - len2.x <= pos.x + len.x && pos2.x + len2.x >= pos.x - len.x) &&
+		(pos2.z - len2.z <= pos.z + len.z && pos2.z + len2.z >= pos.z - len.z))
+		return true;
+	return false;
+}
+
+bool collisionManager::CheckMovable(D3DXVECTOR3 pos, D3DXVECTOR3 len)
+{
+	for (int i = 0; i < GM->GetRenderObjectCount(); i++)
+	{
+		if (!MoveCollisionChannel(GM->GetGameObject(i)))
+			continue;
+		if (SimpleBoxCollision(pos, len, GM->GetGameObject(i)))
+			return false;
+	}
+	return true;
+}
+
+bool collisionManager::MoveCollisionChannel(gameObject* obj)
+{
+	if (obj->channel == gameObject::NO_COLLISION)
+		return false;
+	if (obj->objType == gameObject::AUTOMOVE)
+		return false;
+	if (obj->GetName() == "player")
+		return false;
+	return true;
+}
+
 bool collisionManager::InteractionCircularDetection(D3DXVECTOR3 point, int range, gameObject* src)
 {
 	D3DXVECTOR3 pos, len;
