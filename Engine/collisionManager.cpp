@@ -254,6 +254,14 @@ bool collisionManager::SimpleBoxCollision(D3DXVECTOR3 pos, D3DXVECTOR3 len,gameO
 	return false;
 }
 
+bool collisionManager::IsInsideMap(D3DXVECTOR3 pos, D3DXVECTOR3 pos2, D3DXVECTOR3 len2)
+{
+	if ((pos2.x - len2.x <= pos.x - 3 && pos2.x + len2.x >= pos.x) &&
+		(pos2.z - len2.z <= pos.z && pos2.z + len2.z >= pos.z + 3))
+		return true;
+	return false;
+}
+
 bool collisionManager::CheckMovable(D3DXVECTOR3 pos, D3DXVECTOR3 len)
 {
 	for (int i = 0; i < GM->GetRenderObjectCount(); i++)

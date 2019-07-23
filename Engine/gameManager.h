@@ -25,19 +25,22 @@ public:
 	void UnregisterObjectToRender(gameObject *item, int _scene=0);
 	void RemoveObjectToRender(gameObject* item, int _scene=0);
 	int FindObjectIndex(gameObject *item, int _scene=0);
-	
+	int GetRenderObjectCount();
+	gameObject* GetGameObject(int index);
+
 	void RegisterToBossPool(projectileclass* item);
 	projectileclass* GetFromBossPool();
 	void RegisterToPlayerPool(projectileclass* item);
 	projectileclass* GetFromPlayerPool();
-
-	int GetRenderObjectCount();
-	gameObject* GetGameObject(int index);
 	
 	void CheckCollision();
 	bool CheckMovable(D3DXVECTOR3, D3DXVECTOR3);
+	bool CheckMapOut(D3DXVECTOR3);
+
 	gameObject* CheckInteraction(D3DXVECTOR3, int);
+	
 	void AlphaSort(D3DXVECTOR3);
+	
 	int scene;
 
 private:
@@ -48,7 +51,7 @@ private:
 	collisionManager* m_CM;
 	D3DXVECTOR3 camPos;
 
-	
+	gameObject* floor;
 };
 
 #endif

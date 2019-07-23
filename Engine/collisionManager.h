@@ -17,6 +17,8 @@ public:
 	bool CollisionManager(vector<gameObject*>&, vector<gameObject*>&);
 	bool CheckMovable(D3DXVECTOR3, D3DXVECTOR3);
 	gameObject* InteractionManager(D3DXVECTOR3, int);
+
+	bool IsInsideMap(D3DXVECTOR3, D3DXVECTOR3, D3DXVECTOR3);
 private:
 	bool CheckMatch(gameObject*, gameObject*, int, int);
 	bool CheckInOne(gameObject*, int, int);
@@ -27,9 +29,8 @@ private:
 
 	bool CheckCollisionChannel(gameObject*, gameObject*);
 	int CollisionHandler(gameObject*, gameObject*);
-	bool SimpleBoxCollision(gameObject*, gameObject*);
 	bool InteractionCircularDetection(D3DXVECTOR3, int, gameObject*);
-
+	bool SimpleBoxCollision(gameObject*, gameObject*);
 	bool SimpleBoxCollision(D3DXVECTOR3, D3DXVECTOR3, gameObject*);
 	bool MoveCollisionChannel(gameObject*);
 

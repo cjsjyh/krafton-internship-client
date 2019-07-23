@@ -179,7 +179,8 @@ void playerclass::Frame(int* keys, int frame)
 	{
 		D3DXVECTOR3 nextPos = GetPosition() + GetDirectionVector(direction) * PLAYER_SPEED;
 		if(GM->CheckMovable(nextPos, GetCollSize()))
-			AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
+			if(GM->CheckMapOut(nextPos))
+				AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 	}
 
 	ObjectInteraction(keys);
