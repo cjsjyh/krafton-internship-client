@@ -13,6 +13,7 @@ public:
 	~staticobjclass();
 	
 	void InitializeStatic2D();
+	void InitializeStatic2DItem();
 	void InitializeStatic3D();
 	bool CheckDestroy();
 private:

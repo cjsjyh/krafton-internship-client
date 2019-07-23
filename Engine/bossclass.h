@@ -64,7 +64,7 @@ private:
 
 	void SetBossPhasePattern();
 	void ActivatePattern(BossPattern);
-	vector<vector<BossPattern>> bosspattern;
+	vector<vector<BossPattern>> bossPatternPool;
 	vector<BulletQueue> bossBullets;
 	gameManager* GM;
 };

@@ -5,16 +5,27 @@
 #include "bossclass.h"
 #include "projectileclass.h"
 
+#include <cstdlib>
+#include <ctime>
+
 #include "gameManager.h"
 
 gameManager::gameManager(int sceneCount)
 {
 	for (int i = 0; i < sceneCount; i++)
 	{
-		vector<gameObject*> temp, temp2;
+		vector<gameObject*> temp;
 		renderObjects.push_back(temp);
 	}
+
+	for (int i = 0; i < ITEM_PHASE_COUNT; i++)
+	{
+		vector<Item> temp2;
+		itemPool.push_back(temp2);
+	}
+	SetItemPool();
 	m_CM = new collisionManager(this);
+	srand(unsigned int(time(NULL)));
 	floor = 0;
 }
 
@@ -111,13 +122,17 @@ int gameManager::FindObjectIndex(gameObject *item, int _scene)
 	return distance(renderObjects[_scene].begin(), itr);
 }
 
-int gameManager::GetRenderObjectCount()
+int gameManager::GetRenderObjectCount(int _scene)
 {
+	if(_scene != -1)
+		return renderObjects[_scene].size();
 	return renderObjects[scene].size();
 }
 
-gameObject* gameManager::GetGameObject(int index)
+gameObject* gameManager::GetGameObject(int index, int _scene)
 {
+	if(_scene != -1)
+		return renderObjects[_scene][index];
 	return renderObjects[scene][index];
 }
 
@@ -150,4 +165,36 @@ bool gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
 	D3DXMatrixRotationY(&temp, -floor->GetRotation().y *0.0174532925f);
 	D3DXVec3TransformCoord(&playerPos, &playerPos, &temp);
 	return m_CM->IsInsideMap(playerPos, floor->GetPosition(), floor->GetScale());
+}
+
+void gameManager::SetItemPool()
+{
+	for (int i = 1; i < 6; i++)
+	{
+		Item temp;
+		temp.name = to_string(i);
+		temp.chosen = false;
+		itemPool[0].push_back(temp);
+
+		Item temp2;
+		temp.name = to_string(i);
+		temp.chosen = false;
+		itemPool[1].push_back(temp2);
+	}
+	return;
+}
+
+string gameManager::ChooseItemFromPool(int phase)
+{
+	int index = rand() % itemPool[phase].size();
+	return itemPool[phase][index].name;
+}
+
+void gameManager::SetItemUsed(int phase, string name)
+{
+	for (auto iter = itemPool[phase].begin(); iter != itemPool[phase].end(); iter++)
+	{
+		if ((*iter).name == name)
+			(*iter).chosen = true;
+	}
 }

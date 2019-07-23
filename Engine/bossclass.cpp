@@ -80,7 +80,7 @@ void bossclass::SetBossPhasePattern()
 	for (int i = 0; i < BOSS_PHASE_NUM; i++)
 	{
 		vector<BossPattern> temp;
-		bosspattern.push_back(temp);
+		bossPatternPool.push_back(temp);
 	}
 	BossPattern p1_1;
 	p1_1.type = FIRE_AT_PLAYER;
@@ -88,8 +88,8 @@ void bossclass::SetBossPhasePattern()
 	p1_2.type = FIRE_IN_FAN;
 	p1_2.dirCount = 3;
 	p1_2.Angle = 10;
-	bosspattern[0].push_back(p1_1);
-	bosspattern[0].push_back(p1_2);
+	bossPatternPool[0].push_back(p1_1);
+	bossPatternPool[0].push_back(p1_2);
 
 	BossPattern p2_1;
 	p2_1.type = FIRE_AT_PLAYER;
@@ -97,8 +97,8 @@ void bossclass::SetBossPhasePattern()
 	p2_2.type = FIRE_IN_FAN;
 	p2_2.dirCount = 5;
 	p2_2.Angle = 10;
-	bosspattern[1].push_back(p2_1);
-	bosspattern[1].push_back(p2_2);
+	bossPatternPool[1].push_back(p2_1);
+	bossPatternPool[1].push_back(p2_2);
 
 	BossPattern p3_1;
 	p3_1.type = FIRE_IN_FAN;
@@ -107,8 +107,8 @@ void bossclass::SetBossPhasePattern()
 	BossPattern p3_2;
 	p3_2.type = FIRE_ALL_DIR;
 	p3_2.dirCount = 10;
-	bosspattern[2].push_back(p3_1);
-	bosspattern[2].push_back(p3_2);
+	bossPatternPool[2].push_back(p3_1);
+	bossPatternPool[2].push_back(p3_2);
 }
 
 
@@ -117,8 +117,8 @@ vector<projectileclass*> bossclass::Frame(int frame)
 	vector<projectileclass*> shootBullets;
 	if (frame % 60 == 0)
 	{
-		int ChosenIndex = rand() % bosspattern[phase].size();
-		ActivatePattern(bosspattern[phase][ChosenIndex]);
+		int ChosenIndex = rand() % bossPatternPool[phase].size();
+		ActivatePattern(bossPatternPool[phase][ChosenIndex]);
 	}
 	PopQueue(shootBullets);
 	CheckHp();

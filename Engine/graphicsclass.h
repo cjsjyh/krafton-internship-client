@@ -55,14 +55,14 @@ public:
 	~GraphicsClass();
 
 	bool Initialize(int, int, HWND);
-	bool InitializeUI(int, int, HWND);
 	void InitializeBasic();
 	void UninitializeBasic();
 	void InitializeMap();
 	void UninitializeMap();
 	void InitializePlayerParameters();
 	void InitializeBossParameters();
-	void InitializeRewardMap();
+	void InitializeRewardMap(string[]);
+	void UninitializeRewardMap();
 	void Shutdown();
 	bool Frame(int, int, bool*, int*, int, int);
 	bool Render();

@@ -166,7 +166,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	InitializeMap();
 	InitializePlayerParameters();
 	InitializeBossParameters();
-	InitializeRewardMap();
 	return true;
 }
 
@@ -294,7 +293,7 @@ void GraphicsClass::UninitializeMap()
 	return;
 }
 
-void GraphicsClass::InitializeRewardMap()
+void GraphicsClass::InitializeRewardMap(string itemNames[])
 {
 	m_GM->RegisterObjectToRender(player, 1);
 
@@ -308,22 +307,39 @@ void GraphicsClass::InitializeRewardMap()
 	//add box
 	
 	gameObject* temp;
-	temp = new staticobjclass("box", m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
-	((staticobjclass*)temp)->InitializeStatic2D();
+	temp = new staticobjclass(itemNames[0], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
+	((staticobjclass*)temp)->InitializeStatic2DItem();
 	temp->SetScale(D3DXVECTOR3(1, 1, 1));
 	temp->SetPosition(D3DXVECTOR3(-10, 0, 10));
 	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(temp, 1);
 	
-	temp = new staticobjclass("box", m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
-	((staticobjclass*)temp)->InitializeStatic2D();
+	temp = new staticobjclass(itemNames[1], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
+	((staticobjclass*)temp)->InitializeStatic2DItem();
+	temp->SetScale(D3DXVECTOR3(1, 1, 1));
+	temp->SetPosition(D3DXVECTOR3(0, 0, 10));
+	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
+	m_GM->RegisterObjectToRender(temp, 1);
+	
+	temp = new staticobjclass(itemNames[2], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
+	((staticobjclass*)temp)->InitializeStatic2DItem();
 	temp->SetScale(D3DXVECTOR3(1, 1, 1));
 	temp->SetPosition(D3DXVECTOR3(10, 0, 10));
 	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(temp, 1);
-	
 
 	return;
+}
+
+void GraphicsClass::UninitializeRewardMap()
+{
+	for (int i = 0; i < m_GM->GetRenderObjectCount(1); i++)
+	{
+		if(m_GM->GetGameObject(i,1)->GetName() == "player")
+			m_GM->UnregisterObjectToRender(m_GM->GetGameObject(i, 1), 1);
+		else
+			m_GM->RemoveObjectToRender(m_GM->GetGameObject(i, 1), 1);
+	}
 }
 
 void GraphicsClass::Shutdown()
@@ -442,16 +458,12 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	m_GM->CheckCollision();
 
 	//Camera
-	//If not in reward stage
+	//Follow Player in Boss stage
 	if (m_GM->scene != 1)
 	{
 		midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
 		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
 		m_Camera->Move(midPoint, distance);
-	}
-	else
-	{
-		m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 	}
 
 	
@@ -494,15 +506,30 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			sceneChangeFrame = frame;
 			if (m_GM->scene == 0)
 			{
+				string itemnames[3];
+
 				player->SavePlayerPos(m_GM->scene);
 				player->SetPosition(D3DXVECTOR3(0, 0, 0));
 				player->SetDirection(1);
+				//Set Camera Position
+				m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+				
+				for (int i = 0; i < 3; i++)
+				{
+					itemnames[i] = m_GM->ChooseItemFromPool(0);
+				}
+				InitializeRewardMap(itemnames);
+				
 				m_GM->scene = 1;
 			}
 			else
 			{
 				m_GM->scene = 0;
 				player->SetPosition(player->GetSavedPlayerPos(m_GM->scene));
+
+				UninitializeRewardMap();
+
+				
 			}
 		}
 	}
