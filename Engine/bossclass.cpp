@@ -8,6 +8,9 @@
 #include "gameManager.h"
 #include "skillpatternclass.h"
 
+#include <cstdlib>
+#include <ctime>
+
 #include "bossclass.h"
 
 bossclass::bossclass(int _hp, int _damage, D3DClass* _device, playerclass* _player, ColliderType col)
@@ -18,16 +21,24 @@ bossclass::bossclass(int _hp, int _damage, D3DClass* _device, playerclass* _play
 	phase = 1;
 	player = _player;
 
-	InitializeModels();
+	Initialize();
 }
 bossclass::~bossclass()
 {
 
 }
 
+void bossclass::Initialize()
+{
+	srand((unsigned int)time(NULL));
+	SetBossPhasePattern();
+
+	InitializeModels();
+}
+
 void bossclass::InitializeModels()
 {
-	for (int i = 0; i < BOSS_IMAGE_NUM; i++)
+	for (int i = 0; i < BOSS_PHASE_NUM; i++)
 	{
 		string tName = "../Engine/data/boss/boss" + to_string(i) + ".png";
 		cout << tName << endl;
@@ -42,6 +53,62 @@ void bossclass::InitializeModels()
 void bossclass::SetGameManager(gameManager* _GM)
 {
 	GM = _GM;
+
+}
+
+void bossclass::ActivatePattern(BossPattern pat)
+{
+	vector<D3DXVECTOR3> dirVectors;
+	switch (pat.type)
+	{
+	case FIRE_AT_PLAYER:
+		Fire();
+		break;
+	case FIRE_IN_FAN:
+		dirVectors = skillpatternclass::FireInFan(pat.dirCount,pat.Angle,GetPosition(), player->GetPosition());
+		FireDirections(dirVectors);
+		break;
+	case FIRE_ALL_DIR:
+		dirVectors = skillpatternclass::FireInCircle(pat.dirCount);
+		FireDirections(dirVectors);
+		break;
+	}
+}
+
+void bossclass::SetBossPhasePattern()
+{
+	for (int i = 0; i < BOSS_PHASE_NUM; i++)
+	{
+		vector<BossPattern> temp;
+		bosspattern.push_back(temp);
+	}
+	BossPattern p1_1;
+	p1_1.type = FIRE_AT_PLAYER;
+	BossPattern p1_2;
+	p1_2.type = FIRE_IN_FAN;
+	p1_2.dirCount = 3;
+	p1_2.Angle = 10;
+	bosspattern[0].push_back(p1_1);
+	bosspattern[0].push_back(p1_2);
+
+	BossPattern p2_1;
+	p2_1.type = FIRE_AT_PLAYER;
+	BossPattern p2_2;
+	p2_2.type = FIRE_IN_FAN;
+	p2_2.dirCount = 5;
+	p2_2.Angle = 10;
+	bosspattern[1].push_back(p2_1);
+	bosspattern[1].push_back(p2_2);
+
+	BossPattern p3_1;
+	p3_1.type = FIRE_IN_FAN;
+	p3_1.dirCount = 7;
+	p3_1.Angle = 5;
+	BossPattern p3_2;
+	p3_2.type = FIRE_ALL_DIR;
+	p3_2.dirCount = 10;
+	bosspattern[2].push_back(p3_1);
+	bosspattern[2].push_back(p3_2);
 }
 
 
@@ -50,8 +117,8 @@ vector<projectileclass*> bossclass::Frame(int frame)
 	vector<projectileclass*> shootBullets;
 	if (frame % 60 == 0)
 	{
-		FireDirections(5, frame);
-		//bossBullets.push_back(Fire());
+		int ChosenIndex = rand() % bosspattern[phase].size();
+		ActivatePattern(bosspattern[phase][ChosenIndex]);
 	}
 	PopQueue(shootBullets);
 	CheckHp();
@@ -63,35 +130,45 @@ void bossclass::CheckHp()
 {
 	if ((float)curHp / maxHp < BOSS_PHASE3_HP)
 	{
+		phase = 2;
 		m_model = model_list[2];
 		SetScale(BOSS_SIZE[1]);
 	}
 	else if ((float)curHp / maxHp < BOSS_PHASE2_HP)
 	{
+		phase = 1;
 		m_model = model_list[1];
 		SetScale(BOSS_SIZE[2]);
 	}
+	else
+		phase = 0;
 }
 
-projectileclass* bossclass::Fire()
+void bossclass::Fire()
 {
-	projectileclass* temp = new projectileclass("bullet", GetPosition(), 1, 3, device, gameObject::PLAYER);
-	temp->SetDirVector(skillpatternclass::FireAt(player->GetPosition(),GetPosition()));
-	temp->AdjustPosition(temp->GetDirVector());
+	projectileclass* temp = GM->GetFromBossPool();
+	if (!temp)
+	{
+		temp = new projectileclass("bossbullet", GetPosition(), 1, 3, device, gameObject::BOSS_BULLET);
+		temp->SetDirVector(skillpatternclass::FireAt(GetPosition(), player->GetPosition()));
+		temp->AdjustPosition(temp->GetDirVector());
+	}
+	else
+	{
+		SetBullet(temp, skillpatternclass::FireAt(GetPosition(), player->GetPosition()));
+	}
+	
 
-	return temp;
+	PushQueue(temp, 0);
 }
 
-void bossclass::FireDirections(int dir, int frame)
+void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int delay)
 {
-	vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInCircle(dir);
-	//vector<D3DXVECTOR3> dirVectors = skillpatternclass::FireInFan(dir,10,GetPosition(), player->GetPosition());
 	for (auto iter = dirVectors.begin(); iter != dirVectors.end(); iter++)
 	{
 		projectileclass* temp = GM->GetFromBossPool();
 		if (!temp)
 		{
-			//cout << "temp NULL" << endl;
 			temp = new projectileclass("bossbullet", GetPosition() + 1.5*(*iter), 1, 3, device, gameObject::BOSS_BULLET);
 			temp->SetDirVector(*iter);
 		}
@@ -99,8 +176,7 @@ void bossclass::FireDirections(int dir, int frame)
 		{
 			SetBullet((projectileclass*)temp, *iter);
 		}
-
-		PushQueue(temp, 0);
+		PushQueue(temp, delay);
 	}
 }
 

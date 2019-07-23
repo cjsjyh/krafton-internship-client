@@ -27,6 +27,7 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 			//collision을 체크할 필요가 없는 경우
 			if (!CheckCollisionChannel(GM->GetGameObject(i), GM->GetGameObject(j)))
 				continue;
+			
 
 			flag = false;
 			//서로 타입이 같은 2물체
@@ -34,6 +35,7 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 			{
 				if (srcType == gameObject::COLLIDER_BOX)
 				{
+					
 					if (SimpleBoxCollision(GM->GetGameObject(i), GM->GetGameObject(j)))
 						flag = CollisionHandler(GM->GetGameObject(i), GM->GetGameObject(j));
 				}

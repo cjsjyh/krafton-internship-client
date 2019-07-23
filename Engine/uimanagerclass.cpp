@@ -56,17 +56,3 @@ bool uimanagerclass::InitializeUI()
 	}
 	return true;
 }
-
-void uimanagerclass::UpdateUI()
-{
-
-}
-
-/*
-void uimanagerclass::UpdateBossHpUI(float hpPercent)
-{
-	m_UI[bossUI.index]->Initialize(device->GetDevice(), screenWidth, screenHeight,
-									stdafx::StringToWchar(bossUI.parameters.filename),
-									bossUI.parameters.size_x * hpPercent, bossUI.parameters.size_y);
-}
-*/

@@ -587,10 +587,15 @@ bool GraphicsClass::Render()
 		int y = m_UIManager->parameters[i].pos_y;
 		
 		
-		if (m_UIManager->parameters[i].uiname == "BOSSHPBAR_FRONT")
+		if (m_UIManager->parameters[i].uiname == "BOSS_HPBAR_FRONT")
 		{
 			float bossHp = boss->GetHpPercent();
 			D3DXMatrixScaling(&worldMatrix, bossHp, 1, 1);
+		}
+		else if (m_UIManager->parameters[i].uiname == "PLAYER_HPBAR_FRONT")
+		{
+			float playerHp = player->GetHpPercent();
+			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
 		}
 		
 		result = m_UIManager->m_UI[i]->Render(m_D3D->GetDeviceContext(), 0, 0);

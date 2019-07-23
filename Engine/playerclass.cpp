@@ -13,6 +13,7 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	:hpobjects("player", _hp, _device, PLAYER)
 {
 	objType = MOVEABLE;
+	channel = gameObject::PLAYER;
 	direction = 1;
 
 	PLAYER_DASH_SPEED = 2;
