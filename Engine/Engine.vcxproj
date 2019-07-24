@@ -94,6 +94,7 @@
     <ClCompile Include="hpobjects.cpp" />
     <ClCompile Include="imagedecoderclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
+    <ClCompile Include="itemmanagerclass.cpp" />
     <ClCompile Include="lightclass.cpp" />
     <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="main.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="hpobjects.h" />
     <ClInclude Include="imagedecoderclass.h" />
     <ClInclude Include="inputclass.h" />
+    <ClInclude Include="itemmanagerclass.h" />
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />

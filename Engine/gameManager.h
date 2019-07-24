@@ -2,21 +2,16 @@
 #ifndef _GAMEMANAGER_H_
 #define _GAMEMANAGER_H_
 
-#define ITEM_PHASE_COUNT 3
-
 class collisionManager;
 class gameObject;
 class bossclass;
 class projectileclass;
+class itemmanagerclass;
 
 class gameManager
 {
 public:
-	typedef struct Item {
-		string name;
-		bool chosen;
-	}Item;
-
+	
 	struct CompareDist
 	{
 		bool operator()(gameObject* obj1, gameObject* obj2) {
@@ -26,6 +21,8 @@ public:
 
 	gameManager(int);
 	~gameManager();
+
+	void Frame();
 
 	int scene;
 	void RegisterObjectToRender(gameObject *item, int _scene=0);
@@ -43,13 +40,10 @@ public:
 	void CheckCollision();
 	bool CheckMovable(D3DXVECTOR3, D3DXVECTOR3);
 	bool CheckMapOut(D3DXVECTOR3);
+	void AutoMove();
 
 	gameObject* CheckInteraction(D3DXVECTOR3, int);
-	void SetItemPool();
-	string ChooseItemFromPool(int);
-	void SetItemUsed(int, string);
 	
-	vector<vector<Item>> itemPool;
 	
 
 	void AlphaSort(D3DXVECTOR3);
@@ -63,6 +57,8 @@ private:
 	
 
 	collisionManager* m_CM;
+	itemmanagerclass* m_IM;
+
 	D3DXVECTOR3 camPos;
 
 	gameObject* floor;

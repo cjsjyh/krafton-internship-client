@@ -4,9 +4,7 @@
 #include "gameObject.h"
 #include "bossclass.h"
 #include "projectileclass.h"
-
-#include <cstdlib>
-#include <ctime>
+#include "itemmanagerclass.h"
 
 #include "gameManager.h"
 
@@ -17,15 +15,10 @@ gameManager::gameManager(int sceneCount)
 		vector<gameObject*> temp;
 		renderObjects.push_back(temp);
 	}
-
-	for (int i = 0; i < ITEM_PHASE_COUNT; i++)
-	{
-		vector<Item> temp2;
-		itemPool.push_back(temp2);
-	}
-	SetItemPool();
+	
 	m_CM = new collisionManager(this);
-	srand(unsigned int(time(NULL)));
+	m_IM = new itemmanagerclass();
+	
 	floor = 0;
 }
 
@@ -34,6 +27,11 @@ gameManager::~gameManager()
 	delete m_CM;
 }
 
+void gameManager::Frame()
+{
+	AutoMove();
+	CheckCollision();
+}
 
 void gameManager::RegisterObjectToRender(gameObject *item, int _scene)
 {
@@ -115,7 +113,6 @@ projectileclass* gameManager::GetFromPlayerPool()
 	return temp;
 }
 
-
 int gameManager::FindObjectIndex(gameObject *item, int _scene)
 {
 	vector<gameObject*>::iterator itr = find(renderObjects[_scene].begin(), renderObjects[_scene].end(), item);
@@ -148,6 +145,48 @@ bool gameManager::CheckMovable(D3DXVECTOR3 pos, D3DXVECTOR3 len)
 	return m_CM->CheckMovable(pos, len);
 }
 
+void gameManager::AutoMove()
+{
+	//Move AUTOMOVE objects
+	int size = GetRenderObjectCount();
+	for (int i = size - 1; i >= 0; i--)
+	{
+		gameObject* temp = GetGameObject(i);
+		if (temp->objType == gameObject::AUTOMOVE)
+		{
+			projectileclass* bullet = (projectileclass*)temp;
+
+			if (bullet->delay > 0)
+			{
+				bullet->delay--;
+				bullet->Move(0.1);
+
+			}
+			else
+			{
+				bullet->Move(1);
+				if (temp->CheckDestroy())
+				{
+					if (temp->GetName() == "bossbullet")
+					{
+						UnregisterObjectToRender(temp, scene);
+						RegisterToBossPool((projectileclass*)temp);
+					}
+					else if (temp->GetName() == "playerbullet")
+					{
+						UnregisterObjectToRender(temp, scene);
+						RegisterToPlayerPool((projectileclass*)temp);
+					}
+					else
+					{
+						RemoveObjectToRender(temp, scene);
+					}
+				}
+			}
+		}
+	}
+	return;
+}
 
 gameObject* gameManager::CheckInteraction(D3DXVECTOR3 point, int range)
 {
@@ -165,36 +204,4 @@ bool gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
 	D3DXMatrixRotationY(&temp, -floor->GetRotation().y *0.0174532925f);
 	D3DXVec3TransformCoord(&playerPos, &playerPos, &temp);
 	return m_CM->IsInsideMap(playerPos, floor->GetPosition(), floor->GetScale());
-}
-
-void gameManager::SetItemPool()
-{
-	for (int i = 1; i < 6; i++)
-	{
-		Item temp;
-		temp.name = to_string(i);
-		temp.chosen = false;
-		itemPool[0].push_back(temp);
-
-		Item temp2;
-		temp.name = to_string(i);
-		temp.chosen = false;
-		itemPool[1].push_back(temp2);
-	}
-	return;
-}
-
-string gameManager::ChooseItemFromPool(int phase)
-{
-	int index = rand() % itemPool[phase].size();
-	return itemPool[phase][index].name;
-}
-
-void gameManager::SetItemUsed(int phase, string name)
-{
-	for (auto iter = itemPool[phase].begin(); iter != itemPool[phase].end(); iter++)
-	{
-		if ((*iter).name == name)
-			(*iter).chosen = true;
-	}
 }

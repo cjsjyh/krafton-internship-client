@@ -450,12 +450,8 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 
 	//Frame
 	player->Frame(key, frame);
-
 	//AutoMoving(bullets)
-	AutoMove();
-	
-	//Collision Detection
-	m_GM->CheckCollision();
+	m_GM->Frame();
 
 	//Camera
 	//Follow Player in Boss stage
@@ -473,7 +469,6 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 		lastLeftClick = 0;
 	
 	//PLAYER DEAD
-	/*
 	if (player->CheckDestroy())
 	{
 		UninitializeMap();
@@ -481,12 +476,11 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 
 		InitializeBasic();
 		InitializeMap();
-		InitializeRewardMap();
 		InitializePlayerParameters();
 		InitializeBossParameters();
 		return true;
 	}
-	*/
+	
 	//-------------------
 	//  Input Handler
 	//-------------------
@@ -498,7 +492,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			lastLeftClick = frame;
 		}
 	}
-
+	/*
 	if (InputClass::IsKeyPressed(key, 'T'))
 	{
 		if (frame - sceneChangeFrame > 60)
@@ -533,7 +527,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			}
 		}
 	}
-
+	*/
 	// Render the graphics scene.
 	result = Render();
 	if(!result)
@@ -657,48 +651,6 @@ bool GraphicsClass::Render()
 	return true;
 }
 
-void GraphicsClass::AutoMove()
-{
-	//Move AUTOMOVE objects
-	int size = m_GM->GetRenderObjectCount();
-	for (int i = size - 1; i >= 0; i--)
-	{
-		gameObject* temp = m_GM->GetGameObject(i);
-		if (temp->objType == gameObject::AUTOMOVE)
-		{
-			projectileclass* bullet = (projectileclass*)temp;
-
-			if (bullet->delay > 0)
-			{
-				bullet->delay--;
-				bullet->Move(0.1);
-
-			}
-			else
-			{
-				bullet->Move(1);
-				if (temp->CheckDestroy())
-				{
-					if (temp->GetName() == "bossbullet")
-					{
-						m_GM->UnregisterObjectToRender(temp,m_GM->scene);
-						m_GM->RegisterToBossPool((projectileclass*)temp);
-					}
-					else if (temp->GetName() == "playerbullet")
-					{
-						m_GM->UnregisterObjectToRender(temp, m_GM->scene);
-						m_GM->RegisterToPlayerPool((projectileclass*)temp);
-					}
-					else
-					{
-						m_GM->RemoveObjectToRender(temp, m_GM->scene);
-					}
-				}
-			}
-		}
-	}
-	return;
-}
 
 bool GraphicsClass::SetUI(int mouseX, int mouseY, int fps, int cpu)
 {
