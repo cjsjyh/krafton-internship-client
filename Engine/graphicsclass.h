@@ -27,6 +27,7 @@ class playerclass;
 class projectileclass;
 class bossclass;
 
+class itemmanagerclass;
 class gameManager;
 class textfilereader;
 
@@ -61,7 +62,7 @@ public:
 	void UninitializeMap();
 	void InitializePlayerParameters();
 	void InitializeBossParameters();
-	void InitializeRewardMap(string[]);
+	void InitializeRewardMap(vector<string>);
 	void UninitializeRewardMap();
 	void Shutdown();
 	bool Frame(int, int, bool*, int*, int, int);
@@ -70,12 +71,10 @@ public:
 private:
 	D3DXVECTOR3 GetDirectionMouse(int, int);
 	
-	void AutoMove();
 	bool SetUI(int, int, int, int);
 
 	textfilereader* m_filereader;
 	D3DClass* m_D3D;
-	CameraClass* m_Camera;
 	TextClass* m_Text;
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
@@ -85,6 +84,8 @@ private:
 	playerclass* player;
 	bossclass* boss;
 	gameManager* m_GM;
+	itemmanagerclass* m_IM;
+	CameraClass* m_Camera;
 	gameObject* floor;
 
 	vector<ModelClass*> m_Model;

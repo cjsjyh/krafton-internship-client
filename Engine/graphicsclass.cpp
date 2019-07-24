@@ -21,6 +21,7 @@
 #include "projectileclass.h"
 #include "bossclass.h"
 
+#include "itemmanagerclass.h"
 #include "gameManager.h"
 #include "textfilereader.h"
 
@@ -179,7 +180,7 @@ void GraphicsClass::InitializeBasic()
 
 	// Create gameManager object
 	m_GM = new gameManager(SCENE_COUNT);
-
+	m_IM = new itemmanagerclass();
 	return;
 }
 
@@ -293,7 +294,7 @@ void GraphicsClass::UninitializeMap()
 	return;
 }
 
-void GraphicsClass::InitializeRewardMap(string itemNames[])
+void GraphicsClass::InitializeRewardMap(vector<string> itemNames)
 {
 	m_GM->RegisterObjectToRender(player, 1);
 
@@ -305,28 +306,17 @@ void GraphicsClass::InitializeRewardMap(string itemNames[])
 	m_GM->RegisterObjectToRender(floor, 1);
 
 	//add box
-	
-	gameObject* temp;
-	temp = new staticobjclass(itemNames[0], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
-	((staticobjclass*)temp)->InitializeStatic2DItem();
-	temp->SetScale(D3DXVECTOR3(1, 1, 1));
-	temp->SetPosition(D3DXVECTOR3(-10, 0, 10));
-	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
-	m_GM->RegisterObjectToRender(temp, 1);
-	
-	temp = new staticobjclass(itemNames[1], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
-	((staticobjclass*)temp)->InitializeStatic2DItem();
-	temp->SetScale(D3DXVECTOR3(1, 1, 1));
-	temp->SetPosition(D3DXVECTOR3(0, 0, 10));
-	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
-	m_GM->RegisterObjectToRender(temp, 1);
-	
-	temp = new staticobjclass(itemNames[2], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
-	((staticobjclass*)temp)->InitializeStatic2DItem();
-	temp->SetScale(D3DXVECTOR3(1, 1, 1));
-	temp->SetPosition(D3DXVECTOR3(10, 0, 10));
-	//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
-	m_GM->RegisterObjectToRender(temp, 1);
+	for (int i = 0; i < itemNames.size(); i++)
+	{
+		gameObject* temp;
+		temp = new staticobjclass(itemNames[i], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
+		((staticobjclass*)temp)->InitializeStatic2DItem();
+		temp->SetScale(D3DXVECTOR3(1, 1, 1));
+		temp->SetPosition(D3DXVECTOR3(-10 + 10*i, 0, 10));
+		temp->SetRotationAfter(D3DXVECTOR3(0, 45, 0));
+		//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
+		m_GM->RegisterObjectToRender(temp, 1);
+	}
 
 	return;
 }
@@ -429,44 +419,44 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	mouseX = _mouseX - screenW / 2;
 	mouseY = -(_mouseY - screenH / 2);
 
+	frame++;
 	//UI
 	if (!SetUI(mouseX, mouseY, fps, cpu))
 		return false;
 
-	//-------------------
-	//   Frame Action
-	//-------------------
-	frame++;
-	
-	//BOSS
-	if (m_GM->scene == 0)
-	{
-		vector<projectileclass*> bossBullet = boss->Frame(frame);
-		for (unsigned int i = 0; i < bossBullet.size(); i++)
-			m_GM->RegisterObjectToRender(bossBullet[i]);
-	}
-	
-	
-
-	//Frame
-	player->Frame(key, frame);
-	//AutoMoving(bullets)
-	m_GM->Frame();
-
-	//Camera
-	//Follow Player in Boss stage
-	if (m_GM->scene != 1)
-	{
-		midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
-		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
-		m_Camera->Move(midPoint, distance);
-	}
-
-	
-
 	//CAN CLICK AGAIN!
 	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
 		lastLeftClick = 0;
+
+	//-------------------
+	//   Frame Action
+	//-------------------
+	
+	
+	if (m_GM->scene == 0)
+	{
+		//BOSS
+		vector<projectileclass*> bossBullet = boss->Frame(frame);
+		for (unsigned int i = 0; i < bossBullet.size(); i++)
+			m_GM->RegisterObjectToRender(bossBullet[i]);
+
+		//CAMERA
+		m_Camera->SetViewPoint((player->GetPosition() + boss->GetPosition()) / 2);
+		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
+		m_Camera->Move(distance);
+	}
+	else if (m_GM->scene == 1)
+	{
+		//CAMERA
+		m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+		m_Camera->SetViewPoint(D3DXVECTOR3(0, 0, 0));
+	}
+
+
+	player->Frame(key, frame);
+	m_GM->Frame();
+
+	//Camera
 	
 	//PLAYER DEAD
 	if (player->CheckDestroy())
@@ -492,7 +482,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			lastLeftClick = frame;
 		}
 	}
-	/*
+	
 	if (InputClass::IsKeyPressed(key, 'T'))
 	{
 		if (frame - sceneChangeFrame > 60)
@@ -500,19 +490,16 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			sceneChangeFrame = frame;
 			if (m_GM->scene == 0)
 			{
-				string itemnames[3];
+				vector<string> itemNames;
 
 				player->SavePlayerPos(m_GM->scene);
 				player->SetPosition(D3DXVECTOR3(0, 0, 0));
 				player->SetDirection(1);
-				//Set Camera Position
-				m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+				
 				
 				for (int i = 0; i < 3; i++)
-				{
-					itemnames[i] = m_GM->ChooseItemFromPool(0);
-				}
-				InitializeRewardMap(itemnames);
+					itemNames.push_back(m_IM->ChooseItemFromPool(0));
+				InitializeRewardMap(itemNames);
 				
 				m_GM->scene = 1;
 			}
@@ -522,12 +509,10 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 				player->SetPosition(player->GetSavedPlayerPos(m_GM->scene));
 
 				UninitializeRewardMap();
-
-				
 			}
 		}
 	}
-	*/
+	
 	// Render the graphics scene.
 	result = Render();
 	if(!result)
@@ -541,7 +526,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 bool GraphicsClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	D3DXMATRIX temp, MatrixToFaceCamera;
+	D3DXMATRIX MatrixToFaceCamera;
 	bool result;
 
 	//-----------------------
@@ -550,7 +535,7 @@ bool GraphicsClass::Render()
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render(player->GetPosition());
-	m_Camera->GetBillBoardMatrix(MatrixToFaceCamera, midPoint);
+	m_Camera->GetBillBoardMatrix(MatrixToFaceCamera);
 	m_Camera->GetViewMatrix(viewMatrix);
 
 	m_D3D->GetProjectionMatrix(projectionMatrix);
@@ -588,17 +573,12 @@ bool GraphicsClass::Render()
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
 
-	// Render the text strings.
 	D3DXMatrixIdentity(&worldMatrix);
-	//D3DXMatrixScaling(&worldMatrix, 2, 1, 0);
 	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if (!result)
 	{
 		return false;
 	}
-
-	
-	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
 
 	for (int i=0;i < m_UIManager->m_UI.size(); i++)
 	{
@@ -638,14 +618,8 @@ bool GraphicsClass::Render()
 		}
 	}
 
-	// Turn off alpha blending after rendering the text.
 	m_D3D->TurnOffAlphaBlending();
-
-	// Turn the Z buffer back on now that all 2D rendering has completed.
 	m_D3D->TurnZBufferOn();
-
-
-	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 
 	return true;

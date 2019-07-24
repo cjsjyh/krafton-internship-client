@@ -12,6 +12,10 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
+
+	viewPoint.x = 0;
+	viewPoint.y = 0;
+	viewPoint.z = 0;
 }
 
 CameraClass::~CameraClass()
@@ -19,12 +23,12 @@ CameraClass::~CameraClass()
 
 }
 
-void CameraClass::Move(D3DXVECTOR3 midpoint, float distance)
+void CameraClass::Move(float distance)
 {
 	if (distance < 30)
-		SetPosition(D3DXVECTOR3(midpoint.x, midpoint.y + 30, midpoint.z - 30));
+		SetPosition(D3DXVECTOR3(viewPoint.x, viewPoint.y + 30, viewPoint.z - 30));
 	else
-		SetPosition(D3DXVECTOR3(midpoint.x, (midpoint.y + 30) * (distance / 30), (midpoint.z - 30) * (distance / 30)));
+		SetPosition(D3DXVECTOR3(viewPoint.x, (viewPoint.y + 30) * (distance / 30), (viewPoint.z - 30) * (distance / 30)));
 }
 
 void CameraClass::SetPosition(D3DXVECTOR3 pos)
@@ -60,6 +64,14 @@ void CameraClass::AdjustRotation(D3DXVECTOR3 _rotOffset)
 	return;
 }
 
+void CameraClass::SetViewPoint(D3DXVECTOR3 _viewpt)
+{
+	viewPoint.x = _viewpt.x;
+	viewPoint.y = _viewpt.y;
+	viewPoint.z = _viewpt.z;
+	return;
+}
+
 D3DXVECTOR3 CameraClass::GetPosition()
 {
 	return D3DXVECTOR3(m_positionX, m_positionY, m_positionZ);
@@ -69,6 +81,11 @@ D3DXVECTOR3 CameraClass::GetPosition()
 D3DXVECTOR3 CameraClass::GetRotation()
 {
 	return D3DXVECTOR3(m_rotationX, m_rotationY, m_rotationZ);
+}
+
+D3DXVECTOR3 CameraClass::GetViewPoint()
+{
+	return viewPoint;
 }
 
 
@@ -125,11 +142,12 @@ void CameraClass::GetViewMatrix(D3DXMATRIX& viewMatrix)
 	return;
 }
 
-void CameraClass::GetBillBoardMatrix(D3DXMATRIX& billBoardMatrix, D3DXVECTOR3 player_pos)
+void CameraClass::GetBillBoardMatrix(D3DXMATRIX& billBoardMatrix)
 {
 	float yaw, pitch, rad_yaw, rad_pitch;
 	D3DXMATRIX rot_yaw, rot_pitch;
-	D3DXVECTOR3 tempvec = normalizeVec3(player_pos - GetPosition());
+	D3DXVECTOR3 tempvec = normalizeVec3(viewPoint - GetPosition());
+	stdafx::PrintVector3(viewPoint);
 
 	yaw = atan2(tempvec.x, tempvec.z) * (180.0 / D3DX_PI);
 	rad_yaw = yaw * 0.0174532925f;

@@ -12,6 +12,7 @@ gameObject::gameObject(string objname, CollisionChannel _channel, ColliderType c
 	pos.x = pos.y = pos.z = 0;
 	scale.x = scale.y = scale.z = 1;
 	rot.x = rot.y = rot.z = 0;
+	rot_after.x = rot_after.y = rot_after.z = 0;
 	box_collSize.x = box_collSize.y = box_collSize.z = 1;
 	sphere_collSize = 0.5;
 	m_model = 0;
@@ -33,6 +34,7 @@ gameObject::gameObject(string objname, D3DXVECTOR3 _pos, CollisionChannel _chann
 
 	scale.x = scale.y = scale.z = 1;
 	rot.x = rot.y = rot.z = 0;
+	rot_after.x = rot_after.y = rot_after.z = 0;
 	box_collSize.x = box_collSize.y = box_collSize.z = 1;
 	m_model = 0;
 
@@ -90,6 +92,11 @@ D3DXVECTOR3 gameObject::GetRotation()
 	return D3DXVECTOR3(rot.x, rot.y, rot.z);
 }
 
+D3DXVECTOR3 gameObject::GetRotationAfter()
+{
+	return D3DXVECTOR3(rot_after.x, rot_after.y, rot_after.z);
+}
+
 D3DXVECTOR3 gameObject::GetScale ()
 {
 	return D3DXVECTOR3(scale.x, scale.y,scale.z);
@@ -125,6 +132,22 @@ void gameObject::SetScale(D3DXVECTOR3 _scale)
 	scale.y = _scale.y;
 	scale.z = _scale.z;
 
+	return;
+}
+
+void gameObject::SetRotationAfter(D3DXVECTOR3 _rot)
+{
+	rot_after.x = _rot.x;
+	while (rot_after.x > 360)
+		rot_after.x = rot_after.x - 360;
+
+	rot_after.y = _rot.y;
+	while (rot_after.y > 360)
+		rot_after.y = rot_after.y - 360;
+
+	rot_after.z = _rot.z;
+	while (rot_after.z > 360)
+		rot_after.z = rot_after.z - 360;
 	return;
 }
 
@@ -188,7 +211,11 @@ void gameObject::GetWorldMatrix(D3DXMATRIX& WorldMatrix)
 	WorldMatrix *= temp;
 	D3DXMatrixRotationZ(&temp, rot.z * 0.0174532925f);
 	WorldMatrix *= temp;
-
+	
 	D3DXMatrixTranslation(&temp, pos.x, pos.y, pos.z);
 	WorldMatrix *= temp;
+	/*
+	D3DXMatrixTranslation(&temp, rot_after.x, rot_after.y, rot_after.z);
+	WorldMatrix *= temp;
+	*/
 }

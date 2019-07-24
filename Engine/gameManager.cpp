@@ -4,7 +4,6 @@
 #include "gameObject.h"
 #include "bossclass.h"
 #include "projectileclass.h"
-#include "itemmanagerclass.h"
 
 #include "gameManager.h"
 
@@ -17,7 +16,6 @@ gameManager::gameManager(int sceneCount)
 	}
 	
 	m_CM = new collisionManager(this);
-	m_IM = new itemmanagerclass();
 	
 	floor = 0;
 }

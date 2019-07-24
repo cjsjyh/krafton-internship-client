@@ -6,7 +6,6 @@ class collisionManager;
 class gameObject;
 class bossclass;
 class projectileclass;
-class itemmanagerclass;
 
 class gameManager
 {
@@ -54,10 +53,7 @@ private:
 	vector<projectileclass*> BossbulletPool;
 	vector<projectileclass*> PlayerbulletPool;
 
-	
-
 	collisionManager* m_CM;
-	itemmanagerclass* m_IM;
 
 	D3DXVECTOR3 camPos;
 
