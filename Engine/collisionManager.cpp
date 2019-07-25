@@ -13,6 +13,11 @@ collisionManager::collisionManager(gameManager* _GM)
 	GM = _GM;
 }
 
+collisionManager::~collisionManager()
+{
+
+}
+
 bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameObject*>& item2)
 {
 	//check all objects if they collide and return true or false.

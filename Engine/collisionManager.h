@@ -14,6 +14,7 @@ class collisionManager
 {
 public:
 	collisionManager(gameManager*);
+	~collisionManager();
 	bool CollisionManager(vector<gameObject*>&, vector<gameObject*>&);
 	bool CheckMovable(D3DXVECTOR3, D3DXVECTOR3);
 	gameObject* InteractionManager(D3DXVECTOR3, int);

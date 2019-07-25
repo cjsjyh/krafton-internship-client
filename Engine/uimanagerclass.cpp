@@ -14,6 +14,12 @@ uimanagerclass::uimanagerclass(vector<textfilereader::UIinfo> _input, D3DClass* 
 	parameters = _input;
 }
 
+uimanagerclass::~uimanagerclass()
+{
+
+}
+
+
 void uimanagerclass::SetValues(int _screenWidth, int _screenHeight, HWND _hwnd)
 {
 	screenWidth = _screenWidth;

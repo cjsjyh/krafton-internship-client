@@ -13,6 +13,7 @@ public:
 
 
 	uimanagerclass(vector<textfilereader::UIinfo>, D3DClass*);
+	~uimanagerclass();
 	bool InitializeUI();
 
 	void UpdateUI();

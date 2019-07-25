@@ -6,6 +6,7 @@
 #include "gameObject.h"
 #include "gameManager.h"
 #include "inputclass.h"
+#include "itemmanagerclass.h"
 
 #include "playerclass.h"
 
@@ -47,9 +48,10 @@ void playerclass::InitializeModels()
 	
 }
 
-void playerclass::SetGameManager(gameManager* _GM)
+void playerclass::SetManager(gameManager* _GM, itemmanagerclass* _IM)
 {
 	GM = _GM;
+	IM = _IM;
 }
 
 projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
@@ -190,10 +192,12 @@ bool playerclass::Dash(int* keys, int frame)
 {
 	if (keys[4] == DIK_SPACE || dashFrame != -1)
 	{
+		//START DASH
 		if (dashFrame == -1)
 		{
 			dashFrame = frame;
 			dashDir = direction;
+			channel = gameObject::NO_COLLISION;
 		}
 		else
 		{
@@ -204,6 +208,7 @@ bool playerclass::Dash(int* keys, int frame)
 				if (dashPauseFrame == -1)
 				{
 					dashPauseFrame = frame;
+					channel = gameObject::PLAYER;
 				}
 				else
 				{
@@ -232,10 +237,8 @@ int playerclass::ObjectInteraction(int* keys)
 	{
 		gameObject* hitObj = GM->CheckInteraction(GetPosition(), PLAYER_INTERACTION_RANGE);
 
-		if (!hitObj)
-			cout << "null!" << endl;
-		else
-			cout << "hiit obj: " + hitObj->GetName() << endl;
+		if (hitObj)
+			IM->SetItemUsed(hitObj->GetName(),0);
 	}
 
 	return 1;

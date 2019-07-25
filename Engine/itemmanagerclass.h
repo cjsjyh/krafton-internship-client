@@ -4,6 +4,8 @@
 
 #define ITEM_PHASE_COUNT 3
 
+class playerclass;
+
 class itemmanagerclass
 {
 public:
@@ -13,14 +15,18 @@ public:
 	}Item;
 
 	itemmanagerclass();
+	~itemmanagerclass();
 
 	vector<string> ChooseItemFromPool(int, int);
 	void SetItemUsed(string, int);
 	void SetItemEffect(string);
 
+	void SetPlayer(playerclass* _player);
+
 private:
 	void SetItemPool();
 	
+	playerclass* player;
 	vector<vector<Item>> itemPool;
 };
 

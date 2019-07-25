@@ -11,6 +11,12 @@ imagedecoderclass::imagedecoderclass()
 	g_ipD2DBitmap = nullptr;
 }
 
+imagedecoderclass::~imagedecoderclass()
+{
+
+}
+
+
 void imagedecoderclass::GetImageSize(WCHAR* fname, int& width, int& height)
 {
 	HRESULT hr = E_FAIL;

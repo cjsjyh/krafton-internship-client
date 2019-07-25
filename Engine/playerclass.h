@@ -9,6 +9,7 @@ class D3DClass;
 class ModelClass;
 class gameObject;
 class gameManager;
+class itemmanagerclass;
 
 #define PLAYER_IMAGE_NUM 8
 
@@ -22,7 +23,7 @@ public:
 	
 	void Frame(int*, int);
 
-	void SetGameManager(gameManager*);
+	void SetManager(gameManager*, itemmanagerclass*);
 	void SetDirection(int*);
 	void SetDirection(int);
 	int GetDirection();
@@ -58,6 +59,7 @@ private:
 	int dashDir;
 	vector<D3DXVECTOR3> playerPosSave;
 	gameManager* GM;
+	itemmanagerclass* IM;
 };
 
 #endif

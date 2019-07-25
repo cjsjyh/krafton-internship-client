@@ -15,6 +15,11 @@ hpobjects::hpobjects(string name, int _hp, D3DClass* _device, CollisionChannel c
 	//HpObjectInitialize();
 }
 
+hpobjects::hpobjects()
+{
+
+}
+
 void hpobjects::SetHp(int hp)
 {
 	maxHp = curHp = hp;

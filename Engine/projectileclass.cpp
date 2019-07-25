@@ -20,6 +20,11 @@ projectileclass::projectileclass(string name, D3DXVECTOR3 pos, float _speed, int
 	InitializeProjectile();
 }
 
+projectileclass::~projectileclass()
+{
+
+}
+
 void projectileclass::InitializeProjectile()
 {
 	bool result;

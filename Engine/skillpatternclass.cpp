@@ -2,6 +2,16 @@
 
 #include "skillpatternclass.h"
 
+skillpatternclass::skillpatternclass()
+{
+
+}
+
+skillpatternclass::~skillpatternclass()
+{
+
+}
+
 D3DXVECTOR3 skillpatternclass::FireAt(D3DXVECTOR3 src, D3DXVECTOR3 dest)
 {
 	return stdafx::normalizeVec3(dest - src);

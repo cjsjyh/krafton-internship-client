@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "playerclass.h"
+
 #include "itemmanagerclass.h"
 
 itemmanagerclass::itemmanagerclass()
@@ -15,6 +17,16 @@ itemmanagerclass::itemmanagerclass()
 		itemPool.push_back(temp2);
 	}
 	SetItemPool();
+}
+
+itemmanagerclass::~itemmanagerclass()
+{
+
+}
+
+void itemmanagerclass::SetPlayer(playerclass* _player)
+{
+	player = _player;
 }
 
 void itemmanagerclass::SetItemPool()
@@ -49,7 +61,7 @@ vector<string> itemmanagerclass::ChooseItemFromPool(int count, int phase)
 			index = rand() % itemPool[phase].size();
 			for (int i = 0; i < temp.size(); i++)
 			{
-				if (temp[i] == itemPool[phase][index].name)
+				if (temp[i] == itemPool[phase][index].name || !itemPool[phase][index].chosen)
 					flag = false;
 			}
 		}
@@ -63,7 +75,10 @@ void itemmanagerclass::SetItemUsed(string name, int phase)
 	for (auto iter = itemPool[phase].begin(); iter != itemPool[phase].end(); iter++)
 	{
 		if ((*iter).name == name)
+		{
 			(*iter).chosen = true;
+			SetItemEffect((*iter).name);
+		}
 	}
 }
 

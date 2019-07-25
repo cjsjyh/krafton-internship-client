@@ -6,6 +6,7 @@ class imagedecoderclass
 {
 public:
 	imagedecoderclass();
+	~imagedecoderclass();
 	void GetImageSize(WCHAR*, int& width, int& height);
 
 private:
