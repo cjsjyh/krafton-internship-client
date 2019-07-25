@@ -86,7 +86,7 @@ private:
 	gameManager* m_GM;
 	itemmanagerclass* m_IM;
 	CameraClass* m_Camera;
-	gameObject* floor;
+	gameObject *floor, *rewardfloor;
 
 	vector<ModelClass*> m_Model;
 	

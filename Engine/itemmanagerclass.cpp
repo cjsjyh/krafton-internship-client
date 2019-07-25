@@ -34,17 +34,40 @@ void itemmanagerclass::SetItemPool()
 	return;
 }
 
-string itemmanagerclass::ChooseItemFromPool(int phase)
+vector<string> itemmanagerclass::ChooseItemFromPool(int count, int phase)
 {
-	int index = rand() % itemPool[phase].size();
-	return itemPool[phase][index].name;
+	vector<string> temp;
+	int index;
+	bool flag;
+
+	for (int i = 0; i < count; i++)
+	{
+		flag = false;
+		while (!flag)
+		{
+			flag = true;
+			index = rand() % itemPool[phase].size();
+			for (int i = 0; i < temp.size(); i++)
+			{
+				if (temp[i] == itemPool[phase][index].name)
+					flag = false;
+			}
+		}
+		temp.push_back(itemPool[phase][index].name);
+	}
+	return  temp;
 }
 
-void itemmanagerclass::SetItemUsed(int phase, string name)
+void itemmanagerclass::SetItemUsed(string name, int phase)
 {
 	for (auto iter = itemPool[phase].begin(); iter != itemPool[phase].end(); iter++)
 	{
 		if ((*iter).name == name)
 			(*iter).chosen = true;
 	}
+}
+
+void itemmanagerclass::SetItemEffect(string name)
+{
+
 }

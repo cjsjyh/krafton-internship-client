@@ -51,6 +51,7 @@ void gameManager::RemoveObjectToRender(gameObject* item, int _scene)
 	gameObject* temp = renderObjects[_scene][index];
 	renderObjects[_scene].erase(renderObjects[_scene].begin() + index);
 	delete temp;
+	temp = 0;
 	return;
 }
 

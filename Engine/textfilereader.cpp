@@ -96,7 +96,7 @@ bool textfilereader::ReadUIFile(string fname)
 				temp.uiname = fields[1];
 				break;
 			case 1:
-				temp.filename = "../Engine/data/" + fields[1];
+				temp.filename = "../Engine/data/UI/" + fields[1];
 				break;
 			case 2:
 				temp.pos_x = stoi(fields[1]);
@@ -112,6 +112,8 @@ bool textfilereader::ReadUIFile(string fname)
 				break;
 			}
 		}
+		temp.pos_x -= temp.size_x / 2;
+		temp.pos_y -= temp.size_y / 2;
 		paramUI.push_back(temp);
 	}
 	return true;

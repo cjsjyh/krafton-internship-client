@@ -14,15 +14,14 @@ public:
 
 	itemmanagerclass();
 
-	string ChooseItemFromPool(int);
-	void SetItemUsed(int, string);
+	vector<string> ChooseItemFromPool(int, int);
+	void SetItemUsed(string, int);
+	void SetItemEffect(string);
 
 private:
 	void SetItemPool();
 	
-
 	vector<vector<Item>> itemPool;
-
 };
 
 #endif

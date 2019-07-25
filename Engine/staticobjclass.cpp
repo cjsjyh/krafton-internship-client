@@ -20,13 +20,13 @@ staticobjclass::~staticobjclass()
 
 void staticobjclass::InitializeStatic2D()
 {
-	string tName = "../Engine/data/" + GetName() + ".png";
+	string tName = "../Engine/data/gameobject/" + GetName() + ".png";
 	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
 }
 
 void staticobjclass::InitializeStatic3D()
 {
-	string tName = "../Engine/data/" + GetName() + ".png";
+	string tName = "../Engine/data/gameobject/" + GetName() + ".png";
 	m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", stdafx::StringToWchar(tName));
 }
 

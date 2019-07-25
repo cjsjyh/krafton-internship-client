@@ -147,7 +147,6 @@ void CameraClass::GetBillBoardMatrix(D3DXMATRIX& billBoardMatrix)
 	float yaw, pitch, rad_yaw, rad_pitch;
 	D3DXMATRIX rot_yaw, rot_pitch;
 	D3DXVECTOR3 tempvec = normalizeVec3(viewPoint - GetPosition());
-	stdafx::PrintVector3(viewPoint);
 
 	yaw = atan2(tempvec.x, tempvec.z) * (180.0 / D3DX_PI);
 	rad_yaw = yaw * 0.0174532925f;
@@ -168,9 +167,4 @@ D3DXVECTOR3 CameraClass::normalizeVec3(D3DXVECTOR3 vec)
 	square = vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 	square = sqrt(square);
 	return D3DXVECTOR3(vec.x / square, vec.y / square, vec.z / square);
-}
-
-void CameraClass::PrintVector3(D3DXVECTOR3 vec)
-{
-	cout << "x: " + to_string(vec.x) << "y: " + to_string(vec.y) << "z: " + to_string(vec.z) << endl;
 }

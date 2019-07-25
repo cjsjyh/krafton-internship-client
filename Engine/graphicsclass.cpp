@@ -147,15 +147,15 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	m_filereader = new textfilereader;
-	result = m_filereader->ReadFile("../Engine/data/player_parameter.csv");
+	result = m_filereader->ReadFile("../Engine/data/datasheet/player_parameter.csv");
 	if (!result)
 		return false;
 		
-	result = m_filereader->ReadFile("../Engine/data/boss_parameter.csv");
+	result = m_filereader->ReadFile("../Engine/data/datasheet/boss_parameter.csv");
 	if (!result)
 		return false;
 	
-	m_filereader->ReadUIFile("../Engine/data/ui_parameter.csv");
+	m_filereader->ReadUIFile("../Engine/data/datasheet/ui_parameter.csv");
 	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D);
 	m_UIManager->SetValues(screenWidth, screenHeight, hwnd);
 
@@ -283,13 +283,21 @@ void GraphicsClass::InitializeMap()
 
 void GraphicsClass::UninitializeMap()
 {
-	delete player;
-	delete boss;
-	delete floor;
-
-	player = 0;
-	boss = 0;
-	floor = 0;
+	if (player)
+	{
+		delete player;
+		player = 0;
+	}
+	if (boss)
+	{
+		delete boss;
+		boss = 0;
+	}
+	if (floor)
+	{
+		delete floor;
+		floor = 0;
+	}
 	
 	return;
 }
@@ -298,12 +306,12 @@ void GraphicsClass::InitializeRewardMap(vector<string> itemNames)
 {
 	m_GM->RegisterObjectToRender(player, 1);
 
-	floor = new staticobjclass("floor", m_D3D, gameObject::NO_COLLISION,gameObject::COLLIDER_BOX);
-	((staticobjclass*)floor)->InitializeStatic3D();
-	floor->SetScale(D3DXVECTOR3(40, 0.1, 40));
-	floor->SetPosition(D3DXVECTOR3(0, -5, 0));
-	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
-	m_GM->RegisterObjectToRender(floor, 1);
+	rewardfloor = new staticobjclass("floor", m_D3D, gameObject::NO_COLLISION,gameObject::COLLIDER_BOX);
+	((staticobjclass*)rewardfloor)->InitializeStatic3D();
+	rewardfloor->SetScale(D3DXVECTOR3(40, 0.1, 40));
+	rewardfloor->SetPosition(D3DXVECTOR3(0, -5, 0));
+	rewardfloor->SetRotation(D3DXVECTOR3(0, 45, 0));
+	m_GM->RegisterObjectToRender(rewardfloor, 1);
 
 	//add box
 	for (int i = 0; i < itemNames.size(); i++)
@@ -475,7 +483,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//  Input Handler
 	//-------------------
 	if (InputClass::LeftMouseClicked(mousePress))
-	{
+	{    
 		if (!lastLeftClick)
 		{
 			m_GM->RegisterObjectToRender(player->Fire(GetDirectionMouse(_mouseX,_mouseY)),m_GM->scene);
@@ -497,8 +505,10 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 				player->SetDirection(1);
 				
 				
-				for (int i = 0; i < 3; i++)
-					itemNames.push_back(m_IM->ChooseItemFromPool(0));
+				
+				itemNames = m_IM->ChooseItemFromPool(3,0);
+				for (auto iter = itemNames.begin(); iter != itemNames.end(); iter++)
+					cout << *iter << endl;
 				InitializeRewardMap(itemNames);
 				
 				m_GM->scene = 1;
@@ -591,12 +601,12 @@ bool GraphicsClass::Render()
 		if (m_UIManager->parameters[i].uiname == "BOSS_HPBAR_FRONT")
 		{
 			float bossHp = boss->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, bossHp, 1, 1);
+			D3DXMatrixScaling(&worldMatrix, 1-bossHp, 1, 1);
 		}
 		else if (m_UIManager->parameters[i].uiname == "PLAYER_HPBAR_FRONT")
 		{
 			float playerHp = player->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
+			D3DXMatrixScaling(&worldMatrix, 1-playerHp, 1, 1);
 		}
 		
 		result = m_UIManager->m_UI[i]->Render(m_D3D->GetDeviceContext(), 0, 0);

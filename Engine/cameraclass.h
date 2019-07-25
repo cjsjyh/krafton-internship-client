@@ -37,7 +37,6 @@ public:
 	void GetBillBoardMatrix(D3DXMATRIX&);
 private:
 	D3DXVECTOR3 normalizeVec3(D3DXVECTOR3);
-	void PrintVector3(D3DXVECTOR3);
 
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
