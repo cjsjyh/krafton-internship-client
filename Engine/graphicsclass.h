@@ -42,7 +42,7 @@ const float CAM_SENSITIVITY = 0.01f;
 
 const int PLAYER_MODEL_COUNT = 8;
 
-const int MOUSE_FRAME_RATE = 10;
+
 const int COLL_CHECK_RATE = 10;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +96,6 @@ private:
 	int mouseX, mouseY;
 	int frame;
 	int screenW, screenH;
-	int lastLeftClick;
 	int sceneChangeFrame;
 };
 

@@ -21,7 +21,7 @@ public:
 	
 	void InitializeModels();
 	
-	void Frame(int*, int);
+	void Frame(int*, bool*, D3DXVECTOR3, int);
 
 	void SetManager(gameManager*, itemmanagerclass*);
 	void SetDirection(int*);
@@ -48,14 +48,18 @@ public:
 	float PLAYER_INTERACTION_RANGE;
 
 	//player bullet parameters
+	int PLAYER_BULLET_RELOAD;
 	int PLAYER_BULLET_DAMAGE;
 	float PLAYER_BULLET_SPEED;
 	int PLAYER_BULLET_DISTANCE;
 	int PLAYER_BULLET_DELAY;
+	float PLAYER_BULLET_ANGLE;
+	float PLAYER_BULLET_COUNT;
 
 private:
 	int direction;
 	int dashFrame, dashPauseFrame;
+	int lastLeftClick;
 	int dashDir;
 	vector<D3DXVECTOR3> playerPosSave;
 	gameManager* GM;

@@ -1,10 +1,10 @@
-Name,BOSS_HPBAR_BACK,BOSS HP╧ыюг ╣ч юл╧лаЖ
+Name,BOSS_HPBAR_BACK,BOSS HPО©╫О©╫О©╫О©╫ О©╫О©╫ О©╫л╧О©╫О©╫О©╫
 Filename,hpbar_back.png,
 Position_X,960,
 Position_Y,30,
 Size_X,729,
 Size_Y,45,
-Name,BOSS_HPBAR_FRONT,BOSS HP╧ыюг ╬у юл╧лаЖ
+Name,BOSS_HPBAR_FRONT,BOSS HPО©╫О©╫О©╫О©╫ О©╫О©╫ О©╫л╧О©╫О©╫О©╫
 Filename,hpbar_front.png,
 Position_X,960,
 Position_Y,30,
@@ -25,24 +25,12 @@ Size_Y,45,
 Name,ITEM_BAR,
 Filename,item_bar.png,
 Position_X,10,
-Position_Y,170,юл╧лаЖ ©Ь╥║ ╩ГюлаН╦╕ ╩Г©Кго╟М ╫мю╦╦И 0
-Size_X,0,юл╧лаЖ ©Ь╥║ ╩ГюлаН╦╕ ╩Г©Кго╟М ╫мю╦╦И 0
+Position_Y,170,О©╫л╧О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫Н╦╕ О©╫О©╫О©╫О©╫о╟О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ 0
+Size_X,0,О©╫л╧О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫Н╦╕ О©╫О©╫О©╫О©╫о╟О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ 0
 Size_Y,0,
 Name,PLAYER_TIMER,
 Filename,timer.png,
 Position_X,810,
 Position_Y,1050,
-Size_X,0,юл╧лаЖ ©Ь╥║ ╩ГюлаН╦╕ ╩Г©Кго╟М ╫мю╦╦И 0
-Size_Y,0,юл╧лаЖ ©Ь╥║ ╩ГюлаН╦╕ ╩Г©Кго╟М ╫мю╦╦И 0
-Name,button3,
-Filename,button.png,
-Position_X,10,
-Position_Y,270,
-Size_X,50,
-Size_Y,50,
-Name,button4,
-Filename,bullet.png,
-Position_X,10,
-Position_Y,320,
-Size_X,50,
-Size_Y,50,
+Size_X,0,О©╫л╧О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫Н╦╕ О©╫О©╫О©╫О©╫о╟О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ 0
+Size_Y,0,О©╫л╧О©╫О©╫О©╫ О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫Н╦╕ О©╫О©╫О©╫О©╫о╟О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ 0

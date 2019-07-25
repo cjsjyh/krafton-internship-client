@@ -17,9 +17,11 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	channel = gameObject::PLAYER;
 	direction = 1;
 
+	lastLeftClick = 0;
 	PLAYER_DASH_SPEED = 2;
 	PLAYER_DASH_FRAME = 20;
 	PLAYER_DASH_PAUSE_FRAME = 5;
+	PLAYER_BULLET_RELOAD = 10;
 
 	dashFrame = dashPauseFrame = -1;
 	dashDir = -1;
@@ -171,10 +173,23 @@ D3DXVECTOR3 playerclass::GetDirectionVector(int dir)
 	}
 }
 
-void playerclass::Frame(int* keys, int frame)
+void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int frame)
 {
+	//CAN CLICK AGAIN!
+	if (frame - lastLeftClick > PLAYER_BULLET_RELOAD)
+		lastLeftClick = 0;
+
+	if (InputClass::LeftMouseClicked(mousePress))
+	{
+		if (!lastLeftClick)
+		{
+			GM->RegisterObjectToRender(Fire(vecToMouse), GM->scene);
+			lastLeftClick = frame;
+		}
+	}
+
 	SetDirection(keys);
-	
+
 	//Dashing
 	if (Dash(keys, frame));
 	else if (InputClass::IsWASDKeyPressed(keys))

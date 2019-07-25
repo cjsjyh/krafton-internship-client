@@ -39,7 +39,6 @@ GraphicsClass::GraphicsClass()
 	m_GM = 0;
 
 	frame = 0;
-	lastLeftClick = 0;
 	m_filereader = 0;
 }
 
@@ -441,9 +440,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	if (!SetUI(mouseX, mouseY, fps, cpu))
 		return false;
 
-	//CAN CLICK AGAIN!
-	if (frame - lastLeftClick > MOUSE_FRAME_RATE)
-		lastLeftClick = 0;
+	
 
 	//-------------------
 	//   Frame Action
@@ -470,7 +467,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	}
 
 
-	player->Frame(key, frame);
+	player->Frame(key, mousePress, GetDirectionMouse(_mouseX, _mouseY) ,frame);
 	m_GM->Frame();
 
 	//Camera
@@ -489,17 +486,8 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	}
 	
 	//-------------------
-	//  Input Handler
+	//  sCENE CHANGE
 	//-------------------
-	if (InputClass::LeftMouseClicked(mousePress))
-	{    
-		if (!lastLeftClick)
-		{
-			m_GM->RegisterObjectToRender(player->Fire(GetDirectionMouse(_mouseX,_mouseY)),m_GM->scene);
-			lastLeftClick = frame;
-		}
-	}
-	
 	if (InputClass::IsKeyPressed(key, 'T'))
 	{
 		if (frame - sceneChangeFrame > 60)
