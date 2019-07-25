@@ -40,13 +40,9 @@ GraphicsClass::GraphicsClass()
 
 	frame = 0;
 	m_filereader = 0;
+
+	SCENE_CHANGE_COOLTIME = 60;
 }
-
-
-GraphicsClass::GraphicsClass(const GraphicsClass& other)
-{
-}
-
 
 GraphicsClass::~GraphicsClass()
 {
@@ -67,12 +63,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	{
 		return false;
 	}
-
-	// Set the initial position of the camera.
-
-	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
-	m_Camera->Render(D3DXVECTOR3(0, 0, 0));
-	m_Camera->GetViewMatrix(baseViewMatrix);
 
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
@@ -174,7 +164,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 
 void GraphicsClass::InitializeBasic()
 {
-	//initial camera setup
+	// Set baseViewMatrix for UI
+	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
+	m_Camera->Render(D3DXVECTOR3(0, 0, 0));
+	m_Camera->GetViewMatrix(baseViewMatrix);
+	// Initial camera setup
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 	m_Camera->SetRotation(D3DXVECTOR3(45, 0, 0));
 
@@ -189,8 +183,7 @@ void GraphicsClass::InitializeBasic()
 	m_UIManager->SetValues(screenW, screenH, hwnd);
 	m_UIManager->InitializeUI();
 
-	
-	sceneChangeFrame = 0;
+	last_scene_change_frame = 0;
 	return;
 }
 
@@ -198,7 +191,13 @@ void GraphicsClass::UninitializeBasic()
 {
 	delete m_GM;
 	m_GM = 0;
+	/*
+	delete m_IM;
+	m_IM = 0;
 
+	delete m_UIManager;
+	m_UIManager = 0;
+	*/
 	return;
 }
 
@@ -426,6 +425,7 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse(int _mouseX, int _mouseY)
 	projectedPt.z = rayOrigin.z + rayDirection.z * k;
 
 	return stdafx::normalizeVec3(projectedPt);
+	//return projectedPt;
 }
 
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, int fps, int cpu)
@@ -440,13 +440,9 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	if (!SetUI(mouseX, mouseY, fps, cpu))
 		return false;
 
-	
-
 	//-------------------
 	//   Frame Action
 	//-------------------
-	
-	
 	if (m_GM->scene == 0)
 	{
 		//BOSS
@@ -490,9 +486,9 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//-------------------
 	if (InputClass::IsKeyPressed(key, 'T'))
 	{
-		if (frame - sceneChangeFrame > 60)
+		if (frame - last_scene_change_frame > SCENE_CHANGE_COOLTIME)
 		{
-			sceneChangeFrame = frame;
+			last_scene_change_frame = frame;
 			if (m_GM->scene == 0)
 			{
 				vector<string> itemNames;

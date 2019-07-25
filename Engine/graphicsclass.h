@@ -52,7 +52,6 @@ class GraphicsClass
 {
 public:
 	GraphicsClass();
-	GraphicsClass(const GraphicsClass&);
 	~GraphicsClass();
 
 	bool Initialize(int, int, HWND);
@@ -96,7 +95,7 @@ private:
 	int mouseX, mouseY;
 	int frame;
 	int screenW, screenH;
-	int sceneChangeFrame;
+	int last_scene_change_frame, SCENE_CHANGE_COOLTIME;
 };
 
 #endif

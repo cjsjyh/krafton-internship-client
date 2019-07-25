@@ -7,6 +7,7 @@
 #include "gameManager.h"
 #include "inputclass.h"
 #include "itemmanagerclass.h"
+#include "skillpatternclass.h"
 
 #include "playerclass.h"
 
@@ -22,6 +23,8 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	PLAYER_DASH_FRAME = 20;
 	PLAYER_DASH_PAUSE_FRAME = 5;
 	PLAYER_BULLET_RELOAD = 10;
+	PLAYER_BULLET_COUNT = 3;
+	PLAYER_BULLET_ANGLE = 10;
 
 	dashFrame = dashPauseFrame = -1;
 	dashDir = -1;
@@ -183,7 +186,16 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	{
 		if (!lastLeftClick)
 		{
-			GM->RegisterObjectToRender(Fire(vecToMouse), GM->scene);
+			//GM->RegisterObjectToRender(Fire(vecToMouse), GM->scene);
+			//stdafx::PrintVector3(vecToMouse);
+			
+			vector<D3DXVECTOR3> temp = skillpatternclass::FireInFan(PLAYER_BULLET_COUNT, PLAYER_BULLET_ANGLE, D3DXVECTOR3(0,0,0), vecToMouse);
+			for (auto iter = temp.begin(); iter != temp.end(); iter++)
+			{
+				//stdafx::PrintVector3(*iter);
+				GM->RegisterObjectToRender(Fire(*iter), GM->scene);
+			}
+			
 			lastLeftClick = frame;
 		}
 	}
@@ -199,8 +211,10 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 			if(GM->CheckMapOut(nextPos))
 				AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 	}
-
-	ObjectInteraction(keys);
+	else if (InputClass::IsKeyPressed(keys, 'F'))
+	{
+		ObjectInteraction();
+	}
 }
 
 bool playerclass::Dash(int* keys, int frame)
@@ -246,16 +260,15 @@ bool playerclass::Dash(int* keys, int frame)
 	return false;
 }
 
-int playerclass::ObjectInteraction(int* keys)
+int playerclass::ObjectInteraction()
 {
-	if (keys[6] == DIK_F)
+	gameObject* hitObj = GM->CheckInteraction(GetPosition(), PLAYER_INTERACTION_RANGE);
+
+	if (hitObj)
 	{
-		gameObject* hitObj = GM->CheckInteraction(GetPosition(), PLAYER_INTERACTION_RANGE);
-
-		if (hitObj)
-			IM->SetItemUsed(hitObj->GetName(),0);
+		IM->SetItemUsed(hitObj->GetName(), 0);
 	}
-
+	
 	return 1;
 }
 

@@ -32,7 +32,7 @@ public:
 	D3DXVECTOR3 GetDirectionVector(int);
 	projectileclass* Fire(D3DXVECTOR3);
 	void SetBullet(projectileclass*, D3DXVECTOR3);
-	int ObjectInteraction(int*);
+	int ObjectInteraction();
 
 	bool Dash(int*, int);
 	void SetSpeed(float);

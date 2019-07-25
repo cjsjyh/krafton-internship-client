@@ -88,5 +88,18 @@ void itemmanagerclass::SetItemUsed(string name, int phase)
 
 void itemmanagerclass::SetItemEffect(string name)
 {
+	if (name == "shotgun")
+	{
 
+	}
+	else if (name == "sniper")
+	{
+
+	}
+	else if (name == "berserk")
+	{
+
+	}
+
+	return;
 }
