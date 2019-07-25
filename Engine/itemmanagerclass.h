@@ -5,6 +5,7 @@
 #define ITEM_PHASE_COUNT 3
 
 class playerclass;
+class textfilereader;
 
 class itemmanagerclass
 {
@@ -21,12 +22,14 @@ public:
 	void SetItemUsed(string, int);
 	void SetItemEffect(string);
 
+	void SetParameter(textfilereader*);
 	void SetPlayer(playerclass* _player);
 
 private:
 	void SetItemPool();
 	
 	playerclass* player;
+	textfilereader* itemparameters;
 	vector<vector<Item>> itemPool;
 };
 

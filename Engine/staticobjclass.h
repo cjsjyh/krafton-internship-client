@@ -12,9 +12,9 @@ public:
 	staticobjclass(string objname, D3DClass* _device, CollisionChannel _channel = PLAYER, ColliderType _col=COLLIDER_BOX);
 	~staticobjclass();
 	
-	void InitializeStatic2D();
-	void InitializeStatic2DItem();
-	void InitializeStatic3D();
+	void InitializeStatic2D(string prefix="");
+	void InitializeStatic2DItem(string prefix="");
+	void InitializeStatic3D(string prefix = "");
 	bool CheckDestroy();
 private:
 	

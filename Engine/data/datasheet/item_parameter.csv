@@ -1,0 +1,9 @@
+ITEM_NAME,shotgun,,
+SHOTGUN_BULLET_COUNT,3,float,�ѹ� �� �Ѿ��� ��߾�
+SHOTGUN_BULLET_ANGLE,10,float,�Ѿ˰� ����
+SHOTGUN_BULLET_DAMAGE,3,float,�Ѿ� �ѹߴ� ������
+SHOTGUN_BULLET_DISTANCE,20,int,�Ѿ��� ���ư� ������(�Ѿ��� �Ÿ��� SPEED*FRAME)
+SHOTGUN_BULLET_SPEED,3,float,�Ѿ��� �����Ӹ��� �̵��� �ӵ�
+SHOTGUN_FIRE_DELAY,10,int,�����߻���� ������
+ITEM_NAME,sniper,,
+ITEM_NAME,berserk,,

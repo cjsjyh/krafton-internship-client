@@ -54,12 +54,13 @@ GraphicsClass::~GraphicsClass()
 }
 
 
-bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
+bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 {
 	bool result;
 	
 	screenW = screenWidth;
 	screenH = screenHeight;
+	hwnd = _hwnd;
 
 	// Create the camera object.
 	m_Camera = new CameraClass;
@@ -155,14 +156,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!result)
 		return false;
 	
-	m_filereader->ReadUIFile("../Engine/data/datasheet/ui_parameter.csv");
-	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D);
-	m_UIManager->SetValues(screenWidth, screenHeight, hwnd);
-
-	result = m_UIManager->InitializeUI();
+	result = m_filereader->ReadUIFile("../Engine/data/datasheet/ui_parameter.csv");
 	if (!result)
 		return false;
-		
+
+	result = m_filereader->ReadItemFile("../Engine/data/datasheet/item_parameter.csv");
+	if (!result)
+		return false;
+
 	InitializeBasic();
 	InitializeMap();
 	InitializePlayerParameters();
@@ -180,7 +181,17 @@ void GraphicsClass::InitializeBasic()
 
 	// Create gameManager object
 	m_GM = new gameManager(SCENE_COUNT);
+	m_GM->scene = 0;
+
 	m_IM = new itemmanagerclass();
+	m_IM->SetParameter(m_filereader);
+
+	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D);
+	m_UIManager->SetValues(screenW, screenH, hwnd);
+	m_UIManager->InitializeUI();
+
+	
+	sceneChangeFrame = 0;
 	return;
 }
 
@@ -256,9 +267,6 @@ void GraphicsClass::InitializeBossParameters()
 
 void GraphicsClass::InitializeMap() 
 {
-	m_GM->scene = 0;
-	sceneChangeFrame = 0;
-
 	floor = new staticobjclass("floor",m_D3D, gameObject::NO_COLLISION, gameObject::COLLIDER_BOX);
 	((staticobjclass*)floor)->InitializeStatic3D();
 	floor->SetScale(D3DXVECTOR3(40, 0.1, 40));
@@ -268,8 +276,9 @@ void GraphicsClass::InitializeMap()
 	
 	
 	player = new playerclass(10, m_D3D);
-	player->SetGameManager(m_GM);
+	player->SetManager(m_GM,m_IM);
 	m_GM->RegisterObjectToRender(player);
+	m_IM->SetPlayer(player);
 
 	boss = new bossclass(30, 1, m_D3D, player);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
@@ -318,8 +327,8 @@ void GraphicsClass::InitializeRewardMap(vector<string> itemNames)
 	{
 		gameObject* temp;
 		temp = new staticobjclass(itemNames[i], m_D3D, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
-		((staticobjclass*)temp)->InitializeStatic2DItem();
-		temp->SetScale(D3DXVECTOR3(1, 1, 1));
+		((staticobjclass*)temp)->InitializeStatic2DItem("shop_");
+		temp->SetScale(D3DXVECTOR3(2, 2, 2));
 		temp->SetPosition(D3DXVECTOR3(-10 + 10*i, 0, 10));
 		temp->SetRotationAfter(D3DXVECTOR3(0, 45, 0));
 		//temp->SetRotation(D3DXVECTOR3(0, 45, 0));

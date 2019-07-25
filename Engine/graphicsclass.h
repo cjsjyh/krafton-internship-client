@@ -92,6 +92,7 @@ private:
 	
 	D3DXMATRIX baseViewMatrix;
 	D3DXVECTOR3 midPoint;
+	HWND hwnd;
 	int mouseX, mouseY;
 	int frame;
 	int screenW, screenH;

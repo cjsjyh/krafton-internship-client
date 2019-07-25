@@ -18,21 +18,21 @@ staticobjclass::~staticobjclass()
 
 }
 
-void staticobjclass::InitializeStatic2D()
+void staticobjclass::InitializeStatic2D(string prefix)
 {
-	string tName = "../Engine/data/gameobject/" + GetName() + ".png";
+	string tName = "../Engine/data/gameobject/" + prefix + GetName() + ".png";
 	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
 }
 
-void staticobjclass::InitializeStatic3D()
+void staticobjclass::InitializeStatic3D(string prefix)
 {
-	string tName = "../Engine/data/gameobject/" + GetName() + ".png";
+	string tName = "../Engine/data/gameobject/" + prefix + GetName() + ".png";
 	m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", stdafx::StringToWchar(tName));
 }
 
-void staticobjclass::InitializeStatic2DItem()
+void staticobjclass::InitializeStatic2DItem(string prefix)
 {
-	string tName = "../Engine/data/item/" + GetName() + ".png";
+	string tName = "../Engine/data/item/" + prefix + GetName() + ".png";
 	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
 }
 

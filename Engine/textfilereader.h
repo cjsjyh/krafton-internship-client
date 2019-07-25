@@ -18,6 +18,7 @@ public:
 	~textfilereader();
 	bool ReadFile(string);
 	bool ReadUIFile(string);
+	bool ReadItemFile(string);
 
 	
 	map<string, int> paramInt;
@@ -25,6 +26,11 @@ public:
 	map<string, bool> paramBool;
 
 	vector<UIinfo> paramUI;
+
+	map<string, int> ItemInt;
+	map<string, float> ItemFloat;
+	map<string, bool> ItemBool;
+	vector<string> ItemNames;
 private:
 
 

@@ -38,7 +38,10 @@ bool textfilereader::ReadFile(string fname)
 		}
 
 		if (fields.size() < 3)
+		{
+			cout << "[WARNING] INCORRECT DATASHEET FORMAT!" << endl;
 			return false;
+		}
 
 		if (fields[2] == "int")
 			paramInt.insert(make_pair(fields[0], stoi(fields[1])));
@@ -53,11 +56,9 @@ bool textfilereader::ReadFile(string fname)
 		}
 		else
 			return false;
-		std::cout << fields[0] << endl;
 	}
 	return true;
 }
-
 
 bool textfilereader::ReadUIFile(string fname)
 {
@@ -81,7 +82,7 @@ bool textfilereader::ReadUIFile(string fname)
 			vector<string> fields;
 			if (line == "")
 				break;
-			cout << line << endl;
+
 			while ((pos = line.find(',')) >= 0)
 			{
 				fields.push_back(line.substr(0, pos));
@@ -115,6 +116,61 @@ bool textfilereader::ReadUIFile(string fname)
 		temp.pos_x -= temp.size_x / 2;
 		temp.pos_y -= temp.size_y / 2;
 		paramUI.push_back(temp);
+	}
+	return true;
+}
+
+bool textfilereader::ReadItemFile(string fname)
+{
+	fstream in(fname);
+	string line;
+	int pos;
+	if (!in.is_open())
+	{
+		std::cout << "Failed to open file" << endl;
+		return false;
+	}
+
+	while (getline(in, line))
+	{
+		vector<string> fields;
+		if (line == "")
+			break;
+		else if (line[0] == ',')
+			continue;
+
+		while ((pos = line.find(',')) >= 0)
+		{
+			fields.push_back(line.substr(0, pos));
+			line = line.substr(pos + 1);
+
+		}
+
+		if (fields.size() < 3)
+		{
+			cout << "[WARNING] INCORRECT DATASHEET FORMAT!" << endl;
+			return false;
+		}
+
+		if (fields[0] == "ITEM_NAME")
+		{
+			ItemNames.push_back(fields[1]);
+			continue;
+		}
+
+		if (fields[2] == "int")
+			ItemInt.insert(make_pair(fields[0], stoi(fields[1])));
+		else if (fields[2] == "float")
+			ItemFloat.insert(make_pair(fields[0], stof(fields[1])));
+		else if (fields[2] == "bool")
+		{
+			if (fields[2] == "true")
+				ItemBool.insert(make_pair(fields[0], true));
+			else
+				ItemBool.insert(make_pair(fields[0], false));
+		}
+		else
+			return false;
 	}
 	return true;
 }

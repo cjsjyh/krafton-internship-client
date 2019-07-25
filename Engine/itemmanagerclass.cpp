@@ -4,6 +4,7 @@
 #include <ctime>
 
 #include "playerclass.h"
+#include "textfilereader.h"
 
 #include "itemmanagerclass.h"
 
@@ -16,12 +17,17 @@ itemmanagerclass::itemmanagerclass()
 		vector<Item> temp2;
 		itemPool.push_back(temp2);
 	}
-	SetItemPool();
 }
 
 itemmanagerclass::~itemmanagerclass()
 {
 
+}
+
+void itemmanagerclass::SetParameter(textfilereader* _itemparameters)
+{
+	itemparameters = _itemparameters;
+	SetItemPool();
 }
 
 void itemmanagerclass::SetPlayer(playerclass* _player)
@@ -31,17 +37,12 @@ void itemmanagerclass::SetPlayer(playerclass* _player)
 
 void itemmanagerclass::SetItemPool()
 {
-	for (int i = 1; i < 6; i++)
+	for (int i = 0; i < itemparameters->ItemNames.size(); i++)
 	{
 		Item temp;
-		temp.name = to_string(i);
+		temp.name = itemparameters->ItemNames[i];
 		temp.chosen = false;
 		itemPool[0].push_back(temp);
-
-		Item temp2;
-		temp.name = to_string(i);
-		temp.chosen = false;
-		itemPool[1].push_back(temp2);
 	}
 	return;
 }
@@ -52,6 +53,9 @@ vector<string> itemmanagerclass::ChooseItemFromPool(int count, int phase)
 	int index;
 	bool flag;
 
+	if (count > itemPool[phase].size())
+		count = itemPool[phase].size();
+
 	for (int i = 0; i < count; i++)
 	{
 		flag = false;
@@ -61,7 +65,7 @@ vector<string> itemmanagerclass::ChooseItemFromPool(int count, int phase)
 			index = rand() % itemPool[phase].size();
 			for (int i = 0; i < temp.size(); i++)
 			{
-				if (temp[i] == itemPool[phase][index].name || !itemPool[phase][index].chosen)
+				if (temp[i] == itemPool[phase][index].name && !itemPool[phase][index].chosen)
 					flag = false;
 			}
 		}
