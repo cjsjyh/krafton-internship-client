@@ -112,7 +112,7 @@ void bossclass::SetBossPhasePattern()
 }
 
 
-vector<projectileclass*> bossclass::Frame(int frame)
+void bossclass::Frame(int frame)
 {
 	vector<projectileclass*> shootBullets;
 	if (frame % 60 == 0)
@@ -123,7 +123,9 @@ vector<projectileclass*> bossclass::Frame(int frame)
 	PopQueue(shootBullets);
 	CheckHp();
 
-	return shootBullets;
+	//register bullets
+	for (auto iter = shootBullets.begin(); iter != shootBullets.end(); iter++)
+		GM->RegisterObjectToRender(*iter);
 }
 
 void bossclass::CheckHp()
@@ -195,11 +197,6 @@ void bossclass::PushQueue(projectileclass* bullet, int frame)
 	newBullet.bullet = bullet;
 	newBullet.frame = frame;
 	bossBullets.push_back(newBullet);
-}
-
-void bossclass::CheckQueue()
-{
-	
 }
 
 void bossclass::PopQueue(vector<projectileclass*>& shootBullet)

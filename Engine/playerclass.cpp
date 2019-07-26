@@ -28,6 +28,7 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 
 	dashFrame = dashPauseFrame = -1;
 	dashDir = -1;
+	attackType = "basic";
 
 	playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
 	InitializeModels();
@@ -186,9 +187,6 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	{
 		if (!lastLeftClick)
 		{
-			//GM->RegisterObjectToRender(Fire(vecToMouse), GM->scene);
-			//stdafx::PrintVector3(vecToMouse);
-			
 			vector<D3DXVECTOR3> temp = skillpatternclass::FireInFan(PLAYER_BULLET_COUNT, PLAYER_BULLET_ANGLE, D3DXVECTOR3(0,0,0), vecToMouse);
 			for (auto iter = temp.begin(); iter != temp.end(); iter++)
 			{
@@ -297,4 +295,14 @@ D3DXVECTOR3 playerclass::GetSavedPlayerPos(int scene)
 			playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
 	}
 	return playerPosSave[scene];
+}
+
+void playerclass::SetPlayerAttackType(string _type)
+{
+	attackType = _type;
+}
+
+void playerclass::AddPlayerItem(string _item)
+{
+	playerItems.push_back(_item);
 }

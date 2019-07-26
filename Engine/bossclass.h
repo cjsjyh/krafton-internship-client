@@ -37,7 +37,7 @@ public:
 	bossclass(int _hp, int _damage, D3DClass*, playerclass*,  ColliderType col = COLLIDER_BOX);
 	~bossclass();
 
-	vector<projectileclass*> Frame(int);
+	void Frame(int);
 	void SetGameManager(gameManager*);
 
 	float BOSS_PHASE2_HP;
@@ -59,7 +59,6 @@ private:
 	void SetBullet(projectileclass*, D3DXVECTOR3);
 
 	void PushQueue(projectileclass*, int);
-	void CheckQueue();
 	void PopQueue(vector<projectileclass*>&);
 
 	void SetBossPhasePattern();

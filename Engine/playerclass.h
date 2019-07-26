@@ -39,6 +39,8 @@ public:
 
 	void SavePlayerPos(int scene);
 	D3DXVECTOR3 GetSavedPlayerPos(int scene);
+	void SetPlayerAttackType(string);
+	void AddPlayerItem(string);
 
 	//player movement parameters
 	float PLAYER_SPEED;
@@ -62,6 +64,8 @@ private:
 	int lastLeftClick;
 	int dashDir;
 	vector<D3DXVECTOR3> playerPosSave;
+	vector<string> playerItems;
+	string attackType;
 	gameManager* GM;
 	itemmanagerclass* IM;
 };

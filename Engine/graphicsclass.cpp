@@ -29,25 +29,32 @@
 
 GraphicsClass::GraphicsClass()
 {
+	m_filereader = 0;
 	m_D3D = 0;
-	m_Camera = 0;
-	
 	m_Text = 0;
+	m_TextureShader = 0;
+	m_LightShader = 0;
+	m_Light = 0;
 	m_UIManager = 0;
 
-	m_TextureShader = 0;
+	player = 0;
+	boss = 0;
 	m_GM = 0;
+	m_IM = 0;
+	m_Camera = 0;
+	floor = rewardfloor = 0;
 
+	mouseX = mouseY = 0;
 	frame = 0;
-	m_filereader = 0;
-
+	screenW = screenH = 0;
+	last_scene_change_frame = 0;
 	SCENE_CHANGE_COOLTIME = 60;
+	
 }
 
 GraphicsClass::~GraphicsClass()
 {
 }
-
 
 bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 {
@@ -153,6 +160,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	if (!result)
 		return false;
 
+	// Set baseViewMatrix for UI
+	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
+	m_Camera->Render(D3DXVECTOR3(0, 0, 0));
+	m_Camera->GetViewMatrix(baseViewMatrix);
+
 	InitializeBasic();
 	InitializeMap();
 	InitializePlayerParameters();
@@ -160,14 +172,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	return true;
 }
 
-
-
 void GraphicsClass::InitializeBasic()
 {
-	// Set baseViewMatrix for UI
-	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
-	m_Camera->Render(D3DXVECTOR3(0, 0, 0));
-	m_Camera->GetViewMatrix(baseViewMatrix);
+	
 	// Initial camera setup
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 	m_Camera->SetRotation(D3DXVECTOR3(45, 0, 0));
@@ -191,13 +198,13 @@ void GraphicsClass::UninitializeBasic()
 {
 	delete m_GM;
 	m_GM = 0;
-	/*
+	
 	delete m_IM;
 	m_IM = 0;
-
+	
 	delete m_UIManager;
 	m_UIManager = 0;
-	*/
+	
 	return;
 }
 
@@ -440,33 +447,24 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	if (!SetUI(mouseX, mouseY, fps, cpu))
 		return false;
 
-	//-------------------
-	//   Frame Action
-	//-------------------
 	if (m_GM->scene == 0)
 	{
-		//BOSS
-		vector<projectileclass*> bossBullet = boss->Frame(frame);
-		for (unsigned int i = 0; i < bossBullet.size(); i++)
-			m_GM->RegisterObjectToRender(bossBullet[i]);
-
-		//CAMERA
 		m_Camera->SetViewPoint((player->GetPosition() + boss->GetPosition()) / 2);
 		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
 		m_Camera->Move(distance);
 	}
 	else if (m_GM->scene == 1)
 	{
-		//CAMERA
 		m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 		m_Camera->SetViewPoint(D3DXVECTOR3(0, 0, 0));
 	}
 
 
+	//Frame Action
+	if (m_GM->scene == 0)
+		boss->Frame(frame);
 	player->Frame(key, mousePress, GetDirectionMouse(_mouseX, _mouseY) ,frame);
 	m_GM->Frame();
-
-	//Camera
 	
 	//PLAYER DEAD
 	if (player->CheckDestroy())
@@ -482,7 +480,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	}
 	
 	//-------------------
-	//  sCENE CHANGE
+	//  SCENE CHANGE
 	//-------------------
 	if (InputClass::IsKeyPressed(key, 'T'))
 	{
@@ -492,18 +490,12 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			if (m_GM->scene == 0)
 			{
 				vector<string> itemNames;
-
 				player->SavePlayerPos(m_GM->scene);
 				player->SetPosition(D3DXVECTOR3(0, 0, 0));
 				player->SetDirection(1);
 				
-				
-				
 				itemNames = m_IM->ChooseItemFromPool(3,0);
-				for (auto iter = itemNames.begin(); iter != itemNames.end(); iter++)
-					cout << *iter << endl;
 				InitializeRewardMap(itemNames);
-				
 				m_GM->scene = 1;
 			}
 			else

@@ -90,14 +90,17 @@ void itemmanagerclass::SetItemEffect(string name)
 {
 	if (name == "shotgun")
 	{
+		player->SetPlayerAttackType(name);
 
 	}
 	else if (name == "sniper")
 	{
+		player->SetPlayerAttackType(name);
 
 	}
 	else if (name == "berserk")
 	{
+		player->AddPlayerItem(name);
 
 	}
 
