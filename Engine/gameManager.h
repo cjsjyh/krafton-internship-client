@@ -47,9 +47,7 @@ private:
 	vector<projectileclass*> PlayerbulletPool;
 
 	collisionManager* m_CM;
-
 	D3DXVECTOR3 camPos;
-
 	gameObject* floor;
 };
 

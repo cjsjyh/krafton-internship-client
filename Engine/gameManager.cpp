@@ -221,10 +221,9 @@ bool gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
 {
 	D3DXMATRIX temp;
 	//find floor and set
-	if (floor == 0)
-		for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
-			if ((*iter)->GetName() == "floor")
-				floor = *iter;
+	for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
+		if ((*iter)->GetName() == "floor")
+			floor = *iter;
 	D3DXMatrixRotationY(&temp, -floor->GetRotation().y *0.0174532925f);
 	D3DXVec3TransformCoord(&playerPos, &playerPos, &temp);
 	return m_CM->IsInsideMap(playerPos, floor->GetPosition(), floor->GetScale());

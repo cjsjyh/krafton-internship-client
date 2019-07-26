@@ -171,8 +171,9 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 				return false;
 			
 			uiinfo->filename = "../Engine/data/UI/icon_" + player->GetPlayerItem(i) + ".png";
+			//item bar x:10, y: 170
 			uiinfo->pos_x = 15;
-			uiinfo->pos_y = 250 + i * 60;
+			uiinfo->pos_y = 240 + i * 70;
 			uiinfo->size_x = uiinfo->size_y = 0;
 			itemParameters.push_back(uiinfo);
 
