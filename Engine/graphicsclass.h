@@ -75,7 +75,6 @@ private:
 	textfilereader* m_filereader;
 	D3DClass* m_D3D;
 	TextClass* m_Text;
-	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	uimanagerclass* m_UIManager;

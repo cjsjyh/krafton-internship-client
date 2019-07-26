@@ -109,6 +109,7 @@
     <ClCompile Include="textfilereader.cpp" />
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
+    <ClCompile Include="UIinfo.cpp" />
     <ClCompile Include="uimanagerclass.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
   </ItemGroup>
@@ -143,6 +144,7 @@
     <ClInclude Include="textfilereader.h" />
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
+    <ClInclude Include="UIinfo.h" />
     <ClInclude Include="uimanagerclass.h" />
     <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>

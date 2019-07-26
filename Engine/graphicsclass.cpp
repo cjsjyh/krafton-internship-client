@@ -32,7 +32,6 @@ GraphicsClass::GraphicsClass()
 	m_filereader = 0;
 	m_D3D = 0;
 	m_Text = 0;
-	m_TextureShader = 0;
 	m_LightShader = 0;
 	m_Light = 0;
 	m_UIManager = 0;
@@ -89,17 +88,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	//------------
 	//   text
 	//------------
-	m_TextureShader = new TextureShaderClass;
-	if (!m_TextureShader)
-	{
-		return false;
-	}
-	result = m_TextureShader->Initialize(m_D3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
+	
 
 	// Create the text object.
 	m_Text = new TextClass;
@@ -174,7 +163,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 
 void GraphicsClass::InitializeBasic()
 {
-	
 	// Initial camera setup
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 	m_Camera->SetRotation(D3DXVECTOR3(45, 0, 0));
@@ -186,8 +174,8 @@ void GraphicsClass::InitializeBasic()
 	m_IM = new itemmanagerclass();
 	m_IM->SetParameter(m_filereader);
 
-	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D);
-	m_UIManager->SetValues(screenW, screenH, hwnd);
+	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D, hwnd);
+	m_UIManager->SetValues(screenW, screenH, m_Camera, m_GM);
 	m_UIManager->InitializeUI();
 
 	last_scene_change_frame = 0;
@@ -283,7 +271,7 @@ void GraphicsClass::InitializeMap()
 	player = new playerclass(10, m_D3D);
 	player->SetManager(m_GM,m_IM);
 	m_GM->RegisterObjectToRender(player);
-	m_IM->SetPlayer(player);
+	m_IM->SetGameManager(m_GM);
 
 	boss = new bossclass(30, 1, m_D3D, player);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
@@ -575,43 +563,7 @@ bool GraphicsClass::Render()
 		return false;
 	}
 
-	for (int i=0;i < m_UIManager->m_UI.size(); i++)
-	{
-		D3DXMATRIX temp;
-		D3DXMatrixIdentity(&worldMatrix);
-		int x = m_UIManager->parameters[i].pos_x;
-		int y = m_UIManager->parameters[i].pos_y;
-		
-		
-		if (m_UIManager->parameters[i].uiname == "BOSS_HPBAR_FRONT")
-		{
-			float bossHp = boss->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, 1-bossHp, 1, 1);
-		}
-		else if (m_UIManager->parameters[i].uiname == "PLAYER_HPBAR_FRONT")
-		{
-			float playerHp = player->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, 1-playerHp, 1, 1);
-		}
-		
-		result = m_UIManager->m_UI[i]->Render(m_D3D->GetDeviceContext(), 0, 0);
-		if (!result)
-		{
-			return false;
-		}
-		D3DXMatrixTranslation(&temp, -screenW / 2, screenH / 2, 0);
-		worldMatrix *= temp;
-		D3DXMatrixTranslation(&temp, x, -y, 0);
-		worldMatrix *= temp;
-
-		// Render the bitmap with the texture shader.
-		result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_UIManager->m_UI[i]->GetIndexCount(), worldMatrix, 
-										baseViewMatrix, orthoMatrix, m_UIManager->m_UI[i]->GetTexture());
-		if (!result)
-		{
-			return false;
-		}
-	}
+	m_UIManager->Render(baseViewMatrix);
 
 	m_D3D->TurnOffAlphaBlending();
 	m_D3D->TurnZBufferOn();

@@ -2,18 +2,11 @@
 #ifndef _TEXTFILEREADER_H_
 #define _TEXTFILEREADER_H_
 
+class UIinfo;
+
 class textfilereader
 {
 public:
-	typedef struct UIinfo {
-		string uiname;
-		string filename;
-		int pos_x;
-		int pos_y;
-		int size_x;
-		int size_y;
-	}UIinfo;
-
 	textfilereader();
 	~textfilereader();
 	bool ReadFile(string);
@@ -25,7 +18,7 @@ public:
 	map<string, float> paramFloat;
 	map<string, bool> paramBool;
 
-	vector<UIinfo> paramUI;
+	vector<UIinfo*> paramUI;
 
 	map<string, int> ItemInt;
 	map<string, float> ItemFloat;

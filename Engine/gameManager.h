@@ -10,14 +10,6 @@ class projectileclass;
 class gameManager
 {
 public:
-	
-	struct CompareDist
-	{
-		bool operator()(gameObject* obj1, gameObject* obj2) {
-			return obj1->w > obj2->w;
-		}
-	};
-
 	gameManager(int);
 	~gameManager();
 
@@ -30,6 +22,7 @@ public:
 	int FindObjectIndex(gameObject *item, int _scene=0);
 	int GetRenderObjectCount(int _scene = -1);
 	gameObject* GetGameObject(int index, int _scene = -1);
+	gameObject* GetGameObject(string name, int _scene = -1);
 
 	void RegisterToBossPool(projectileclass* item);
 	projectileclass* GetFromBossPool();

@@ -2,30 +2,39 @@
 #ifndef _UIMANAGERCLASS_H_
 #define _UIMANAGERCLASS_H_
 
-#include "textfilereader.h"
+
+class UIinfo;
 class BitmapClass;
 class imagedecoderclass;
 class D3DClass;
+class CameraClass;
+class gameManager;
+class bossclass;
+class playerclass;
+class TextureShaderClass;
+
 
 class uimanagerclass
 {
 public:
-
-
-	uimanagerclass(vector<textfilereader::UIinfo>, D3DClass*);
+	uimanagerclass(vector<UIinfo*>, D3DClass*, HWND);
 	~uimanagerclass();
 	bool InitializeUI();
 
-	void UpdateUI();
-	void UpdateBossHpUI(float);
-	void SetValues(int, int, HWND);
+	bool Render(D3DXMATRIX);
+	void SetValues(int, int, CameraClass*, gameManager*);
 
 	vector<BitmapClass*> m_UI;
-	vector<textfilereader::UIinfo> parameters;
+	vector<UIinfo*> parameters;
 
 private:
+	TextureShaderClass* m_TextureShader;
 	imagedecoderclass* m_ImageDecoder;
 	D3DClass* device;
+	CameraClass* camera;
+	gameManager* GM;
+	bossclass* boss;
+	playerclass* player;
 
 	int screenWidth, screenHeight;
 	HWND hwnd;

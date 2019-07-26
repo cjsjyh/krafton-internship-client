@@ -132,6 +132,9 @@
     <ClCompile Include="itemmanagerclass.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="UIinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inputclass.h">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="itemmanagerclass.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="UIinfo.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

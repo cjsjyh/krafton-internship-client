@@ -7,6 +7,13 @@
 
 #include "gameManager.h"
 
+struct CompareDist
+{
+	bool operator()(gameObject* obj1, gameObject* obj2) {
+		return obj1->w > obj2->w;
+	}
+};
+
 gameManager::gameManager(int sceneCount)
 {
 	for (int i = 0; i < sceneCount; i++)
@@ -17,6 +24,7 @@ gameManager::gameManager(int sceneCount)
 	
 	m_CM = new collisionManager(this);
 	
+	//scene = 0;
 	floor = 0;
 }
 
@@ -131,6 +139,23 @@ gameObject* gameManager::GetGameObject(int index, int _scene)
 		return renderObjects[_scene][index];
 	return renderObjects[scene][index];
 }
+
+gameObject* gameManager::GetGameObject(string name, int _scene)
+{
+	int curScene;
+	if (_scene != -1)
+		curScene = _scene;
+	else
+		curScene = scene;
+
+	for (auto iter = renderObjects[curScene].begin(); iter != renderObjects[curScene].end(); iter++)
+	{
+		if ((*iter)->GetName() == name)
+			return *iter;
+	}
+	return NULL;
+}
+
 
 void gameManager::CheckCollision()
 {

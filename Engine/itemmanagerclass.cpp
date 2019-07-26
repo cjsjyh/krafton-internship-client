@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "gameManager.h"
 #include "playerclass.h"
 #include "textfilereader.h"
 
@@ -17,6 +18,8 @@ itemmanagerclass::itemmanagerclass()
 		vector<Item> temp2;
 		itemPool.push_back(temp2);
 	}
+	player = 0;
+	GM = 0;
 }
 
 itemmanagerclass::~itemmanagerclass()
@@ -30,9 +33,9 @@ void itemmanagerclass::SetParameter(textfilereader* _itemparameters)
 	SetItemPool();
 }
 
-void itemmanagerclass::SetPlayer(playerclass* _player)
+void itemmanagerclass::SetGameManager(gameManager* _GM)
 {
-	player = _player;
+	GM = _GM;
 }
 
 void itemmanagerclass::SetItemPool()
@@ -88,6 +91,9 @@ void itemmanagerclass::SetItemUsed(string name, int phase)
 
 void itemmanagerclass::SetItemEffect(string name)
 {
+	if (player == 0)
+		player = (playerclass*)GM->GetGameObject("player");
+
 	if (name == "shotgun")
 	{
 		player->SetPlayerAttackType(name);
