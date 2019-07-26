@@ -92,7 +92,6 @@ bool uimanagerclass::InitializeUI()
 			return false;
 		//get file resolution
 		uiinfo = parameters[i];
-
 		m_ImageDecoder->GetImageSize(stdafx::StringToWchar(uiinfo->filename), width, height);
 		if (uiinfo->size_x == 0 || uiinfo->size_y == 0)
 		{
@@ -111,6 +110,28 @@ bool uimanagerclass::InitializeUI()
 
 	}
 	return true;
+}
+
+void uimanagerclass::ReplaceUI(string itemName, string filename)
+{
+	int width, height, index;
+	UIinfo* uiinfo;
+
+	for (auto iter = parameters.begin(); iter != parameters.end(); ++iter)
+	{
+		if ((*iter)->uiname == itemName)
+		{
+			(*iter)->filename = "../Engine/data/UI/" + filename;
+			uiinfo = *iter;
+			index = iter - parameters.begin();
+		}
+	}
+	BitmapClass* temp = new BitmapClass;
+	temp->Initialize(device->GetDevice(), screenWidth, screenHeight, stdafx::StringToWchar(uiinfo->filename), uiinfo->size_x, uiinfo->size_y);
+
+	m_UI[index]->Shutdown();
+	m_UI[index] = 0;
+	m_UI[index] = temp;
 }
 
 bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
@@ -133,43 +154,83 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 		player = (playerclass*)GM->GetGameObject("player");
 	if (boss == 0)
 		boss = (bossclass*)GM->GetGameObject("boss");
-		
-	for (int i = 0; i < m_UI.size(); i++)
+	
+	RenderUI(m_UI, parameters, "");
+
+	//Set player item images
+	if (player->GetPlayerItemSize() > m_ItemUI.size())
+	{
+		int width, height;
+
+		for (int i = m_ItemUI.size(); i < player->GetPlayerItemSize(); i++)
+		{
+			UIinfo* uiinfo = new UIinfo;
+			BitmapClass* temp = new BitmapClass;
+
+			if (!temp)
+				return false;
+			
+			uiinfo->filename = "../Engine/data/UI/icon_" + player->GetPlayerItem(i) + ".png";
+			uiinfo->pos_x = 15;
+			uiinfo->pos_y = 250 + i * 60;
+			uiinfo->size_x = uiinfo->size_y = 0;
+			itemParameters.push_back(uiinfo);
+
+			//get file resolution
+			m_ImageDecoder->GetImageSize(stdafx::StringToWchar(uiinfo->filename), width, height);
+			if (uiinfo->size_x == 0 || uiinfo->size_y == 0)
+			{
+				uiinfo->size_x = width;
+				uiinfo->size_y = height;
+			}
+
+			// Initialize the bitmap object.
+			result = temp->Initialize(device->GetDevice(), screenWidth, screenHeight, stdafx::StringToWchar(uiinfo->filename), uiinfo->size_x, uiinfo->size_y);
+			m_ItemUI.push_back(temp);
+		}
+	}
+
+	RenderUI(m_ItemUI, itemParameters, "");
+
+}
+
+void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIparam, string fname)
+{
+	D3DXMATRIX worldMatrix;
+	D3DXMATRIX orthoMatrix;
+	bool result;
+
+	D3DXMatrixIdentity(&worldMatrix);
+	device->GetOrthoMatrix(orthoMatrix);
+
+	for (int i = 0; i < UIComp.size(); i++)
 	{
 		D3DXMATRIX temp;
 		D3DXMatrixIdentity(&worldMatrix);
-		int x = parameters[i]->pos_x;
-		int y = parameters[i]->pos_y;
+		int x = UIparam[i]->pos_x;
+		int y = UIparam[i]->pos_y;
 
-
-		if (parameters[i]->uiname == "BOSS_HPBAR_FRONT")
+		if (UIparam[i]->uiname == "BOSS_HPBAR_FRONT")
 		{
 			float bossHp = boss->GetHpPercent();
 			D3DXMatrixScaling(&worldMatrix, 1 - bossHp, 1, 1);
 		}
-		else if (parameters[i]->uiname == "PLAYER_HPBAR_FRONT")
+		else if (UIparam[i]->uiname == "PLAYER_HPBAR_FRONT")
 		{
 			float playerHp = player->GetHpPercent();
 			D3DXMatrixScaling(&worldMatrix, 1 - playerHp, 1, 1);
 		}
 
-		result = m_UI[i]->Render(device->GetDeviceContext(), 0, 0);
-		if (!result)
-		{
-			return false;
-		}
+		result = UIComp[i]->Render(device->GetDeviceContext(), 0, 0);
+
 		D3DXMatrixTranslation(&temp, -screenWidth / 2, screenHeight / 2, 0);
 		worldMatrix *= temp;
 		D3DXMatrixTranslation(&temp, x, -y, 0);
 		worldMatrix *= temp;
 
 		// Render the bitmap with the texture shader.
-		result = m_TextureShader->Render(device->GetDeviceContext(), m_UI[i]->GetIndexCount(), worldMatrix,
-			baseViewMatrix, orthoMatrix, m_UI[i]->GetTexture());
-		if (!result)
-		{
-			return false;
-		}
+		result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
+			baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture());
 	}
 }
 

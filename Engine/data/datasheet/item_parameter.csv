@@ -1,9 +1,12 @@
 ITEM_NAME,shotgun,,
-SHOTGUN_BULLET_COUNT,3,float,ï¿½Ñ¹ï¿½ ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ß¾ï¿½
-SHOTGUN_BULLET_ANGLE,10,float,ï¿½Ñ¾Ë°ï¿½ ï¿½ï¿½ï¿½ï¿½
-SHOTGUN_BULLET_DAMAGE,3,float,ï¿½Ñ¾ï¿½ ï¿½Ñ¹ß´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-SHOTGUN_BULLET_DISTANCE,20,int,ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ SPEED*FRAME)
-SHOTGUN_BULLET_SPEED,3,float,ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½Óµï¿½
-SHOTGUN_FIRE_DELAY,10,int,ï¿½ï¿½ï¿½ï¿½ï¿½ß»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+SHOTGUN_BULLET_COUNT,3,float,ÇÑ¹ø ½ò¶§ ÃÑ¾ËÀÌ ¸î¹ß¾¿
+SHOTGUN_BULLET_ANGLE,10,float,ÃÑ¾Ë°£ °¢µµ
+SHOTGUN_BULLET_DAMAGE,3,float,ÃÑ¾Ë ÇÑ¹ß´ç µ¥¹ÌÁö
+SHOTGUN_BULLET_DISTANCE,20,int,ÃÑ¾ËÀÌ ³¯¾Æ°¥ ÇÁ·¹ÀÓ(ÃÑ¾ËÀÇ °Å¸®´Â SPEED*FRAME)
+SHOTGUN_BULLET_SPEED,3,float,ÃÑ¾ËÀÌ ÇÁ·¹ÀÓ¸¶´Ù ÀÌµ¿ÇÒ ¼Óµµ
+SHOTGUN_BULLET_RELOAD,10,int,´ÙÀ½¹ß»ç±îÁö µô·¹ÀÌ
 ITEM_NAME,sniper,,
 ITEM_NAME,berserk,,
+ITEM_NAME,siege,,
+ITEM_NAME,speedup,,
+,,,

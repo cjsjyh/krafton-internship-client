@@ -40,7 +40,10 @@ public:
 	void SavePlayerPos(int scene);
 	D3DXVECTOR3 GetSavedPlayerPos(int scene);
 	void SetPlayerAttackType(string);
+
 	void AddPlayerItem(string);
+	int GetPlayerItemSize();
+	string GetPlayerItem(int);
 
 	//player movement parameters
 	float PLAYER_SPEED;

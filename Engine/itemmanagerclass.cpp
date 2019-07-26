@@ -6,6 +6,7 @@
 #include "gameManager.h"
 #include "playerclass.h"
 #include "textfilereader.h"
+#include "uimanagerclass.h"
 
 #include "itemmanagerclass.h"
 
@@ -20,6 +21,7 @@ itemmanagerclass::itemmanagerclass()
 	}
 	player = 0;
 	GM = 0;
+	UIM = 0;
 }
 
 itemmanagerclass::~itemmanagerclass()
@@ -33,9 +35,10 @@ void itemmanagerclass::SetParameter(textfilereader* _itemparameters)
 	SetItemPool();
 }
 
-void itemmanagerclass::SetGameManager(gameManager* _GM)
+void itemmanagerclass::SetManagers(gameManager* _GM, uimanagerclass* _UIM)
 {
 	GM = _GM;
+	UIM = _UIM;
 }
 
 void itemmanagerclass::SetItemPool()
@@ -83,8 +86,11 @@ void itemmanagerclass::SetItemUsed(string name, int phase)
 	{
 		if ((*iter).name == name)
 		{
-			(*iter).chosen = true;
-			SetItemEffect((*iter).name);
+			if ((*iter).chosen == false)
+			{
+				(*iter).chosen = true;
+				SetItemEffect((*iter).name);
+			}
 		}
 	}
 }
@@ -97,17 +103,35 @@ void itemmanagerclass::SetItemEffect(string name)
 	if (name == "shotgun")
 	{
 		player->SetPlayerAttackType(name);
-
+		player->PLAYER_BULLET_COUNT = 3;
+		player->PLAYER_BULLET_ANGLE = 10;
+		player->PLAYER_BULLET_DISTANCE = 5;
+		player->PLAYER_BULLET_DAMAGE = 5;
+		player->PLAYER_BULLET_SPEED = 1;
+		UIM->ReplaceUI("PLAYER_ATTACK_TYPE", "icon_shotgun.png");
 	}
 	else if (name == "sniper")
 	{
 		player->SetPlayerAttackType(name);
-
+		player->PLAYER_BULLET_COUNT = 1;
+		player->PLAYER_BULLET_ANGLE = 0;
+		player->PLAYER_BULLET_DISTANCE = 100;
+		player->PLAYER_BULLET_DAMAGE = 5;
+		player->PLAYER_BULLET_SPEED = 3;
+		UIM->ReplaceUI("PLAYER_ATTACK_TYPE", "icon_sniper.png");
 	}
 	else if (name == "berserk")
 	{
 		player->AddPlayerItem(name);
 
+	}
+	else if (name == "siege")
+	{
+		player->AddPlayerItem(name);
+	}
+	else if (name == "speedup")
+	{
+		player->AddPlayerItem(name);
 	}
 
 	return;

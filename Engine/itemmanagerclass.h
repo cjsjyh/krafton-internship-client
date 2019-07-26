@@ -7,6 +7,7 @@
 class playerclass;
 class textfilereader;
 class gameManager;
+class uimanagerclass;
 
 class itemmanagerclass
 {
@@ -24,7 +25,7 @@ public:
 	void SetItemEffect(string);
 
 	void SetParameter(textfilereader*);
-	void SetGameManager(gameManager*);
+	void SetManagers(gameManager*, uimanagerclass*);
 
 private:
 	void SetItemPool();
@@ -32,6 +33,8 @@ private:
 	gameManager* GM;
 	playerclass* player;
 	textfilereader* itemparameters;
+	uimanagerclass* UIM;
+
 	vector<vector<Item>> itemPool;
 };
 

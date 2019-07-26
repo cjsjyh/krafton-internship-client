@@ -28,9 +28,9 @@ Position_X,10,
 Position_Y,170,�̹��� ���� ����� ����ϰ� ������ 0
 Size_X,0,�̹��� ���� ����� ����ϰ� ������ 0
 Size_Y,0,
-Name,PLAYER_TIMER,
-Filename,timer.png,
-Position_X,810,
-Position_Y,1050,
+Name,PLAYER_ATTACK_TYPE,
+Filename,icon_basic.png,
+Position_X,10,
+Position_Y,170,
 Size_X,0,�̹��� ���� ����� ����ϰ� ������ 0
 Size_Y,0,�̹��� ���� ����� ����ϰ� ������ 0

@@ -79,7 +79,7 @@ private:
 	D3DClass* m_D3D;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-	uimanagerclass* m_UIManager;
+	uimanagerclass* m_UIM;
 	
 	playerclass* player;
 	bossclass* boss;

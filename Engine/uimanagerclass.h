@@ -24,12 +24,16 @@ public:
 
 	bool Render(int, int, int, int);
 	void SetValues(int, int, CameraClass*, gameManager*);
+	void ReplaceUI(string, string);
 
 	vector<BitmapClass*> m_UI;
 	vector<UIinfo*> parameters;
+	vector<BitmapClass*> m_ItemUI;
+	vector<UIinfo*> itemParameters;
 
 private:
 	bool SetUI(int, int, int, int);
+	void RenderUI(vector<BitmapClass*>, vector<UIinfo*>, string fname);
 
 	TextureShaderClass* m_TextureShader;
 	TextClass* m_Text;

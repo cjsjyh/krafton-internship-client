@@ -23,8 +23,8 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	PLAYER_DASH_FRAME = 20;
 	PLAYER_DASH_PAUSE_FRAME = 5;
 	PLAYER_BULLET_RELOAD = 10;
-	PLAYER_BULLET_COUNT = 3;
-	PLAYER_BULLET_ANGLE = 10;
+	PLAYER_BULLET_COUNT = 1;
+	PLAYER_BULLET_ANGLE = 0;
 
 	dashFrame = dashPauseFrame = -1;
 	dashDir = -1;
@@ -82,7 +82,7 @@ void playerclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec)
 {
 	bullet->SetPosition(GetPosition() + dirVec);
 	bullet->SetDirVector(dirVec);
-	bullet->SetDistance(100);
+	bullet->SetDistance(PLAYER_BULLET_DISTANCE);
 }
 
 void playerclass::SetSpeed(float _speed)
@@ -190,7 +190,6 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 			vector<D3DXVECTOR3> temp = skillpatternclass::FireInFan(PLAYER_BULLET_COUNT, PLAYER_BULLET_ANGLE, D3DXVECTOR3(0,0,0), vecToMouse);
 			for (auto iter = temp.begin(); iter != temp.end(); iter++)
 			{
-				//stdafx::PrintVector3(*iter);
 				GM->RegisterObjectToRender(Fire(*iter), GM->scene);
 			}
 			
@@ -209,7 +208,8 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 			if(GM->CheckMapOut(nextPos))
 				AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 	}
-	else if (InputClass::IsKeyPressed(keys, 'F'))
+
+	if (InputClass::IsKeyPressed(keys, 'F'))
 	{
 		ObjectInteraction();
 	}
@@ -305,4 +305,14 @@ void playerclass::SetPlayerAttackType(string _type)
 void playerclass::AddPlayerItem(string _item)
 {
 	playerItems.push_back(_item);
+}
+
+int playerclass::GetPlayerItemSize()
+{
+	return playerItems.size();
+}
+
+string playerclass::GetPlayerItem(int i)
+{
+	return playerItems[i];
 }

@@ -31,7 +31,7 @@ GraphicsClass::GraphicsClass()
 	
 	m_LightShader = 0;
 	m_Light = 0;
-	m_UIManager = 0;
+	m_UIM = 0;
 
 	player = 0;
 	boss = 0;
@@ -152,8 +152,8 @@ void GraphicsClass::InitializeBasic()
 	m_IM = new itemmanagerclass();
 	m_IM->SetParameter(m_filereader);
 
-	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D, hwnd, baseViewMatrix);
-	m_UIManager->SetValues(screenW, screenH, m_Camera, m_GM);
+	m_UIM = new uimanagerclass(m_filereader->paramUI, m_D3D, hwnd, baseViewMatrix);
+	m_UIM->SetValues(screenW, screenH, m_Camera, m_GM);
 
 	last_scene_change_frame = 0;
 	return;
@@ -167,8 +167,8 @@ void GraphicsClass::UninitializeBasic()
 	delete m_IM;
 	m_IM = 0;
 	
-	delete m_UIManager;
-	m_UIManager = 0;
+	delete m_UIM;
+	m_UIM = 0;
 	
 	return;
 }
@@ -248,7 +248,7 @@ void GraphicsClass::InitializeMap()
 	player = new playerclass(10, m_D3D);
 	player->SetManager(m_GM,m_IM);
 	m_GM->RegisterObjectToRender(player);
-	m_IM->SetGameManager(m_GM);
+	m_IM->SetManagers(m_GM,m_UIM);
 
 	boss = new bossclass(30, 1, m_D3D, player);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
@@ -301,7 +301,6 @@ void GraphicsClass::InitializeRewardMap(vector<string> itemNames)
 		temp->SetScale(D3DXVECTOR3(2, 2, 2));
 		temp->SetPosition(D3DXVECTOR3(-10 + 10*i, 0, 10));
 		temp->SetRotationAfter(D3DXVECTOR3(0, 45, 0));
-		//temp->SetRotation(D3DXVECTOR3(0, 45, 0));
 		m_GM->RegisterObjectToRender(temp, 1);
 	}
 
@@ -523,7 +522,7 @@ bool GraphicsClass::Render(inputInfo input)
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
 
-	m_UIManager->Render(input.mouseX, input.mouseY, input.fps, input.cpu);
+	m_UIM->Render(input.mouseX, input.mouseY, input.fps, input.cpu);
 
 	m_D3D->TurnOffAlphaBlending();
 	m_D3D->TurnZBufferOn();
