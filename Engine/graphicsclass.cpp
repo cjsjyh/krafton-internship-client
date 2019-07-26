@@ -8,12 +8,9 @@
 #include "modelclass.h"
 
 #include "cameraclass.h"
-#include "textureshaderclass.h"
-#include "textclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
 #include "uimanagerclass.h"
-#include "bitmapclass.h"
 
 #include "gameObject.h"
 #include "staticobjclass.h"
@@ -85,9 +82,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 		return false;
 	}
 
-	//------------
-	//   text
-	//------------
 	
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;

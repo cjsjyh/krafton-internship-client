@@ -27,9 +27,6 @@ uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _
 	parameters = _input;
 	hwnd = _hwnd;
 	baseViewMatrix = _baseViewMatrix;
-
-	Initialize();
-	InitializeUI();
 }
 
 uimanagerclass::~uimanagerclass()
@@ -44,6 +41,9 @@ void uimanagerclass::SetValues(int _screenWidth, int _screenHeight, CameraClass*
 	screenHeight = _screenHeight;
 	camera = _camera;
 	GM = _GM;
+
+	Initialize();
+	InitializeUI();
 }
 
 bool uimanagerclass::Initialize()
@@ -62,13 +62,13 @@ bool uimanagerclass::Initialize()
 		return false;
 	}
 
+
+
 	m_Text = new TextClass;
 	if (!m_Text)
 	{
 		return false;
 	}
-
-	// Initialize the text object.
 	result = m_Text->Initialize(device->GetDevice(), device->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
 	if (!result)
 	{
@@ -119,9 +119,10 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 	D3DXMATRIX orthoMatrix;
 	D3DXMATRIX worldMatrix;
 	
-	SetUI(mouseX, mouseY, fps, cpu);
-
 	D3DXMatrixIdentity(&worldMatrix);
+	device->GetOrthoMatrix(orthoMatrix);
+
+	SetUI(mouseX, mouseY, fps, cpu);
 	result = m_Text->Render(device->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if (!result)
 	{
@@ -133,8 +134,6 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 	if (boss == 0)
 		boss = (bossclass*)GM->GetGameObject("boss");
 		
-	device->GetOrthoMatrix(orthoMatrix);
-
 	for (int i = 0; i < m_UI.size(); i++)
 	{
 		D3DXMATRIX temp;

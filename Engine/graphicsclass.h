@@ -14,12 +14,9 @@ class inputclass;
 class ModelClass;
 
 class CameraClass;
-class TextureShaderClass;
-class TextClass;
 class LightShaderClass;
 class LightClass;
 class uimanagerclass;
-class BitmapClass;
 
 class gameObject;
 class staticobjclass;
@@ -76,8 +73,6 @@ public:
 
 private:
 	D3DXVECTOR3 GetDirectionMouse(int, int);
-	
-	bool SetUI(int, int, int, int);
 	void SetCamera(int);
 
 	textfilereader* m_filereader;
