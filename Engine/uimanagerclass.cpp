@@ -9,20 +9,27 @@
 #include "bossclass.h"
 #include "playerclass.h"
 #include "textureshaderclass.h"
+#include "textclass.h"
 
 #include "uimanagerclass.h"
 
-uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _hwnd)
+uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _hwnd, D3DXMATRIX _baseViewMatrix)
 {
 	m_TextureShader = 0;
+	m_Text = 0;
 	m_ImageDecoder = 0;
 	player = 0;
 	boss = 0;
 	GM = 0;
 	camera = 0;
+
 	device = _device;
 	parameters = _input;
 	hwnd = _hwnd;
+	baseViewMatrix = _baseViewMatrix;
+
+	Initialize();
+	InitializeUI();
 }
 
 uimanagerclass::~uimanagerclass()
@@ -39,8 +46,7 @@ void uimanagerclass::SetValues(int _screenWidth, int _screenHeight, CameraClass*
 	GM = _GM;
 }
 
-
-bool uimanagerclass::InitializeUI()
+bool uimanagerclass::Initialize()
 {
 	bool result;
 
@@ -56,7 +62,25 @@ bool uimanagerclass::InitializeUI()
 		return false;
 	}
 
+	m_Text = new TextClass;
+	if (!m_Text)
+	{
+		return false;
+	}
 
+	// Initialize the text object.
+	result = m_Text->Initialize(device->GetDevice(), device->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
+		return false;
+	}
+
+}
+
+bool uimanagerclass::InitializeUI()
+{
+	bool result;
 	int width, height;
 	UIinfo* uiinfo;
 	m_ImageDecoder = new imagedecoderclass;
@@ -89,11 +113,21 @@ bool uimanagerclass::InitializeUI()
 	return true;
 }
 
-bool uimanagerclass::Render(D3DXMATRIX baseViewMatrix)
+bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 {
 	bool result;
 	D3DXMATRIX orthoMatrix;
+	D3DXMATRIX worldMatrix;
 	
+	SetUI(mouseX, mouseY, fps, cpu);
+
+	D3DXMatrixIdentity(&worldMatrix);
+	result = m_Text->Render(device->GetDeviceContext(), worldMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
 	if (player == 0)
 		player = (playerclass*)GM->GetGameObject("player");
 	if (boss == 0)
@@ -101,7 +135,6 @@ bool uimanagerclass::Render(D3DXMATRIX baseViewMatrix)
 		
 	device->GetOrthoMatrix(orthoMatrix);
 
-	D3DXMATRIX worldMatrix;
 	for (int i = 0; i < m_UI.size(); i++)
 	{
 		D3DXMATRIX temp;
@@ -139,4 +172,33 @@ bool uimanagerclass::Render(D3DXMATRIX baseViewMatrix)
 			return false;
 		}
 	}
+}
+
+bool uimanagerclass::SetUI(int mouseX, int mouseY, int fps, int cpu)
+{
+	bool result;
+	// Set the location of the mouse.
+	result = m_Text->SetMousePosition(mouseX, mouseY, device->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	//----------------
+	//   CPU / FPS
+	//----------------
+	result = m_Text->SetFps(fps, device->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Set the cpu usage.
+	result = m_Text->SetCpu(cpu, device->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }

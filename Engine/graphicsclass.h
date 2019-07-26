@@ -51,6 +51,13 @@ const int COLL_CHECK_RATE = 10;
 class GraphicsClass
 {
 public:
+	typedef struct inputInfo {
+		int mouseX;
+		int mouseY;
+		int fps;
+		int cpu;
+	}inputInfo;
+
 	GraphicsClass();
 	~GraphicsClass();
 
@@ -65,16 +72,16 @@ public:
 	void UninitializeRewardMap();
 	void Shutdown();
 	bool Frame(int, int, bool*, int*, int, int);
-	bool Render();
+	bool Render(inputInfo);
 
 private:
 	D3DXVECTOR3 GetDirectionMouse(int, int);
 	
 	bool SetUI(int, int, int, int);
+	void SetCamera(int);
 
 	textfilereader* m_filereader;
 	D3DClass* m_D3D;
-	TextClass* m_Text;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	uimanagerclass* m_UIManager;

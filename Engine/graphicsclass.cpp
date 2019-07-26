@@ -31,7 +31,7 @@ GraphicsClass::GraphicsClass()
 {
 	m_filereader = 0;
 	m_D3D = 0;
-	m_Text = 0;
+	
 	m_LightShader = 0;
 	m_Light = 0;
 	m_UIManager = 0;
@@ -88,22 +88,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	//------------
 	//   text
 	//------------
-	
-
-	// Create the text object.
-	m_Text = new TextClass;
-	if (!m_Text)
-	{
-		return false;
-	}
-
-	// Initialize the text object.
-	result = m_Text->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
-		return false;
-	}
 	
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -174,9 +158,8 @@ void GraphicsClass::InitializeBasic()
 	m_IM = new itemmanagerclass();
 	m_IM->SetParameter(m_filereader);
 
-	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D, hwnd);
+	m_UIManager = new uimanagerclass(m_filereader->paramUI, m_D3D, hwnd, baseViewMatrix);
 	m_UIManager->SetValues(screenW, screenH, m_Camera, m_GM);
-	m_UIManager->InitializeUI();
 
 	last_scene_change_frame = 0;
 	return;
@@ -425,34 +408,24 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse(int _mouseX, int _mouseY)
 
 bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, int fps, int cpu)
 {
-	
 	bool result;
 	mouseX = _mouseX - screenW / 2;
 	mouseY = -(_mouseY - screenH / 2);
 
+	inputInfo input;
+	input.mouseX = mouseX;
+	input.mouseY = mouseY;
+	input.cpu = cpu;
+	input.fps = fps;
+
 	frame++;
-	//UI
-	if (!SetUI(mouseX, mouseY, fps, cpu))
-		return false;
-
-	if (m_GM->scene == 0)
-	{
-		m_Camera->SetViewPoint((player->GetPosition() + boss->GetPosition()) / 2);
-		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
-		m_Camera->Move(distance);
-	}
-	else if (m_GM->scene == 1)
-	{
-		m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
-		m_Camera->SetViewPoint(D3DXVECTOR3(0, 0, 0));
-	}
-
 
 	//Frame Action
 	if (m_GM->scene == 0)
 		boss->Frame(frame);
 	player->Frame(key, mousePress, GetDirectionMouse(_mouseX, _mouseY) ,frame);
 	m_GM->Frame();
+	SetCamera(m_GM->scene);
 	
 	//PLAYER DEAD
 	if (player->CheckDestroy())
@@ -497,7 +470,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	}
 	
 	// Render the graphics scene.
-	result = Render();
+	result = Render(input);
 	if(!result)
 	{
 		return false;
@@ -506,7 +479,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	return true;
 }
 
-bool GraphicsClass::Render()
+bool GraphicsClass::Render(inputInfo input)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX MatrixToFaceCamera;
@@ -556,14 +529,7 @@ bool GraphicsClass::Render()
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
 
-	D3DXMatrixIdentity(&worldMatrix);
-	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
-	if (!result)
-	{
-		return false;
-	}
-
-	m_UIManager->Render(baseViewMatrix);
+	m_UIManager->Render(input.mouseX, input.mouseY, input.fps, input.cpu);
 
 	m_D3D->TurnOffAlphaBlending();
 	m_D3D->TurnZBufferOn();
@@ -573,31 +539,17 @@ bool GraphicsClass::Render()
 }
 
 
-bool GraphicsClass::SetUI(int mouseX, int mouseY, int fps, int cpu)
+void GraphicsClass::SetCamera(int scene)
 {
-	bool result;
-	// Set the location of the mouse.
-	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
-	if (!result)
+	if (scene == 0)
 	{
-		return false;
+		m_Camera->SetViewPoint((player->GetPosition() + boss->GetPosition()) / 2);
+		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
+		m_Camera->Move(distance);
 	}
-
-	//----------------
-	//   CPU / FPS
-	//----------------
-	result = m_Text->SetFps(fps, m_D3D->GetDeviceContext());
-	if (!result)
+	else if (scene == 1)
 	{
-		return false;
+		m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
+		m_Camera->SetViewPoint(D3DXVECTOR3(0, 0, 0));
 	}
-
-	// Set the cpu usage.
-	result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
 }

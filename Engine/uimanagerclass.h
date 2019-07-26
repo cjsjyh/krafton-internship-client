@@ -12,23 +12,27 @@ class gameManager;
 class bossclass;
 class playerclass;
 class TextureShaderClass;
-
+class TextClass;
 
 class uimanagerclass
 {
 public:
-	uimanagerclass(vector<UIinfo*>, D3DClass*, HWND);
+	uimanagerclass(vector<UIinfo*>, D3DClass*, HWND, D3DXMATRIX);
 	~uimanagerclass();
+	bool Initialize();
 	bool InitializeUI();
 
-	bool Render(D3DXMATRIX);
+	bool Render(int, int, int, int);
 	void SetValues(int, int, CameraClass*, gameManager*);
 
 	vector<BitmapClass*> m_UI;
 	vector<UIinfo*> parameters;
 
 private:
+	bool SetUI(int, int, int, int);
+
 	TextureShaderClass* m_TextureShader;
+	TextClass* m_Text;
 	imagedecoderclass* m_ImageDecoder;
 	D3DClass* device;
 	CameraClass* camera;
@@ -38,6 +42,7 @@ private:
 
 	int screenWidth, screenHeight;
 	HWND hwnd;
+	D3DXMATRIX baseViewMatrix;
 };
 
 #endif
