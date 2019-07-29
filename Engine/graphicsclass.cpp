@@ -98,6 +98,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 		return false;
 	}
 
+
 	// Create the light object.
 	m_Light = new LightClass;
 	if (!m_Light)
@@ -505,9 +506,11 @@ bool GraphicsClass::Render(inputInfo input)
 		temp->GetWorldMatrix(worldMatrix);
 		if (temp->GetName() != "floor")
 			worldMatrix = MatrixToFaceCamera *  worldMatrix;
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(),worldMatrix,
-									viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
-									m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+		
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix,
+			viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
+			m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+
 		if (!result)
 		{
 			return false;

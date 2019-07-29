@@ -11,6 +11,8 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+	float4 colorOverride;
+	float4 colorMultiply;
 };
 
 
@@ -29,6 +31,8 @@ struct PixelInputType
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
+	float4 colorOverride : COLOR;
+	float4 colorMultiply : COLOR2;
 };
 
 
@@ -56,6 +60,9 @@ PixelInputType LightVertexShader(VertexInputType input)
 	
     // Normalize the normal vector.
     output.normal = normalize(output.normal);
+	
+	output.colorOverride = colorOverride;
+	output.colorMultiply = colorMultiply;
 
     return output;
 }

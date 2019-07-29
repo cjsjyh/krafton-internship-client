@@ -11,6 +11,8 @@
 #include "textureshaderclass.h"
 #include "textclass.h"
 
+#include "timerclass.h"
+
 #include "uimanagerclass.h"
 
 uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _hwnd, D3DXMATRIX _baseViewMatrix)
@@ -22,6 +24,8 @@ uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _
 	boss = 0;
 	GM = 0;
 	camera = 0;
+	timer = 0;
+	blindAlpha = 1;
 
 	device = _device;
 	parameters = _input;
@@ -107,8 +111,28 @@ bool uimanagerclass::InitializeUI()
 			return false;
 		}
 		m_UI.push_back(temp);
-
 	}
+
+	//FADE IN FADE OUT SCREEN
+	BitmapClass* temp = new BitmapClass;
+	uiinfo = new UIinfo;
+	uiinfo->filename = "../Engine/data/UI/blackscreen.png";
+	uiinfo->size_x = 2500;
+	uiinfo->size_y = 2500;
+	uiinfo->pos_x = uiinfo->pos_y = -500;
+	uiinfo->uiname = "blackscreen";
+	// Initialize the bitmap object.
+	result = temp->Initialize(device->GetDevice(), screenWidth, screenHeight, stdafx::StringToWchar(uiinfo->filename), uiinfo->size_x, uiinfo->size_y);
+	if (!result)
+	{
+		MessageBox(hwnd, L"!!Could not initialize the bitmap object.", L"Error", MB_OK);
+		return false;
+	}
+	m_UI.push_back(temp);
+	parameters.push_back(uiinfo);
+	timer = new timerclass();
+	timer->SetTimerGradualIncrease(&blindAlpha, -1, 60);
+
 	return true;
 }
 
@@ -140,6 +164,8 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 	D3DXMATRIX orthoMatrix;
 	D3DXMATRIX worldMatrix;
 	
+	timer->Frame();
+
 	D3DXMatrixIdentity(&worldMatrix);
 	device->GetOrthoMatrix(orthoMatrix);
 
@@ -154,7 +180,7 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 		player = (playerclass*)GM->GetGameObject("player");
 	if (boss == 0)
 		boss = (bossclass*)GM->GetGameObject("boss");
-	
+
 	RenderUI(m_UI, parameters, "");
 
 	//Set player item images
@@ -230,8 +256,12 @@ void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIpar
 		worldMatrix *= temp;
 
 		// Render the bitmap with the texture shader.
-		result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
-			baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture());
+		if(UIparam[i]->uiname != "blackscreen")
+			result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
+				baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture());
+		else
+			result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
+				baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture(), D3DXVECTOR4(1,1,1,blindAlpha));
 	}
 }
 

@@ -11,6 +11,7 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+	float4 colorMultiply;
 };
 
 
@@ -27,6 +28,7 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
+	float4 colorMultiply : COLOR;
 };
 
 
@@ -48,6 +50,7 @@ PixelInputType TextureVertexShader(VertexInputType input)
     
 	// Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;
-    
+    output.colorMultiply = colorMultiply;
+
     return output;
 }

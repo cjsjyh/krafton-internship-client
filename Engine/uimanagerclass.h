@@ -14,6 +14,8 @@ class playerclass;
 class TextureShaderClass;
 class TextClass;
 
+class timerclass;
+
 class uimanagerclass
 {
 public:
@@ -43,10 +45,12 @@ private:
 	gameManager* GM;
 	bossclass* boss;
 	playerclass* player;
+	timerclass* timer;
 
 	int screenWidth, screenHeight;
 	HWND hwnd;
 	D3DXMATRIX baseViewMatrix;
+	float blindAlpha;
 };
 
 #endif
