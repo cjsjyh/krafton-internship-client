@@ -24,8 +24,8 @@ uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _
 	boss = 0;
 	GM = 0;
 	camera = 0;
-	timer = 0;
 	blindAlpha = 1;
+	timer = 0;
 
 	device = _device;
 	parameters = _input;
@@ -130,10 +130,24 @@ bool uimanagerclass::InitializeUI()
 	}
 	m_UI.push_back(temp);
 	parameters.push_back(uiinfo);
-	timer = new timerclass();
-	timer->SetTimerGradualIncrease(&blindAlpha, -1, 60);
-
+	ScreenFade(1,-1,60);
 	return true;
+}
+
+void uimanagerclass::ScreenFade(float startAlpha, float amount, int duration)
+{
+	blindAlpha = startAlpha;
+	if (timer)
+	{
+		delete timer;
+		timer = 0;
+	}
+	
+	timer = new timerclass();
+	timer->SetTimerGradualChange(&blindAlpha, amount, duration);
+	//timerclass* temp = new timerclass();
+	//temp->SetTimerGradualChange(&blindAlpha, amount, duration);
+	//timer.push_back(temp);
 }
 
 void uimanagerclass::ReplaceUI(string itemName, string filename)
@@ -164,7 +178,18 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 	D3DXMATRIX orthoMatrix;
 	D3DXMATRIX worldMatrix;
 	
-	timer->Frame();
+	/*for (auto iter = timer.begin(); iter != timer.end(); iter++)
+	{
+		cout << to_string(blindAlpha) << endl;
+		if ((*iter)->Frame() && blindAlpha >= 1)
+		{
+			cout << "timer done!" << endl;
+			ScreenFade(1, -1, 60);
+		}
+	}*/
+	if (timer->Frame() && blindAlpha >= 1)
+		ScreenFade(1, -1, 30);
+
 
 	D3DXMatrixIdentity(&worldMatrix);
 	device->GetOrthoMatrix(orthoMatrix);

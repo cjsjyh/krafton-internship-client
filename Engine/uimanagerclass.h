@@ -27,6 +27,7 @@ public:
 	bool Render(int, int, int, int);
 	void SetValues(int, int, CameraClass*, gameManager*);
 	void ReplaceUI(string, string);
+	void ScreenFade(float, float, int);
 
 	vector<BitmapClass*> m_UI;
 	vector<UIinfo*> parameters;
@@ -45,6 +46,7 @@ private:
 	gameManager* GM;
 	bossclass* boss;
 	playerclass* player;
+	//vector<timerclass*> timer;
 	timerclass* timer;
 
 	int screenWidth, screenHeight;

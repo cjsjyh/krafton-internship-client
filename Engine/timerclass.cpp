@@ -12,17 +12,22 @@ timerclass::~timerclass()
 
 }
 
-void timerclass::Frame()
+bool timerclass::Frame()
 {
 	frame++;
 
 	if (frame < triggerFrame)
 	{
 		*sourceFloat += amountFloat;
+		return false;
+	}
+	else {
+		*sourceFloat += amountFloat;
+		return true;
 	}
 }
 
-void timerclass::SetTimerGradualIncrease(float* source, float amount, int duration)
+void timerclass::SetTimerGradualChange(float* source, float amount, int duration)
 {
 	sourceFloat = source;
 	triggerFrame = frame + duration;

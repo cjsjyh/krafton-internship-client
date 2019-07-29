@@ -8,9 +8,9 @@ public:
 	timerclass();
 	~timerclass();
 
-	void Frame();
+	bool Frame();
 
-	void SetTimerGradualIncrease(float* source, float amount, int duration);
+	void SetTimerGradualChange(float* source, float amount, int duration);
 
 private:
 	int frame;

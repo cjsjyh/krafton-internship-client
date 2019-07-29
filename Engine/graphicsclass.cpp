@@ -444,6 +444,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			last_scene_change_frame = frame;
 			if (m_GM->scene == 0)
 			{
+				m_UIM->ScreenFade(1, -1, 30);
 				vector<string> itemNames;
 				player->SavePlayerPos(m_GM->scene);
 				player->SetPosition(D3DXVECTOR3(0, 0, 0));
@@ -455,6 +456,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 			}
 			else
 			{
+				m_UIM->ScreenFade(1, -1, 30);
 				m_GM->scene = 0;
 				player->SetPosition(player->GetSavedPlayerPos(m_GM->scene));
 
