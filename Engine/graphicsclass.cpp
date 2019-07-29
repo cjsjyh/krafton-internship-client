@@ -249,7 +249,7 @@ void GraphicsClass::InitializeMap()
 	player = new playerclass(10, m_D3D);
 	player->SetManager(m_GM,m_IM);
 	m_GM->RegisterObjectToRender(player);
-	m_IM->SetManagers(m_GM,m_UIM);
+	m_IM->SetManagers(m_GM,m_UIM,m_D3D);
 
 	boss = new bossclass(30, 1, m_D3D, player);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));

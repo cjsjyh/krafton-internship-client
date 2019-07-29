@@ -14,6 +14,7 @@ public:
 	
 	void InitializeStatic2D(string prefix="");
 	void InitializeStatic2DItem(string prefix="");
+	void InitializeStatic2DItem(string prefix, string fname);
 	void InitializeStatic3D(string prefix = "");
 	bool CheckDestroy();
 private:

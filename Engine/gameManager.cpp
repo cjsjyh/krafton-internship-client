@@ -56,6 +56,22 @@ void gameManager::UnregisterObjectToRender(gameObject *item, int _scene)
 void gameManager::RemoveObjectToRender(gameObject* item, int _scene)
 {
 	int index = FindObjectIndex(item, _scene);
+	if (index > renderObjects[_scene].size())
+		return;
+
+	gameObject* temp = renderObjects[_scene][index];
+	renderObjects[_scene].erase(renderObjects[_scene].begin() + index);
+	delete temp;
+	temp = 0;
+	return;
+}
+
+void gameManager::RemoveObjectToRender(string item, int _scene)
+{
+	int index = FindObjectIndex(item, _scene);
+	if (index > renderObjects[_scene].size())
+		return;
+
 	gameObject* temp = renderObjects[_scene][index];
 	renderObjects[_scene].erase(renderObjects[_scene].begin() + index);
 	delete temp;
@@ -124,6 +140,15 @@ int gameManager::FindObjectIndex(gameObject *item, int _scene)
 {
 	vector<gameObject*>::iterator itr = find(renderObjects[_scene].begin(), renderObjects[_scene].end(), item);
 	return distance(renderObjects[_scene].begin(), itr);
+}
+
+int gameManager::FindObjectIndex(string item, int _scene)
+{
+	for (auto iter = renderObjects[_scene].begin(); iter != renderObjects[_scene].end(); iter++)
+	{
+		if((*iter)->GetName() == item)
+			return distance(renderObjects[_scene].begin(), iter);
+	}
 }
 
 int gameManager::GetRenderObjectCount(int _scene)

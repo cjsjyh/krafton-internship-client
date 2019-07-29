@@ -46,7 +46,6 @@ private:
 	gameManager* GM;
 	bossclass* boss;
 	playerclass* player;
-	//vector<timerclass*> timer;
 	timerclass* timer;
 
 	int screenWidth, screenHeight;

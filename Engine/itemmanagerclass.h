@@ -8,6 +8,7 @@ class playerclass;
 class textfilereader;
 class gameManager;
 class uimanagerclass;
+class D3DClass;
 
 class itemmanagerclass
 {
@@ -25,17 +26,20 @@ public:
 	void SetItemEffect(string);
 
 	void SetParameter(textfilereader*);
-	void SetManagers(gameManager*, uimanagerclass*);
+	void SetManagers(gameManager*, uimanagerclass*, D3DClass*);
+
+	void DisplayTooltip(gameObject*);
 
 private:
 	void SetItemPool();
-	
+	D3DClass* device;
 	gameManager* GM;
 	playerclass* player;
 	textfilereader* itemparameters;
 	uimanagerclass* UIM;
 
 	vector<vector<Item>> itemPool;
+	gameObject* tooltip;
 };
 
 #endif

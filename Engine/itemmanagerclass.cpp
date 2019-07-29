@@ -4,9 +4,12 @@
 #include <ctime>
 
 #include "gameManager.h"
-#include "playerclass.h"
 #include "textfilereader.h"
 #include "uimanagerclass.h"
+#include "d3dclass.h"
+
+#include "playerclass.h"
+#include "staticobjclass.h"
 
 #include "itemmanagerclass.h"
 
@@ -22,6 +25,7 @@ itemmanagerclass::itemmanagerclass()
 	player = 0;
 	GM = 0;
 	UIM = 0;
+	tooltip = 0;
 }
 
 itemmanagerclass::~itemmanagerclass()
@@ -35,8 +39,9 @@ void itemmanagerclass::SetParameter(textfilereader* _itemparameters)
 	SetItemPool();
 }
 
-void itemmanagerclass::SetManagers(gameManager* _GM, uimanagerclass* _UIM)
+void itemmanagerclass::SetManagers(gameManager* _GM, uimanagerclass* _UIM, D3DClass* _device)
 {
+	device = _device;
 	GM = _GM;
 	UIM = _UIM;
 }
@@ -52,6 +57,21 @@ void itemmanagerclass::SetItemPool()
 	}
 	return;
 }
+
+void itemmanagerclass::DisplayTooltip(gameObject* item)
+{
+	if (tooltip)
+	{
+		GM->RemoveObjectToRender("tooltip",1);
+		tooltip = 0;
+	}
+	tooltip = new staticobjclass("tooltip", device, gameObject::INTERACTION, gameObject::COLLIDER_BOX);
+	((staticobjclass*)tooltip)->InitializeStatic2DItem("tip_",item->GetName());
+	tooltip->SetPosition(item->GetPosition() + D3DXVECTOR3(0,5,0));
+	tooltip->SetScale(D3DXVECTOR3(6, 2.5, 1));
+	GM->RegisterObjectToRender(tooltip, 1);
+}
+
 
 vector<string> itemmanagerclass::ChooseItemFromPool(int count, int phase)
 {

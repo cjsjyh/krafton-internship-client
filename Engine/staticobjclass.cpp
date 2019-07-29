@@ -36,6 +36,12 @@ void staticobjclass::InitializeStatic2DItem(string prefix)
 	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
 }
 
+void staticobjclass::InitializeStatic2DItem(string prefix, string fname)
+{
+	string tName = "../Engine/data/item/" + prefix + fname + ".png";
+	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
+}
+
 
 bool staticobjclass::CheckDestroy()
 {

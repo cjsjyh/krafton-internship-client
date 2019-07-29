@@ -208,10 +208,15 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 			if(GM->CheckMapOut(nextPos))
 				AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 	}
-
-	if (InputClass::IsKeyPressed(keys, 'F'))
+	
+	if (GM->scene == 1)
 	{
-		ObjectInteraction();
+		NotifyObjectTooltip();
+
+		if (InputClass::IsKeyPressed(keys, 'F'))
+		{
+			ObjectInteraction();
+		}
 	}
 }
 
@@ -269,6 +274,16 @@ int playerclass::ObjectInteraction()
 	
 	return 1;
 }
+
+void playerclass::NotifyObjectTooltip()
+{
+	gameObject* hitObj = GM->CheckInteraction(GetPosition(), PLAYER_INTERACTION_RANGE);
+	if (hitObj)
+	{
+		IM->DisplayTooltip(hitObj);
+	}
+}
+
 
 void playerclass::SetImage()
 {

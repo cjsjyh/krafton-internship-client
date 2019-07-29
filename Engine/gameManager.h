@@ -19,7 +19,9 @@ public:
 	void RegisterObjectToRender(gameObject *item, int _scene=0);
 	void UnregisterObjectToRender(gameObject *item, int _scene=0);
 	void RemoveObjectToRender(gameObject* item, int _scene=0);
+	void RemoveObjectToRender(string item, int _scene = 0);
 	int FindObjectIndex(gameObject *item, int _scene=0);
+	int FindObjectIndex(string item, int _scene = 0);
 	int GetRenderObjectCount(int _scene = -1);
 	gameObject* GetGameObject(int index, int _scene = -1);
 	gameObject* GetGameObject(string name, int _scene = -1);

@@ -28,13 +28,6 @@ public:
 	void SetDirection(int);
 	int GetDirection();
 	void SetImage();
-	
-	D3DXVECTOR3 GetDirectionVector(int);
-	projectileclass* Fire(D3DXVECTOR3);
-	void SetBullet(projectileclass*, D3DXVECTOR3);
-	int ObjectInteraction();
-
-	bool Dash(int*, int);
 	void SetSpeed(float);
 
 	void SavePlayerPos(int scene);
@@ -62,6 +55,15 @@ public:
 	float PLAYER_BULLET_COUNT;
 
 private:
+	projectileclass* Fire(D3DXVECTOR3);
+	void SetBullet(projectileclass*, D3DXVECTOR3);
+
+	D3DXVECTOR3 GetDirectionVector(int);
+	bool Dash(int*, int);
+
+	void NotifyObjectTooltip();
+	int ObjectInteraction();
+
 	int direction;
 	int dashFrame, dashPauseFrame;
 	int lastLeftClick;
