@@ -116,7 +116,7 @@ bool uimanagerclass::InitializeUI()
 	//FADE IN FADE OUT SCREEN
 	BitmapClass* temp = new BitmapClass;
 	uiinfo = new UIinfo;
-	uiinfo->filename = "../Engine/data/UI/blackscreen.png";
+	uiinfo->filename = "./data/UI/blackscreen.png";
 	uiinfo->size_x = 2500;
 	uiinfo->size_y = 2500;
 	uiinfo->pos_x = uiinfo->pos_y = -500;
@@ -159,7 +159,7 @@ void uimanagerclass::ReplaceUI(string itemName, string filename)
 	{
 		if ((*iter)->uiname == itemName)
 		{
-			(*iter)->filename = "../Engine/data/UI/" + filename;
+			(*iter)->filename = "./data/UI/" + filename;
 			uiinfo = *iter;
 			index = iter - parameters.begin();
 		}
@@ -221,7 +221,7 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 			if (!temp)
 				return false;
 			
-			uiinfo->filename = "../Engine/data/UI/icon_" + player->GetPlayerItem(i) + ".png";
+			uiinfo->filename = "./data/UI/icon_" + player->GetPlayerItem(i) + ".png";
 			//item bar x:10, y: 170
 			uiinfo->pos_x = 15;
 			uiinfo->pos_y = 240 + i * 70;

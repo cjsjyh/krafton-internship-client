@@ -43,9 +43,9 @@ void playerclass::InitializeModels()
 {
 	for (int i = 0; i < PLAYER_IMAGE_NUM; i++)
 	{
-		string tName = "../Engine/data/player/player" + to_string(i) + ".png";
+		string tName = "./data/player/player" + to_string(i) + ".png";
 		ModelClass* temp = new ModelClass();
-		temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
+		temp->Initialize(device->GetDevice(), "./data/plane.txt", stdafx::StringToWchar(tName));
 
 		model_list.push_back(temp);
 	}
@@ -213,7 +213,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	{
 		NotifyObjectTooltip();
 
-		if (InputClass::IsKeyPressed(keys, 'F'))
+		if (InputClass::IsKeyPressed(keys, DIK_RETURN))
 		{
 			ObjectInteraction();
 		}

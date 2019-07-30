@@ -112,19 +112,19 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	m_filereader = new textfilereader;
-	result = m_filereader->ReadFile("../Engine/data/datasheet/player_parameter.csv");
+	result = m_filereader->ReadFile("./data/datasheet/player_parameter.csv");
 	if (!result)
 		return false;
 		
-	result = m_filereader->ReadFile("../Engine/data/datasheet/boss_parameter.csv");
+	result = m_filereader->ReadFile("./data/datasheet/boss_parameter.csv");
 	if (!result)
 		return false;
 	
-	result = m_filereader->ReadUIFile("../Engine/data/datasheet/ui_parameter.csv");
+	result = m_filereader->ReadUIFile("./data/datasheet/ui_parameter.csv");
 	if (!result)
 		return false;
 
-	result = m_filereader->ReadItemFile("../Engine/data/datasheet/item_parameter.csv");
+	result = m_filereader->ReadItemFile("./data/datasheet/item_parameter.csv");
 	if (!result)
 		return false;
 
@@ -437,7 +437,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//-------------------
 	//  SCENE CHANGE
 	//-------------------
-	if (InputClass::IsKeyPressed(key, 'T'))
+	if (InputClass::IsKeyPressed(key, DIK_LSHIFT))
 	{
 		if (frame - last_scene_change_frame > SCENE_CHANGE_COOLTIME)
 		{

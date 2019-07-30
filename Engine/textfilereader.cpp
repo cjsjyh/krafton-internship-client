@@ -98,7 +98,7 @@ bool textfilereader::ReadUIFile(string fname)
 				temp->uiname = fields[1];
 				break;
 			case 1:
-				temp->filename = "../Engine/data/UI/" + fields[1];
+				temp->filename = "./data/UI/" + fields[1];
 				break;
 			case 2:
 				temp->pos_x = stoi(fields[1]);

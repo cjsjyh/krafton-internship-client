@@ -255,23 +255,10 @@ bool InputClass::IsWASDKeyPressed(int* arr)
 	return false;
 }
 
-bool InputClass::IsKeyPressed(int* arr, char key)
+bool InputClass::IsKeyPressed(int* arr, int key)
 {
-	int check;
-	switch (key)
-	{
-	case 'T':
-		check = DIK_T;
-		break;
-	case 'F':
-		check = DIK_F;
-		break;
-	default:
-		return false;
-	}
-
 	for (int i = 0; i < KEY_NUM; i++)
-		if (arr[i] == check)
+		if (arr[i] == key)
 			return true;
 	return false;
 }

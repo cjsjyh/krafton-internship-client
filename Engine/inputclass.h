@@ -49,7 +49,7 @@ public:
 	void GetMouseOffset(int&, int&);
 
 	static bool IsWASDKeyPressed(int* arr);
-	static bool IsKeyPressed(int* arr, char key);
+	static bool IsKeyPressed(int* arr, int key);
 	static bool MouseNotClicked(bool* mousePress);
 	static bool RightMouseClicked(bool* mousePress);
 	static bool LeftMouseClicked(bool* mousePress);

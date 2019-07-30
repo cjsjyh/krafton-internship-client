@@ -40,10 +40,10 @@ void bossclass::InitializeModels()
 {
 	for (int i = 0; i < BOSS_PHASE_NUM; i++)
 	{
-		string tName = "../Engine/data/boss/boss" + to_string(i) + ".png";
+		string tName = "./data/boss/boss" + to_string(i) + ".png";
 		cout << tName << endl;
 		ModelClass* temp = new ModelClass();
-		temp->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
+		temp->Initialize(device->GetDevice(), "./data/plane.txt", stdafx::StringToWchar(tName));
 
 		model_list.push_back(temp);
 	}

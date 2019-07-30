@@ -28,7 +28,7 @@ projectileclass::~projectileclass()
 void projectileclass::InitializeProjectile()
 {
 	bool result;
-	result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", L"../Engine/data/gameobject/bullet.png");
+	result = m_model->Initialize(device->GetDevice(), "./data/plane.txt", L"./data/gameobject/bullet.png");
 }
 
 bool projectileclass::checkDistance()

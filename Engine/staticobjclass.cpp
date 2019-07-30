@@ -20,26 +20,26 @@ staticobjclass::~staticobjclass()
 
 void staticobjclass::InitializeStatic2D(string prefix)
 {
-	string tName = "../Engine/data/gameobject/" + prefix + GetName() + ".png";
-	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
+	string tName = "./data/gameobject/" + prefix + GetName() + ".png";
+	bool result = m_model->Initialize(device->GetDevice(), "./data/plane.txt", stdafx::StringToWchar(tName));
 }
 
 void staticobjclass::InitializeStatic3D(string prefix)
 {
-	string tName = "../Engine/data/gameobject/" + prefix + GetName() + ".png";
-	m_model->Initialize(device->GetDevice(), "../Engine/data/cube.txt", stdafx::StringToWchar(tName));
+	string tName = "./data/gameobject/" + prefix + GetName() + ".png";
+	m_model->Initialize(device->GetDevice(), "./data/cube.txt", stdafx::StringToWchar(tName));
 }
 
 void staticobjclass::InitializeStatic2DItem(string prefix)
 {
-	string tName = "../Engine/data/item/" + prefix + GetName() + ".png";
-	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
+	string tName = "./data/item/" + prefix + GetName() + ".png";
+	bool result = m_model->Initialize(device->GetDevice(), "./data/plane.txt", stdafx::StringToWchar(tName));
 }
 
 void staticobjclass::InitializeStatic2DItem(string prefix, string fname)
 {
-	string tName = "../Engine/data/item/" + prefix + fname + ".png";
-	bool result = m_model->Initialize(device->GetDevice(), "../Engine/data/plane.txt", stdafx::StringToWchar(tName));
+	string tName = "./data/item/" + prefix + fname + ".png";
+	bool result = m_model->Initialize(device->GetDevice(), "./data/plane.txt", stdafx::StringToWchar(tName));
 }
 
 
