@@ -145,9 +145,6 @@ void uimanagerclass::ScreenFade(float startAlpha, float amount, int duration)
 	
 	timer = new timerclass();
 	timer->SetTimerGradualChange(&blindAlpha, amount, duration);
-	//timerclass* temp = new timerclass();
-	//temp->SetTimerGradualChange(&blindAlpha, amount, duration);
-	//timer.push_back(temp);
 }
 
 void uimanagerclass::ReplaceUI(string itemName, string filename)
@@ -178,15 +175,6 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 	D3DXMATRIX orthoMatrix;
 	D3DXMATRIX worldMatrix;
 	
-	/*for (auto iter = timer.begin(); iter != timer.end(); iter++)
-	{
-		cout << to_string(blindAlpha) << endl;
-		if ((*iter)->Frame() && blindAlpha >= 1)
-		{
-			cout << "timer done!" << endl;
-			ScreenFade(1, -1, 60);
-		}
-	}*/
 	if (timer->Frame() && blindAlpha >= 1)
 		ScreenFade(1, -1, 30);
 
@@ -223,8 +211,8 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 			
 			uiinfo->filename = "./data/UI/icon_" + player->GetPlayerItem(i) + ".png";
 			//item bar x:10, y: 170
-			uiinfo->pos_x = 15;
-			uiinfo->pos_y = 240 + i * 70;
+			uiinfo->pos_x = 30;
+			uiinfo->pos_y = 680 - i * 70;
 			uiinfo->size_x = uiinfo->size_y = 0;
 			itemParameters.push_back(uiinfo);
 
@@ -265,12 +253,12 @@ void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIpar
 		if (UIparam[i]->uiname == "BOSS_HPBAR_FRONT")
 		{
 			float bossHp = boss->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, 1 - bossHp, 1, 1);
+			D3DXMatrixScaling(&worldMatrix, bossHp, 1, 1);
 		}
 		else if (UIparam[i]->uiname == "PLAYER_HPBAR_FRONT")
 		{
 			float playerHp = player->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, 1 - playerHp, 1, 1);
+			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
 		}
 
 		result = UIComp[i]->Render(device->GetDeviceContext(), 0, 0);

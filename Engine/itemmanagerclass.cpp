@@ -89,6 +89,7 @@ vector<string> itemmanagerclass::ChooseItemFromPool(int count, int phase)
 		{
 			flag = true;
 			index = rand() % itemPool[phase].size();
+			
 			for (int i = 0; i < temp.size(); i++)
 			{
 				if (temp[i] == itemPool[phase][index].name && !itemPool[phase][index].chosen)

@@ -114,8 +114,8 @@ bool textfilereader::ReadUIFile(string fname)
 				break;
 			}
 		}
-		temp->pos_x -= temp->size_x / 2;
-		temp->pos_y -= temp->size_y / 2;
+		//temp->pos_x -= temp->size_x / 2;
+		//temp->pos_y -= temp->size_y / 2;
 		paramUI.push_back(temp);
 	}
 	return true;
