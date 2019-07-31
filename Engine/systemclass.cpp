@@ -8,6 +8,7 @@
 #include "cpuclass.h"
 #include "inputclass.h"
 #include "ApplicationClass.h"
+#include "socketManager.h"
 #include <windows.h>
 
 #include "systemclass.h"
@@ -26,6 +27,7 @@ SystemClass::SystemClass()
 	//TEMP//
 	playerCount = 2;
 	currentPlayerID = 0;
+	m_Socket = 0;
 }
 
 
@@ -100,6 +102,8 @@ bool SystemClass::Initialize()
 
 	// Initialize the cpu object.
 	m_Cpu->Initialize();
+
+	m_Socket = new socketManager();
 
 	return true;
 }

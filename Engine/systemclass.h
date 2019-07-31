@@ -11,6 +11,7 @@ class FpsClass;
 class CpuClass;
 class InputClass;
 class ApplicationClass;
+class socketManager;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass
@@ -42,6 +43,7 @@ private:
 	ApplicationClass* m_Graphics;
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
+	socketManager* m_Socket;
 
 	int mouseX, mouseY;
 };
