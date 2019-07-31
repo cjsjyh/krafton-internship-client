@@ -8,11 +8,11 @@
 #include "cpuclass.h"
 #include "inputclass.h"
 #include "ApplicationClass.h"
-
+#include <windows.h>
 
 #include "systemclass.h"
 
-#include <windows.h>
+
 
 SystemClass::SystemClass()
 {
@@ -22,7 +22,10 @@ SystemClass::SystemClass()
 	m_Fps = 0;
 	m_Cpu = 0;
 
-	mouseX = mouseY = offsetX = offsetY = 0;
+	mouseX = mouseY = 0;
+	//TEMP//
+	playerCount = 2;
+	currentPlayerID = 0;
 }
 
 
@@ -209,7 +212,7 @@ bool SystemClass::Frame()
 
 	
 	
-	//mouse
+	//TEMP//
 	PlayerInfo tempPlayer;
 	tempPlayer.mouseX = mouseX;
 	tempPlayer.mouseY = mouseY;

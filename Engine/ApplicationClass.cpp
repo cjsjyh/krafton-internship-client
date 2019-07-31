@@ -33,7 +33,7 @@ ApplicationClass::ApplicationClass()
 	m_Light = 0;
 	m_UIM = 0;
 
-	player = 0;
+	//player = 0;
 	boss = 0;
 	m_GM = 0;
 	m_IM = 0;
@@ -176,31 +176,35 @@ void ApplicationClass::UninitializeBasic()
 
 void ApplicationClass::InitializePlayerParameters()
 {		
-	player->PLAYER_SPEED = m_filereader->paramFloat.find("PLAYER_SPEED")->second;
-	player->PLAYER_DASH_SPEED = m_filereader->paramFloat.find("PLAYER_DASH_SPEED")->second;
-	player->PLAYER_DASH_FRAME = m_filereader->paramInt.find("PLAYER_DASH_FRAME")->second;
-	player->PLAYER_DASH_PAUSE_FRAME = m_filereader->paramInt.find("PLAYER_DASH_PAUSE_FRAME")->second;
-	
-	player->PLAYER_BULLET_DAMAGE = m_filereader->paramInt.find("PLAYER_BULLET_DAMAGE")->second;
-	player->PLAYER_BULLET_SPEED = m_filereader->paramFloat.find("PLAYER_BULLET_SPEED")->second;
-	player->PLAYER_BULLET_DISTANCE = m_filereader->paramInt.find("PLAYER_BULLET_DISTANCE")->second;
-	player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
-	
-	player->SetHp(m_filereader->paramInt.find("PLAYER_HP")->second);
-	player->PLAYER_INTERACTION_RANGE = m_filereader->paramFloat.find("PLAYER_INTERACTION_RANGE")->second;
-	
-	D3DXVECTOR3 playerSize;
-	playerSize.x = m_filereader->paramFloat.find("PLAYER_SIZE_X")->second;
-	playerSize.y = m_filereader->paramFloat.find("PLAYER_SIZE_Y")->second;
-	playerSize.z = m_filereader->paramFloat.find("PLAYER_SIZE_Z")->second;
-	player->SetScale(playerSize);
+	//TEMP//
+	for (int i = 0; i < playerCount; i++)
+	{
+		playerclass* player = players[i];
+		player->PLAYER_SPEED = m_filereader->paramFloat.find("PLAYER_SPEED")->second;
+		player->PLAYER_DASH_SPEED = m_filereader->paramFloat.find("PLAYER_DASH_SPEED")->second;
+		player->PLAYER_DASH_FRAME = m_filereader->paramInt.find("PLAYER_DASH_FRAME")->second;
+		player->PLAYER_DASH_PAUSE_FRAME = m_filereader->paramInt.find("PLAYER_DASH_PAUSE_FRAME")->second;
 
-	D3DXVECTOR3 playerCollSize;
-	playerCollSize.x = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_X")->second;
-	playerCollSize.y = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_Y")->second;
-	playerCollSize.z = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_Z")->second;
-	player->SetCollSize(playerCollSize);
+		player->PLAYER_BULLET_DAMAGE = m_filereader->paramInt.find("PLAYER_BULLET_DAMAGE")->second;
+		player->PLAYER_BULLET_SPEED = m_filereader->paramFloat.find("PLAYER_BULLET_SPEED")->second;
+		player->PLAYER_BULLET_DISTANCE = m_filereader->paramInt.find("PLAYER_BULLET_DISTANCE")->second;
+		player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
 
+		player->SetHp(m_filereader->paramInt.find("PLAYER_HP")->second);
+		player->PLAYER_INTERACTION_RANGE = m_filereader->paramFloat.find("PLAYER_INTERACTION_RANGE")->second;
+
+		D3DXVECTOR3 playerSize;
+		playerSize.x = m_filereader->paramFloat.find("PLAYER_SIZE_X")->second;
+		playerSize.y = m_filereader->paramFloat.find("PLAYER_SIZE_Y")->second;
+		playerSize.z = m_filereader->paramFloat.find("PLAYER_SIZE_Z")->second;
+		player->SetScale(playerSize);
+
+		D3DXVECTOR3 playerCollSize;
+		playerCollSize.x = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_X")->second;
+		playerCollSize.y = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_Y")->second;
+		playerCollSize.z = m_filereader->paramFloat.find("PLAYER_COLLIDER_SIZE_Z")->second;
+		player->SetCollSize(playerCollSize);
+	}
 	return;
 }
 
@@ -245,28 +249,32 @@ void ApplicationClass::InitializeMap()
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(floor);
 	
-	
-	player = new playerclass(10, m_D3D);
-	player->SetManager(m_GM,m_IM);
-	m_GM->RegisterObjectToRender(player);
-	m_IM->SetManagers(m_GM,m_UIM,m_D3D);
+	for (int i = 0; i < playerCount; i++)
+	{
+		playerclass* player = new playerclass(10, m_D3D);
+		player->SetManager(m_GM, m_IM);
+		m_GM->RegisterObjectToRender(player);
+		m_IM->SetManagers(m_GM, m_UIM, m_D3D);
+		players.push_back(player);
+	}
+	players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
 
-	boss = new bossclass(30, 1, m_D3D, player);
+	boss = new bossclass(30, 1, m_D3D, players[0]);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
 	boss->SetGameManager(m_GM);
 	m_GM->RegisterObjectToRender(boss);
 
-	midPoint = (player->GetPosition() + boss->GetPosition()) / 2;
+	midPoint = (players[0]->GetPosition() + boss->GetPosition()) / 2;
 
 	return;
 }
 
 void ApplicationClass::UninitializeMap()
 {
-	if (player)
+
+	if (players.size() != 0)
 	{
-		delete player;
-		player = 0;
+		players.clear();
 	}
 	if (boss)
 	{
@@ -284,7 +292,8 @@ void ApplicationClass::UninitializeMap()
 
 void ApplicationClass::InitializeRewardMap(vector<string> itemNames)
 {
-	m_GM->RegisterObjectToRender(player, 1);
+	m_GM->RegisterObjectToRender(players[0], 1);
+	m_GM->RegisterObjectToRender(players[1], 1);
 
 	rewardfloor = new staticobjclass("floor", m_D3D, gameObject::NO_COLLISION,gameObject::COLLIDER_BOX);
 	((staticobjclass*)rewardfloor)->InitializeStatic3D();
@@ -383,7 +392,7 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int _mouseX, int _mouseY)
 	origin = m_Camera->GetPosition();
 
 	m_D3D->GetWorldMatrix(worldMatrix);
-	D3DXMatrixTranslation(&temp, player->GetPosition().x, player->GetPosition().y, player->GetPosition().z);
+	D3DXMatrixTranslation(&temp, players[0]->GetPosition().x, players[0]->GetPosition().y, players[0]->GetPosition().z);
 	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &temp);
 	D3DXMatrixInverse(&worldMatrix, NULL, &worldMatrix);
 
@@ -412,12 +421,14 @@ bool ApplicationClass::Frame(PlayerInfo playerInput)
 	if (m_GM->scene == 0)
 		boss->Frame(frame);
 	//player->Frame(m_Input->keyInput, m_Input->mouseInput, GetDirectionMouse(mouseX, mouseY) ,frame);
-	player->Frame(playerInput.keyInput, playerInput.mouseInput, GetDirectionMouse(playerInput.mouseX, playerInput.mouseY), frame);
+	
+	for(int i =0; i<players.size(); i++)
+		players[i]->Frame(playerInput.keyInput, playerInput.mouseInput, GetDirectionMouse(playerInput.mouseX, playerInput.mouseY), frame);
 	m_GM->Frame();
 	SetCamera(m_GM->scene);
 	
 	//PLAYER DEAD
-	if (player->CheckDestroy())
+	if (players[0]->CheckDestroy())
 	{
 		UninitializeMap();
 		UninitializeBasic();
@@ -441,9 +452,9 @@ bool ApplicationClass::Frame(PlayerInfo playerInput)
 			{
 				m_UIM->ScreenFade(1, -1, 30);
 				vector<string> itemNames;
-				player->SavePlayerPos(m_GM->scene);
-				player->SetPosition(D3DXVECTOR3(0, 0, 0));
-				player->SetDirection(1);
+				players[0]->SavePlayerPos(m_GM->scene);
+				players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
+				players[0]->SetDirection(1);
 				
 				itemNames = m_IM->ChooseItemFromPool(3,0);
 				InitializeRewardMap(itemNames);
@@ -453,7 +464,7 @@ bool ApplicationClass::Frame(PlayerInfo playerInput)
 			{
 				m_UIM->ScreenFade(1, -1, 30);
 				m_GM->scene = 0;
-				player->SetPosition(player->GetSavedPlayerPos(m_GM->scene));
+				players[0]->SetPosition(players[0]->GetSavedPlayerPos(m_GM->scene));
 
 				UninitializeRewardMap();
 			}
@@ -481,7 +492,7 @@ bool ApplicationClass::Render()
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	m_Camera->Render(player->GetPosition());
+	m_Camera->Render(players[0]->GetPosition());
 	m_Camera->GetBillBoardMatrix(MatrixToFaceCamera);
 	m_Camera->GetViewMatrix(viewMatrix);
 
@@ -536,8 +547,8 @@ void ApplicationClass::SetCamera(int scene)
 {
 	if (scene == 0)
 	{
-		m_Camera->SetViewPoint((player->GetPosition() + boss->GetPosition()) / 2);
-		float distance = stdafx::GetDistance(player->GetPosition(), boss->GetPosition());
+		m_Camera->SetViewPoint((players[0]->GetPosition() + boss->GetPosition()) / 2);
+		float distance = stdafx::GetDistance(players[0]->GetPosition(), boss->GetPosition());
 		m_Camera->Move(distance);
 	}
 	else if (scene == 1)

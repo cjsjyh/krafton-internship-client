@@ -55,6 +55,9 @@ typedef struct BossInfo {
 	float pos_z;
 };
 
+extern int playerCount;
+extern int currentPlayerID;
+
 class stdafx
 {
 public :

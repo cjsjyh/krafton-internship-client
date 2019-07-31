@@ -78,7 +78,7 @@ private:
 	LightClass* m_Light;
 	uimanagerclass* m_UIM;
 	
-	playerclass* player;
+	vector<playerclass*> players;
 	bossclass* boss;
 	gameManager* m_GM;
 	itemmanagerclass* m_IM;

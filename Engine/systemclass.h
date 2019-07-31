@@ -44,7 +44,6 @@ private:
 	CpuClass* m_Cpu;
 
 	int mouseX, mouseY;
-	int offsetX, offsetY;
 };
 
 
