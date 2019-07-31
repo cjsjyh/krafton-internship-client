@@ -92,7 +92,7 @@
     <ClCompile Include="fpsclass.cpp" />
     <ClCompile Include="gameManager.cpp" />
     <ClCompile Include="gameObject.cpp" />
-    <ClCompile Include="graphicsclass.cpp" />
+    <ClCompile Include="ApplicationClass.cpp" />
     <ClCompile Include="hpobjects.cpp" />
     <ClCompile Include="imagedecoderclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
@@ -129,7 +129,7 @@
     <ClInclude Include="fpsclass.h" />
     <ClInclude Include="gameManager.h" />
     <ClInclude Include="gameObject.h" />
-    <ClInclude Include="graphicsclass.h" />
+    <ClInclude Include="ApplicationClass.h" />
     <ClInclude Include="hpobjects.h" />
     <ClInclude Include="imagedecoderclass.h" />
     <ClInclude Include="inputclass.h" />

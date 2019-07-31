@@ -44,15 +44,21 @@ public:
 	bool IsMMouseDown(); // »Ÿ ≈¨∏Ø
 
 	bool IsEscapePressed();
+
 	bool IsKeyPressed(int);
+	static bool IsKeyPressed(int* arr, int key);
+
 	void GetMouseLocation(int&, int&);
 	void GetMouseOffset(int&, int&);
+	void GetScreenSize(int&, int&);
 
 	static bool IsWASDKeyPressed(int* arr);
-	static bool IsKeyPressed(int* arr, int key);
-	static bool MouseNotClicked(bool* mousePress);
-	static bool RightMouseClicked(bool* mousePress);
-	static bool LeftMouseClicked(bool* mousePress);
+	static bool MouseNotClicked(bool* mouseInput);
+	static bool RightMouseClicked(bool* mouseInput);
+	static bool LeftMouseClicked(bool* mouseInput);
+
+	int keyInput[10];
+	bool mouseInput[3];
 
 private:
 	bool ReadKeyboard();
@@ -67,6 +73,8 @@ private:
 	DIMOUSESTATE m_mouseState;
 	POINT cursorPos;
 	HWND hwnd;
+
+	const int keyCode[KEY_NUM] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE, DIK_LSHIFT, DIK_RETURN };
 
 	int m_screenWidth, m_screenHeight;
 	int m_mouseX, m_mouseY;

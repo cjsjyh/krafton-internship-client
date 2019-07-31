@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.cpp
+// Filename: ApplicationClass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
@@ -22,9 +22,9 @@
 #include "gameManager.h"
 #include "textfilereader.h"
 
-#include "graphicsclass.h"
+#include "ApplicationClass.h"
 
-GraphicsClass::GraphicsClass()
+ApplicationClass::ApplicationClass()
 {
 	m_filereader = 0;
 	m_D3D = 0;
@@ -48,11 +48,11 @@ GraphicsClass::GraphicsClass()
 	
 }
 
-GraphicsClass::~GraphicsClass()
+ApplicationClass::~ApplicationClass()
 {
 }
 
-bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
+bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 {
 	bool result;
 	
@@ -140,7 +140,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	return true;
 }
 
-void GraphicsClass::InitializeBasic()
+void ApplicationClass::InitializeBasic()
 {
 	// Initial camera setup
 	m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
@@ -160,7 +160,7 @@ void GraphicsClass::InitializeBasic()
 	return;
 }
 
-void GraphicsClass::UninitializeBasic()
+void ApplicationClass::UninitializeBasic()
 {
 	delete m_GM;
 	m_GM = 0;
@@ -174,7 +174,7 @@ void GraphicsClass::UninitializeBasic()
 	return;
 }
 
-void GraphicsClass::InitializePlayerParameters()
+void ApplicationClass::InitializePlayerParameters()
 {		
 	player->PLAYER_SPEED = m_filereader->paramFloat.find("PLAYER_SPEED")->second;
 	player->PLAYER_DASH_SPEED = m_filereader->paramFloat.find("PLAYER_DASH_SPEED")->second;
@@ -204,7 +204,7 @@ void GraphicsClass::InitializePlayerParameters()
 	return;
 }
 
-void GraphicsClass::InitializeBossParameters()
+void ApplicationClass::InitializeBossParameters()
 {
 	D3DXVECTOR3 bossSize;
 	bossSize.x = m_filereader->paramFloat.find("BOSS_PHASE1_SIZE_X")->second;
@@ -236,7 +236,7 @@ void GraphicsClass::InitializeBossParameters()
 	return;
 }
 
-void GraphicsClass::InitializeMap() 
+void ApplicationClass::InitializeMap() 
 {
 	floor = new staticobjclass("floor",m_D3D, gameObject::NO_COLLISION, gameObject::COLLIDER_BOX);
 	((staticobjclass*)floor)->InitializeStatic3D();
@@ -261,7 +261,7 @@ void GraphicsClass::InitializeMap()
 	return;
 }
 
-void GraphicsClass::UninitializeMap()
+void ApplicationClass::UninitializeMap()
 {
 	if (player)
 	{
@@ -282,7 +282,7 @@ void GraphicsClass::UninitializeMap()
 	return;
 }
 
-void GraphicsClass::InitializeRewardMap(vector<string> itemNames)
+void ApplicationClass::InitializeRewardMap(vector<string> itemNames)
 {
 	m_GM->RegisterObjectToRender(player, 1);
 
@@ -308,7 +308,7 @@ void GraphicsClass::InitializeRewardMap(vector<string> itemNames)
 	return;
 }
 
-void GraphicsClass::UninitializeRewardMap()
+void ApplicationClass::UninitializeRewardMap()
 {
 	for (int i = 0; i < m_GM->GetRenderObjectCount(1); i++)
 	{
@@ -319,7 +319,7 @@ void GraphicsClass::UninitializeRewardMap()
 	}
 }
 
-void GraphicsClass::Shutdown()
+void ApplicationClass::Shutdown()
 {
 	// Release the texture shader object.
 	if (m_Light)
@@ -361,7 +361,7 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-D3DXVECTOR3 GraphicsClass::GetDirectionMouse(int _mouseX, int _mouseY)
+D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int _mouseX, int _mouseY)
 {
 	D3DXVECTOR3 direction, origin, rayOrigin, rayDirection, projectedPt;
 	D3DXMATRIX projectionMatrix, viewMatrix, inverseViewMatrix, worldMatrix, temp;
@@ -397,27 +397,22 @@ D3DXVECTOR3 GraphicsClass::GetDirectionMouse(int _mouseX, int _mouseY)
 	projectedPt.z = rayOrigin.z + rayDirection.z * k;
 
 	return stdafx::normalizeVec3(projectedPt);
-	//return projectedPt;
 }
 
-bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, int fps, int cpu)
+bool ApplicationClass::Frame(PlayerInfo playerInput)
 {
 	bool result;
-	mouseX = _mouseX - screenW / 2;
-	mouseY = -(_mouseY - screenH / 2);
 
-	inputInfo input;
-	input.mouseX = mouseX;
-	input.mouseY = mouseY;
-	input.cpu = cpu;
-	input.fps = fps;
+	//mouseX = mouseX - screenW / 2;
+	//mouseY = -(mouseY - screenH / 2);
 
 	frame++;
 
 	//Frame Action
 	if (m_GM->scene == 0)
 		boss->Frame(frame);
-	player->Frame(key, mousePress, GetDirectionMouse(_mouseX, _mouseY) ,frame);
+	//player->Frame(m_Input->keyInput, m_Input->mouseInput, GetDirectionMouse(mouseX, mouseY) ,frame);
+	player->Frame(playerInput.keyInput, playerInput.mouseInput, GetDirectionMouse(playerInput.mouseX, playerInput.mouseY), frame);
 	m_GM->Frame();
 	SetCamera(m_GM->scene);
 	
@@ -437,7 +432,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	//-------------------
 	//  SCENE CHANGE
 	//-------------------
-	if (InputClass::IsKeyPressed(key, DIK_LSHIFT))
+	if (InputClass::IsKeyPressed(playerInput.keyInput, DIK_LSHIFT))
 	{
 		if (frame - last_scene_change_frame > SCENE_CHANGE_COOLTIME)
 		{
@@ -466,7 +461,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	}
 	
 	// Render the graphics scene.
-	result = Render(input);
+	result = Render();
 	if(!result)
 	{
 		return false;
@@ -475,7 +470,7 @@ bool GraphicsClass::Frame(int _mouseX, int _mouseY, bool* mousePress, int* key, 
 	return true;
 }
 
-bool GraphicsClass::Render(inputInfo input)
+bool ApplicationClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	D3DXMATRIX MatrixToFaceCamera;
@@ -527,7 +522,7 @@ bool GraphicsClass::Render(inputInfo input)
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
 
-	m_UIM->Render(input.mouseX, input.mouseY, input.fps, input.cpu);
+	m_UIM->Render();
 
 	m_D3D->TurnOffAlphaBlending();
 	m_D3D->TurnZBufferOn();
@@ -537,7 +532,7 @@ bool GraphicsClass::Render(inputInfo input)
 }
 
 
-void GraphicsClass::SetCamera(int scene)
+void ApplicationClass::SetCamera(int scene)
 {
 	if (scene == 0)
 	{

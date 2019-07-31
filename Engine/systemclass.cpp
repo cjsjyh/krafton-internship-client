@@ -7,7 +7,7 @@
 #include "fpsclass.h"
 #include "cpuclass.h"
 #include "inputclass.h"
-#include "graphicsclass.h"
+#include "ApplicationClass.h"
 
 
 #include "systemclass.h"
@@ -65,7 +65,7 @@ bool SystemClass::Initialize()
 	}
 
 	// Create the graphics object.  This object will handle rendering all the graphics for this application.
-	m_Graphics = new GraphicsClass;
+	m_Graphics = new ApplicationClass;
 	if(!m_Graphics)
 	{
 		return false;
@@ -189,11 +189,9 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
-	bool mousePress[3];
-	int keyInput[10];
-
 	m_Fps->Frame();
 	m_Cpu->Frame();
+	cout << "CPU: " + to_string(m_Cpu->GetCpuPercentage()) << " FPS: " + to_string(m_Fps->GetFps()) << endl;
 
 	// Do the input frame processing.
 	result = m_Input->Frame();
@@ -209,20 +207,19 @@ bool SystemClass::Frame()
 	m_Input->GetMouseLocation(mouseX, mouseY);
 
 
-	memset(keyInput, 0, sizeof(keyInput));
-	for (int i = 0; i < KEY_NUM; i++) {
-		if (m_Input->IsKeyPressed(keyCode[i])) {
-			keyInput[i] = keyCode[i];
-		}
-	}
+	
 	
 	//mouse
-	mousePress[0] = m_Input->IsLMouseDown();
-	mousePress[1] = m_Input->IsRMouseDown();
-	mousePress[2] = m_Input->IsMMouseDown();
+	PlayerInfo tempPlayer;
+	tempPlayer.mouseX = mouseX;
+	tempPlayer.mouseY = mouseY;
+	for (int i = 0; i < 10; i++)
+		tempPlayer.keyInput[i] = m_Input->keyInput[i];
+	for (int i = 0; i < 3; i++)
+		tempPlayer.mouseInput[i] = m_Input->mouseInput[i];
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, mousePress, keyInput, m_Fps->GetFps(), m_Cpu->GetCpuPercentage());
+	result = m_Graphics->Frame(tempPlayer);
 	if (!result)
 	{
 		return false;

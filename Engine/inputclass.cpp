@@ -163,6 +163,17 @@ bool InputClass::Frame()
 		return false;
 	}
 
+
+	memset(keyInput, 0, sizeof(keyInput));
+	for (int i = 0; i < KEY_NUM; i++) {
+		if (IsKeyPressed(keyCode[i])) {
+			keyInput[i] = keyCode[i];
+		}
+	}
+	mouseInput[0] = IsLMouseDown();
+	mouseInput[1] = IsRMouseDown();
+	mouseInput[2] = IsMMouseDown();
+
 	return true;
 }
 
@@ -227,6 +238,13 @@ void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 	return;
 }
 
+void InputClass::GetScreenSize(int& screenWidth, int& screenHeight)
+{
+	screenWidth = m_screenWidth;
+	screenHeight = m_screenHeight;
+	return;
+}
+
 bool InputClass::IsEscapePressed()
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
@@ -284,23 +302,23 @@ bool InputClass::IsMMouseDown()
 	return false;
 }
 
-bool InputClass::MouseNotClicked(bool* mousePress)
+bool InputClass::MouseNotClicked(bool* mouseInput)
 {
-	if (!mousePress[0] && !mousePress[1] && !mousePress[2])
+	if (!mouseInput[0] && !mouseInput[1] && !mouseInput[2])
 		return true;
 	return false;
 }
 
-bool InputClass::RightMouseClicked(bool* mousePress)
+bool InputClass::RightMouseClicked(bool* mouseInput)
 {
-	if (mousePress[1])
+	if (mouseInput[1])
 		return true;
 	return false;
 }
 
-bool InputClass::LeftMouseClicked(bool* mousePress)
+bool InputClass::LeftMouseClicked(bool* mouseInput)
 {
-	if (mousePress[0])
+	if (mouseInput[0])
 		return true;
 	return false;
 }

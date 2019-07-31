@@ -41,6 +41,20 @@ using namespace std;
 
 #define KEY_NUM 7
 
+typedef struct PlayerInfo {
+	int mouseX;
+	int mouseY;
+
+	bool mouseInput[3];
+	int keyInput[10];
+};
+
+typedef struct BossInfo {
+	float pos_x;
+	float pos_y;
+	float pos_z;
+};
+
 class stdafx
 {
 public :

@@ -24,7 +24,7 @@ public:
 	bool Initialize();
 	bool InitializeUI();
 
-	bool Render(int, int, int, int);
+	bool Render();
 	void SetValues(int, int, CameraClass*, gameManager*);
 	void ReplaceUI(string, string);
 	void ScreenFade(float, float, int);

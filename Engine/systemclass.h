@@ -10,7 +10,7 @@
 class FpsClass;
 class CpuClass;
 class InputClass;
-class GraphicsClass;
+class ApplicationClass;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass
@@ -39,12 +39,10 @@ private:
 	HWND m_hwnd;
 
 	InputClass* m_Input;
-	GraphicsClass* m_Graphics;
+	ApplicationClass* m_Graphics;
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
 
-	const int keyCode[KEY_NUM] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE, DIK_LSHIFT, DIK_RETURN};
-	
 	int mouseX, mouseY;
 	int offsetX, offsetY;
 };

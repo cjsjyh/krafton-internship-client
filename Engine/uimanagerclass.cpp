@@ -150,7 +150,7 @@ void uimanagerclass::ScreenFade(float startAlpha, float amount, int duration)
 void uimanagerclass::ReplaceUI(string itemName, string filename)
 {
 	int width, height, index;
-	UIinfo* uiinfo;
+	UIinfo* uiinfo = 0;
 
 	for (auto iter = parameters.begin(); iter != parameters.end(); ++iter)
 	{
@@ -169,7 +169,7 @@ void uimanagerclass::ReplaceUI(string itemName, string filename)
 	m_UI[index] = temp;
 }
 
-bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
+bool uimanagerclass::Render()
 {
 	bool result;
 	D3DXMATRIX orthoMatrix;
@@ -182,7 +182,7 @@ bool uimanagerclass::Render(int mouseX, int mouseY, int fps, int cpu)
 	D3DXMatrixIdentity(&worldMatrix);
 	device->GetOrthoMatrix(orthoMatrix);
 
-	SetUI(mouseX, mouseY, fps, cpu);
+	//SetUI(mouseX, mouseY, fps, cpu);
 	result = m_Text->Render(device->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if (!result)
 	{

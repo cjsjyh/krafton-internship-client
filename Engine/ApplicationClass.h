@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.h
+// Filename: ApplicationClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
@@ -10,7 +10,7 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 class D3DClass;
-class inputclass;
+class InputClass;
 class ModelClass;
 
 class CameraClass;
@@ -43,20 +43,18 @@ const int PLAYER_MODEL_COUNT = 8;
 const int COLL_CHECK_RATE = 10;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: GraphicsClass
+// Class name: ApplicationClass
 ////////////////////////////////////////////////////////////////////////////////
-class GraphicsClass
+class ApplicationClass
 {
 public:
 	typedef struct inputInfo {
 		int mouseX;
 		int mouseY;
-		int fps;
-		int cpu;
 	}inputInfo;
 
-	GraphicsClass();
-	~GraphicsClass();
+	ApplicationClass();
+	~ApplicationClass();
 
 	bool Initialize(int, int, HWND);
 	void InitializeBasic();
@@ -68,9 +66,8 @@ public:
 	void InitializeRewardMap(vector<string>);
 	void UninitializeRewardMap();
 	void Shutdown();
-	bool Frame(int, int, bool*, int*, int, int);
-	bool Render(inputInfo);
-
+	bool Frame(PlayerInfo);
+	bool Render();
 private:
 	D3DXVECTOR3 GetDirectionMouse(int, int);
 	void SetCamera(int);
