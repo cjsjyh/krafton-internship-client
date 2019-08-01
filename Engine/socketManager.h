@@ -2,6 +2,8 @@
 #ifndef _SOCKET_H_
 #define _SOCKET_H_
 
+#define BUFFER_SIZE 512
+
 class socketManager
 {
 public:
@@ -9,6 +11,12 @@ public:
 	~socketManager();
 private:
 	int Initialize();
+	int receiveMessage(SOCKET);
+	bool sendMessage(SOCKET);
+
+	char sendBuffer[BUFFER_SIZE];
+	char recvBuffer[BUFFER_SIZE];
+	std::vector<int> delimiterIndex;
 };
 
 #endif

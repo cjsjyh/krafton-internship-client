@@ -13,8 +13,8 @@ using namespace boost::iostreams;
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <stdlib.h>
-#include <stdio.h>
+
+#include <vector>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -116,17 +116,6 @@ int socketManager::Initialize()
 
 	freeaddrinfo(result);
 
-	//---------------------------
-	char buffer[500] = { 0, };
-	array_sink sink{ buffer };
-	stream<array_sink> os{ sink };
-
-	tst T("Tab", 31, 3.1415);
-	boost::archive::text_oarchive oa(os);
-	oa << T;
-
-	//---------------------
-
 
 	printf("Start Listening\n");
 
@@ -147,40 +136,19 @@ int socketManager::Initialize()
 		WSACleanup();
 		return 1;
 	}
+	printf("Client Conneced\n");
 	// No longer need server socket
 	closesocket(ListenSocket);
 
 
 
-	int iSendResult;
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
-
+	int count = 0;
 	// Receive until the peer shuts down the connection
 	do {
-		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+		iResult = receiveMessage(ClientSocket);
+		iResult = 1;
 		if (iResult > 0) {
-			printf("Bytes received: %d\n", iResult);
-
-			// Echo the buffer back to the sender
-			iSendResult = send(ClientSocket, buffer, strlen(buffer), 0);
-			if (iSendResult == SOCKET_ERROR) {
-				printf("send failed with error: %d\n", WSAGetLastError());
-				closesocket(ClientSocket);
-				WSACleanup();
-				return 1;
-			}
-			printf("Bytes sent: %d\n", iSendResult);
-
-			// Echo the buffer back to the sender
-			iSendResult = send(ClientSocket, buffer, strlen(buffer), 0);
-			if (iSendResult == SOCKET_ERROR) {
-				printf("send failed with error: %d\n", WSAGetLastError());
-				closesocket(ClientSocket);
-				WSACleanup();
-				return 1;
-			}
-			printf("Bytes sent: %d\n", iSendResult);
+			sendMessage(ClientSocket);
 		}
 
 		else if (iResult == 0)
@@ -192,6 +160,9 @@ int socketManager::Initialize()
 			return 1;
 		}
 
+		if (count++ > 8)
+			break;
+		iResult = 1;
 	} while (iResult > 0);
 
 	// shutdown the connection since we're done
@@ -203,8 +174,8 @@ int socketManager::Initialize()
 		return 1;
 	}
 
-	printf("%s\n", recvbuf);
-	scanf_s("%d", &iResult);
+	//printf("%s\n", recvbuf);
+	//scanf_s("%d", &iResult);
 
 	// cleanup
 	closesocket(ClientSocket);
@@ -212,4 +183,79 @@ int socketManager::Initialize()
 
 
 	return 0;
+}
+
+int socketManager::receiveMessage(SOCKET ConnectSocket)
+{
+	int iResult;
+	memset(recvBuffer, 0, sizeof(recvBuffer));
+	iResult = recv(ConnectSocket, recvBuffer, BUFFER_SIZE, 0); // returns number of bytes received or error
+	if (iResult > 0)
+	{
+		//FIND \n INDEX
+		delimiterIndex.clear();
+		for (int i = 0; i < strlen(recvBuffer); i++)
+			if (recvBuffer[i] == '\n')
+				delimiterIndex.push_back(i);
+
+		//HANDLE EACH MESSAGE BY DELIMITER
+		for (auto iter = delimiterIndex.begin(); iter != delimiterIndex.end(); iter++)
+		{
+			int messageLen = delimiterIndex[0];
+			std::stringstream ss;
+			ss.write(&(recvBuffer[*iter - messageLen]), messageLen);
+			boost::archive::text_iarchive ia(ss);
+
+			tst TT;
+			ia >> TT;
+
+			std::cout << TT.Name << std::endl;
+			std::cout << TT.age << std::endl;
+			std::cout << TT.pi << std::endl << std::endl;
+		}
+		//DESERIALIZATION FROM CHAR*
+	}
+	else if (iResult == 0)
+		printf("Connection closed\n");
+	else
+		printf("recv failed with error: %d\n", WSAGetLastError());
+
+	return iResult;
+}
+
+bool socketManager::sendMessage(SOCKET ClientSocket)
+{
+	int iSendResult;
+	memset(sendBuffer, 0, sizeof(sendBuffer));
+
+	array_sink sink{ sendBuffer };
+	stream<array_sink> os{ sink };
+
+	tst T("Tab", 31, 3.1415);
+	boost::archive::text_oarchive oa(os);
+	oa << T;
+
+	sendBuffer[strlen(sendBuffer)] = '\n';
+
+	iSendResult = send(ClientSocket, sendBuffer, strlen(sendBuffer), 0);
+	if (iSendResult == SOCKET_ERROR) {
+		printf("send failed with error: %d\n", WSAGetLastError());
+		closesocket(ClientSocket);
+		WSACleanup();
+		return false;
+	}
+	printf("Bytes sent: %d\n", iSendResult);
+
+	std::cout << sendBuffer << std::endl;
+	// Echo the buffer back to the sender
+	iSendResult = send(ClientSocket, sendBuffer, strlen(sendBuffer), 0);
+	if (iSendResult == SOCKET_ERROR) {
+		printf("send failed with error: %d\n", WSAGetLastError());
+		closesocket(ClientSocket);
+		WSACleanup();
+		return false;
+	}
+	printf("Bytes sent: %d\n", iSendResult);
+
+	return true;
 }

@@ -198,7 +198,7 @@ bool SystemClass::Frame()
 	bool result;
 	m_Fps->Frame();
 	m_Cpu->Frame();
-	cout << "CPU: " + to_string(m_Cpu->GetCpuPercentage()) << " FPS: " + to_string(m_Fps->GetFps()) << endl;
+	//cout << "CPU: " + to_string(m_Cpu->GetCpuPercentage()) << " FPS: " + to_string(m_Fps->GetFps()) << endl;
 
 	// Do the input frame processing.
 	result = m_Input->Frame();
