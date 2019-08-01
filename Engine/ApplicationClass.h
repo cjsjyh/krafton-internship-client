@@ -66,7 +66,7 @@ public:
 	void InitializeRewardMap(vector<string>);
 	void UninitializeRewardMap();
 	void Shutdown();
-	bool Frame(PlayerInfo);
+	bool Frame(PlayerInfotemp);
 	bool Render();
 private:
 	D3DXVECTOR3 GetDirectionMouse(int, int);

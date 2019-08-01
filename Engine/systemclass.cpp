@@ -213,11 +213,11 @@ bool SystemClass::Frame()
 	//keyboard
 	m_Input->GetMouseLocation(mouseX, mouseY);
 
-
+	m_Socket->Frame();
 	
 	
 	//TEMP//
-	PlayerInfo tempPlayer;
+	PlayerInfotemp tempPlayer;
 	tempPlayer.mouseX = mouseX;
 	tempPlayer.mouseY = mouseY;
 	for (int i = 0; i < 10; i++)

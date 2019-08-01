@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{6407c2b3-d8fc-40b6-839e-d49d2bbd218a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SocketProtocol">
+      <UniqueIdentifier>{d956928c-d2d2-4252-ab00-1bdfd69e883a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="inputclass.cpp">
@@ -147,6 +150,9 @@
     <ClCompile Include="socketManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="playerInfo.cpp">
+      <Filter>SocketProtocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inputclass.h">
@@ -253,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="socketManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="playerInfo.h">
+      <Filter>SocketProtocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

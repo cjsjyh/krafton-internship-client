@@ -408,7 +408,7 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int _mouseX, int _mouseY)
 	return stdafx::normalizeVec3(projectedPt);
 }
 
-bool ApplicationClass::Frame(PlayerInfo playerInput)
+bool ApplicationClass::Frame(PlayerInfotemp playerInput)
 {
 	bool result;
 

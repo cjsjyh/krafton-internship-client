@@ -13,8 +13,9 @@ using namespace boost::iostreams;
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-
 #include <vector>
+
+#include "playerInfo.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -57,7 +58,6 @@ public:
 
 socketManager::socketManager()
 {
-	
 	Initialize();
 }
 
@@ -66,122 +66,106 @@ socketManager::~socketManager()
 
 }
 
+bool socketManager::Shutdown()
+{
+	int iResult;
+	// shutdown the connection since we're done
+	iResult = shutdown(ConnectSocket, SD_SEND);
+	if (iResult == SOCKET_ERROR) {
+		printf("shutdown failed with error: %d\n", WSAGetLastError());
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return false;
+	}
+	// cleanup
+	closesocket(ConnectSocket);
+	WSACleanup();
+	return true;
+}
+
+bool socketManager::Frame()
+{
+	int iResult;
+	// Receive until the peer shuts down the connection
+	//sendMessage(ConnectSocket);
+	
+	iResult = receiveMessage(ConnectSocket);
+	
+	if (iResult > 0) {
+		std::cout << "Message Received: " + std::to_string(iResult) + " Bytes" << std::endl;
+		//sendMessage(ConnectSocket);
+	}
+
+	else if (iResult == 0)
+		printf("Connection closing...\n");
+	else {
+		printf("recv failed with error: %d\n", WSAGetLastError());
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return false;
+	}
+	return true;
+}
+
 int socketManager::Initialize()
 {
-	struct addrinfo* result = NULL;
-	struct addrinfo hints;
-	ZeroMemory(&hints, sizeof(hints));
-	hints.ai_family = AF_INET; // IPv4
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = IPPROTO_TCP; // TCP
-	hints.ai_flags = AI_PASSIVE; // 
-
-	WSADATA wsaData;
-	// Initialize Winsock
+	WSADATA wsaData; //Contains information aout the Windows Sockets implementation.
 	int iResult;
-	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData); // initiate the use of WS2_32.dll // = Winsock version 2.2 used
 	if (iResult != 0) {
 		printf("WSAStartup failed with error: %d\n", iResult);
 		return 1;
 	}
 
+	//addrinfo contains sockaddr structure
+	struct addrinfo* result = NULL,
+		* ptr = NULL,
+		hints;
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_UNSPEC; //either IPv6 or IPv4 address can be returned
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	ConnectSocket = INVALID_SOCKET;
+
 	// Resolve the server address and port
-	iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+	iResult = getaddrinfo("", DEFAULT_PORT, &hints, &result);
 	if (iResult != 0) {
 		printf("getaddrinfo failed with error: %d\n", iResult);
 		WSACleanup();
 		return 1;
 	}
 
+	// Attempt to connect to an address until one succeeds
+	for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
 
-	SOCKET ListenSocket = INVALID_SOCKET;
-	// Create a SOCKET for connecting to server
-	ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-	if (ListenSocket == INVALID_SOCKET) {
-		printf("socket failed with error: %ld\n", WSAGetLastError());
-		freeaddrinfo(result);
-		WSACleanup();
-		return 1;
-	}
-
-	// Setup the TCP listening socket
-	iResult = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
-	if (iResult == SOCKET_ERROR) {
-		printf("bind failed with error: %d\n", WSAGetLastError());
-		freeaddrinfo(result);
-		closesocket(ListenSocket);
-		WSACleanup();
-		return 1;
-	}
-
-	freeaddrinfo(result);
-
-
-	printf("Start Listening\n");
-
-	iResult = listen(ListenSocket, SOMAXCONN);
-	if (iResult == SOCKET_ERROR) {
-		printf("listen failed with error: %d\n", WSAGetLastError());
-		closesocket(ListenSocket);
-		WSACleanup();
-		return 1;
-	}
-
-	SOCKET ClientSocket = INVALID_SOCKET;
-	// Accept a client socket
-	ClientSocket = accept(ListenSocket, NULL, NULL);
-	if (ClientSocket == INVALID_SOCKET) {
-		printf("accept failed with error: %d\n", WSAGetLastError());
-		closesocket(ListenSocket);
-		WSACleanup();
-		return 1;
-	}
-	printf("Client Conneced\n");
-	// No longer need server socket
-	closesocket(ListenSocket);
-
-
-
-	int count = 0;
-	// Receive until the peer shuts down the connection
-	do {
-		iResult = receiveMessage(ClientSocket);
-		iResult = 1;
-		if (iResult > 0) {
-			sendMessage(ClientSocket);
-		}
-
-		else if (iResult == 0)
-			printf("Connection closing...\n");
-		else {
-			printf("recv failed with error: %d\n", WSAGetLastError());
-			closesocket(ClientSocket);
+		// Create a SOCKET for connecting to server
+		ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
+			ptr->ai_protocol);
+		// Validate Socket
+		if (ConnectSocket == INVALID_SOCKET) {
+			printf("socket failed with error: %ld\n", WSAGetLastError());
 			WSACleanup();
 			return 1;
 		}
 
-		if (count++ > 8)
-			break;
-		iResult = 1;
-	} while (iResult > 0);
+		// Connect to server.
+		iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+		if (iResult == SOCKET_ERROR) {
+			closesocket(ConnectSocket);
+			ConnectSocket = INVALID_SOCKET;
+			continue;
+		}
+		break;
+	}
 
-	// shutdown the connection since we're done
-	iResult = shutdown(ClientSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed with error: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
+	//Validate Socket
+	freeaddrinfo(result);
+	if (ConnectSocket == INVALID_SOCKET) {
+		printf("Unable to connect to server!\n");
 		WSACleanup();
 		return 1;
 	}
-
-	//printf("%s\n", recvbuf);
-	//scanf_s("%d", &iResult);
-
-	// cleanup
-	closesocket(ClientSocket);
-	WSACleanup();
-
-
 	return 0;
 }
 
@@ -199,19 +183,20 @@ int socketManager::receiveMessage(SOCKET ConnectSocket)
 				delimiterIndex.push_back(i);
 
 		//HANDLE EACH MESSAGE BY DELIMITER
-		for (auto iter = delimiterIndex.begin(); iter != delimiterIndex.end(); iter++)
+		int prevEnd = -1;
+		for (int i=0; i<delimiterIndex.size(); i++)
 		{
-			int messageLen = delimiterIndex[0];
+			int messageLen = delimiterIndex[i];
 			std::stringstream ss;
-			ss.write(&(recvBuffer[*iter - messageLen]), messageLen);
+			ss.write(&(recvBuffer[prevEnd+1]), delimiterIndex[i] - (prevEnd+1));
 			boost::archive::text_iarchive ia(ss);
+			prevEnd = delimiterIndex[i] + 1;
+			playerInfo pInfo;
+			ia >> pInfo;
 
-			tst TT;
-			ia >> TT;
-
-			std::cout << TT.Name << std::endl;
-			std::cout << TT.age << std::endl;
-			std::cout << TT.pi << std::endl << std::endl;
+			std::cout << "ID: " << pInfo.playerID << std::endl;
+			std::cout << "mouseX: " << pInfo.mouseX << std::endl;
+			std::cout << "mouseY: " << pInfo.mouseY << std::endl << std::endl;
 		}
 		//DESERIALIZATION FROM CHAR*
 	}
@@ -242,17 +227,7 @@ bool socketManager::sendMessage(SOCKET ClientSocket)
 		printf("send failed with error: %d\n", WSAGetLastError());
 		closesocket(ClientSocket);
 		WSACleanup();
-		return false;
-	}
-	printf("Bytes sent: %d\n", iSendResult);
-
-	std::cout << sendBuffer << std::endl;
-	// Echo the buffer back to the sender
-	iSendResult = send(ClientSocket, sendBuffer, strlen(sendBuffer), 0);
-	if (iSendResult == SOCKET_ERROR) {
-		printf("send failed with error: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		WSACleanup();
+		ClientSocket = 0;
 		return false;
 	}
 	printf("Bytes sent: %d\n", iSendResult);

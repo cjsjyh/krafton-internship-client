@@ -9,6 +9,9 @@ class socketManager
 public:
 	socketManager();
 	~socketManager();
+
+	bool Shutdown();
+	bool Frame();
 private:
 	int Initialize();
 	int receiveMessage(SOCKET);
@@ -17,6 +20,8 @@ private:
 	char sendBuffer[BUFFER_SIZE];
 	char recvBuffer[BUFFER_SIZE];
 	std::vector<int> delimiterIndex;
+
+	SOCKET ConnectSocket;
 };
 
 #endif
