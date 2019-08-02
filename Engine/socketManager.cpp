@@ -156,6 +156,9 @@ int socketManager::Initialize()
 			ConnectSocket = INVALID_SOCKET;
 			continue;
 		}
+		else {
+			std::cout << "socket connected!" << std::endl;
+		}
 		break;
 	}
 
@@ -172,33 +175,43 @@ int socketManager::Initialize()
 int socketManager::receiveMessage(SOCKET ConnectSocket)
 {
 	int iResult;
+	//First receive size of data that needs to be read
 	memset(recvBuffer, 0, sizeof(recvBuffer));
-	iResult = recv(ConnectSocket, recvBuffer, BUFFER_SIZE, 0); // returns number of bytes received or error
+	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
 	if (iResult > 0)
 	{
-		//FIND \n INDEX
-		delimiterIndex.clear();
-		for (int i = 0; i < strlen(recvBuffer); i++)
-			if (recvBuffer[i] == '\n')
-				delimiterIndex.push_back(i);
-
-		//HANDLE EACH MESSAGE BY DELIMITER
-		int prevEnd = -1;
-		for (int i=0; i<delimiterIndex.size(); i++)
+		std::cout << "count: " + std::to_string(count++) << std::endl;
+		//read to know how many bytes to receive
+		int msgLen = std::stoi(recvBuffer);
+		memset(recvBuffer, 0, sizeof(recvBuffer));
+		//read real messages
+		iResult = recv(ConnectSocket, recvBuffer, msgLen, 0); // returns number of bytes received or error
+		if (iResult > 0)
 		{
-			int messageLen = delimiterIndex[i];
-			std::stringstream ss;
-			ss.write(&(recvBuffer[prevEnd+1]), delimiterIndex[i] - (prevEnd+1));
-			boost::archive::text_iarchive ia(ss);
-			prevEnd = delimiterIndex[i] + 1;
-			playerInfo pInfo;
-			ia >> pInfo;
+			//FIND \n INDEX
+			delimiterIndex.clear();
+			for (int i = 0; i < strlen(recvBuffer); i++)
+				if (recvBuffer[i] == '\n')
+					delimiterIndex.push_back(i);
 
-			std::cout << "ID: " << pInfo.playerID << std::endl;
-			std::cout << "mouseX: " << pInfo.mouseX << std::endl;
-			std::cout << "mouseY: " << pInfo.mouseY << std::endl << std::endl;
+			//HANDLE EACH MESSAGE BY DELIMITER
+			int prevEnd = -1;
+			for (int i = 0; i < delimiterIndex.size(); i++)
+			{
+				int messageLen = delimiterIndex[i];
+				std::stringstream ss;
+				ss.write(&(recvBuffer[prevEnd + 1]), delimiterIndex[i] - (prevEnd + 1));
+				boost::archive::text_iarchive ia(ss);
+				prevEnd = delimiterIndex[i] + 1;
+				playerInfo pInfo;
+				ia >> pInfo;
+
+				std::cout << "ID: " << pInfo.playerID << std::endl;
+				std::cout << "mouseX: " << pInfo.mouseX << std::endl;
+				std::cout << "mouseY: " << pInfo.mouseY << std::endl << std::endl;
+			}
+			//DESERIALIZATION FROM CHAR*
 		}
-		//DESERIALIZATION FROM CHAR*
 	}
 	else if (iResult == 0)
 		printf("Connection closed\n");
@@ -208,7 +221,7 @@ int socketManager::receiveMessage(SOCKET ConnectSocket)
 	return iResult;
 }
 
-bool socketManager::sendMessage(SOCKET ClientSocket)
+int socketManager::sendMessage(SOCKET ClientSocket)
 {
 	int iSendResult;
 	memset(sendBuffer, 0, sizeof(sendBuffer));
@@ -216,21 +229,30 @@ bool socketManager::sendMessage(SOCKET ClientSocket)
 	array_sink sink{ sendBuffer };
 	stream<array_sink> os{ sink };
 
-	tst T("Tab", 31, 3.1415);
+	bool tempBool[] = { true, false, false };
+	int tempInt[10];
+	tempInt[0] = 0x11;
+	playerInfo T(1, 100, 100, tempBool, tempInt);
+
+
 	boost::archive::text_oarchive oa(os);
 	oa << T;
-
 	sendBuffer[strlen(sendBuffer)] = '\n';
+
+	std::string msgLen = std::to_string(strlen(sendBuffer));
+	const char* msgLenChar = msgLen.c_str();
+	iSendResult = send(ClientSocket, msgLenChar, sizeof(int), 0);
 
 	iSendResult = send(ClientSocket, sendBuffer, strlen(sendBuffer), 0);
 	if (iSendResult == SOCKET_ERROR) {
 		printf("send failed with error: %d\n", WSAGetLastError());
 		closesocket(ClientSocket);
 		WSACleanup();
-		ClientSocket = 0;
-		return false;
+		return -1;
 	}
+
+	std::cout << sendBuffer << std::endl;
 	printf("Bytes sent: %d\n", iSendResult);
 
-	return true;
+	return iSendResult;
 }

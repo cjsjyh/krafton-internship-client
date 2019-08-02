@@ -15,13 +15,14 @@ public:
 private:
 	int Initialize();
 	int receiveMessage(SOCKET);
-	bool sendMessage(SOCKET);
+	int sendMessage(SOCKET);
 
 	char sendBuffer[BUFFER_SIZE];
 	char recvBuffer[BUFFER_SIZE];
 	std::vector<int> delimiterIndex;
 
 	SOCKET ConnectSocket;
+	int count=0;
 };
 
 #endif

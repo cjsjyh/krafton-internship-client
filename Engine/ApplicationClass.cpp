@@ -428,7 +428,7 @@ bool ApplicationClass::Frame(PlayerInfotemp playerInput)
 	SetCamera(m_GM->scene);
 	
 	//PLAYER DEAD
-	if (players[0]->CheckDestroy())
+	if (players[0]->CheckDestroy() || boss->CheckDestroy())
 	{
 		UninitializeMap();
 		UninitializeBasic();
