@@ -37,6 +37,8 @@ using namespace DirectX;
 #include "iostream"
 using namespace std;
 
+
+
 #define TO_RADIAN 0.0174532925f
 
 #define KEY_NUM 7

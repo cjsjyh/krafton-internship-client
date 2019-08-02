@@ -4,18 +4,14 @@
 
 #include <iostream>
 #include <sstream>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/iostreams/device/array.hpp>
-#include <boost/iostreams/stream.hpp>
-using namespace boost::iostreams;
 
 #include <windows.h>
+
+
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <vector>
 
-#include "playerInfo.h"
+//#include "playerInfo.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -26,38 +22,9 @@ using namespace boost::iostreams;
 
 #include "socketManager.h"
 
-class tst {
-public:
-	friend class boost::serialization::access;
-
-	tst(std::string sName, int sage, float spi)
-		:Name(sName), age(sage), pi(spi)
-	{}
-
-	tst() {
-	}
-
-	~tst() {
-
-	}
-
-	std::string Name;
-	int age;
-	float pi;
-
-	template<class Archive>
-	void serialize(Archive& ar, const unsigned int version) {
-		ar& Name;
-		ar& age;
-		ar& pi;
-	}
-
-
-};
-
-
 socketManager::socketManager()
 {
+	//pInfo = 0;
 	Initialize();
 }
 
@@ -203,7 +170,11 @@ int socketManager::receiveMessage(SOCKET ConnectSocket)
 				ss.write(&(recvBuffer[prevEnd + 1]), delimiterIndex[i] - (prevEnd + 1));
 				boost::archive::text_iarchive ia(ss);
 				prevEnd = delimiterIndex[i] + 1;
-				playerInfo pInfo;
+
+				//if (pInfo)
+				//	delete pInfo;
+				//pInfo = new playerInfo();
+				//playerInfo pInfo;
 				ia >> pInfo;
 
 				std::cout << "ID: " << pInfo.playerID << std::endl;
@@ -229,7 +200,9 @@ int socketManager::sendMessage(SOCKET ClientSocket)
 	array_sink sink{ sendBuffer };
 	stream<array_sink> os{ sink };
 
-	bool tempBool[] = { true, false, false };
+	bool tempBool[3];
+	for (int i = 0; i < 3; i++)
+		tempBool[i] = true;
 	int tempInt[10];
 	tempInt[0] = 0x11;
 	playerInfo T(1, 100, 100, tempBool, tempInt);
@@ -256,3 +229,5 @@ int socketManager::sendMessage(SOCKET ClientSocket)
 
 	return iSendResult;
 }
+
+

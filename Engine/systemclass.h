@@ -12,6 +12,7 @@ class CpuClass;
 class InputClass;
 class ApplicationClass;
 class socketManager;
+class playerInfo;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass

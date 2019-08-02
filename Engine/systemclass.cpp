@@ -8,8 +8,11 @@
 #include "cpuclass.h"
 #include "inputclass.h"
 #include "ApplicationClass.h"
-#include "socketManager.h"
+
 #include <windows.h>
+
+#include "socketManager.h"
+//#include "playerInfo.h"
 
 #include "systemclass.h"
 
@@ -223,7 +226,8 @@ bool SystemClass::Frame()
 	for (int i = 0; i < 10; i++)
 		tempPlayer.keyInput[i] = m_Input->keyInput[i];
 	for (int i = 0; i < 3; i++)
-		tempPlayer.mouseInput[i] = m_Input->mouseInput[i];
+		tempPlayer.mouseInput[i] = m_Socket->pInfo.mouseInput[i];
+		//tempPlayer.mouseInput[i] = m_Input->mouseInput[i];
 
 	// Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(tempPlayer);
@@ -231,7 +235,7 @@ bool SystemClass::Frame()
 	{
 		return false;
 	}
-
+	
 	return true;
 }
 
