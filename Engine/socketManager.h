@@ -56,7 +56,7 @@ public:
 	~socketManager();
 
 	bool Shutdown();
-	bool Frame();
+	bool Frame(bool);
 
 	playerInfo pInfo;
 	int testete;

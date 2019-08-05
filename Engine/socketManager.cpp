@@ -50,21 +50,29 @@ bool socketManager::Shutdown()
 	return true;
 }
 
-bool socketManager::Frame()
+bool socketManager::Frame(bool IsKeyChanged)
 {
-	int iResult;
+	int iResult = 0 ;
 	// Receive until the peer shuts down the connection
 	//sendMessage(ConnectSocket);
 	
-	iResult = receiveMessage(ConnectSocket);
-	
+	if (IsKeyChanged)
+	{
+		std::cout << "Key changed!" << std::endl;
+		iResult = sendMessage(ConnectSocket);
+		iResult = receiveMessage(ConnectSocket);
+	}
+	else {
+		std::cout << "Key Same!" << std::endl;
+	}
+
 	if (iResult > 0) {
 		std::cout << "Message Received: " + std::to_string(iResult) + " Bytes" << std::endl;
 		//sendMessage(ConnectSocket);
 	}
 
 	else if (iResult == 0)
-		printf("Connection closing...\n");
+		printf("Nothing received...\n");
 	else {
 		printf("recv failed with error: %d\n", WSAGetLastError());
 		closesocket(ConnectSocket);

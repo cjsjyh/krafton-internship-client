@@ -133,7 +133,7 @@ void InputClass::Shutdown()
 }
 
 
-bool InputClass::Frame()
+bool InputClass::Frame(bool& IsKeyChanged)
 {
 	bool result;
 	GetCursorPos(&cursorPos);
@@ -163,7 +163,6 @@ bool InputClass::Frame()
 		return false;
 	}
 
-
 	memset(keyInput, 0, sizeof(keyInput));
 	for (int i = 0; i < KEY_NUM; i++) {
 		if (IsKeyPressed(keyCode[i])) {
@@ -173,6 +172,25 @@ bool InputClass::Frame()
 	mouseInput[0] = IsLMouseDown();
 	mouseInput[1] = IsRMouseDown();
 	mouseInput[2] = IsMMouseDown();
+
+	//COMPARE WITH PREVIOUS INPUT AND SET
+	IsKeyChanged = false;
+	for (int i = 0; i < KEY_NUM; i++) {
+		if (keyInput[i] != prevkeyInput[i])
+		{
+			IsKeyChanged = true;
+			prevkeyInput[i] = keyInput[i];
+		}
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		if (mouseInput[i] != prevmouseInput[i])
+		{
+			IsKeyChanged = true;
+			prevmouseInput[i] = mouseInput[i];
+		}
+	}
+
 
 	return true;
 }

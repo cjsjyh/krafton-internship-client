@@ -199,12 +199,13 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
+	bool IsKeyChanged;
 	m_Fps->Frame();
 	m_Cpu->Frame();
 	//cout << "CPU: " + to_string(m_Cpu->GetCpuPercentage()) << " FPS: " + to_string(m_Fps->GetFps()) << endl;
 
 	// Do the input frame processing.
-	result = m_Input->Frame();
+	result = m_Input->Frame(IsKeyChanged);
 	if (!result)
 	{
 		return false;
@@ -216,7 +217,7 @@ bool SystemClass::Frame()
 	//keyboard
 	m_Input->GetMouseLocation(mouseX, mouseY);
 
-	m_Socket->Frame();
+	m_Socket->Frame(IsKeyChanged);
 	
 	
 	//TEMP//

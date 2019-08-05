@@ -37,7 +37,7 @@ public:
 
 	bool Initialize(HINSTANCE, HWND, int, int);
 	void Shutdown();
-	bool Frame();
+	bool Frame(bool&);
 
 	bool IsLMouseDown(); // 왼쪽 클릭
 	bool IsRMouseDown(); // 오른쪽 클릭
@@ -58,7 +58,10 @@ public:
 	static bool LeftMouseClicked(bool* mouseInput);
 
 	int keyInput[10];
+	int prevkeyInput[10];
+
 	bool mouseInput[3];
+	bool prevmouseInput[3];
 
 private:
 	bool ReadKeyboard();
