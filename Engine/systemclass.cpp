@@ -3,16 +3,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
-
 #include "fpsclass.h"
 #include "cpuclass.h"
 #include "inputclass.h"
 #include "ApplicationClass.h"
+#include "socketManager.h"
 
 #include <windows.h>
-
-#include "socketManager.h"
-//#include "playerInfo.h"
 
 #include "systemclass.h"
 
@@ -107,6 +104,12 @@ bool SystemClass::Initialize()
 	m_Cpu->Initialize();
 
 	m_Socket = new socketManager();
+	if (!m_Socket)
+	{
+		std::cout << "Socket not initialized properly" << std::endl;
+		return false;
+	}
+	m_Socket->Initialize();
 
 	return true;
 }
@@ -217,18 +220,16 @@ bool SystemClass::Frame()
 	//keyboard
 	m_Input->GetMouseLocation(mouseX, mouseY);
 
-	m_Socket->Frame(IsKeyChanged);
-	
+	m_Socket->Frame(IsKeyChanged, WrapInput());
 	
 	//TEMP//
 	PlayerInfotemp tempPlayer;
-	tempPlayer.mouseX = mouseX;
-	tempPlayer.mouseY = mouseY;
+	tempPlayer.mouseX = m_Socket->playerInput[m_Socket->playerId].mouseX;
+	tempPlayer.mouseY = m_Socket->playerInput[m_Socket->playerId].mouseY;
 	for (int i = 0; i < 10; i++)
-		tempPlayer.keyInput[i] = m_Input->keyInput[i];
+		tempPlayer.keyInput[i] = m_Socket->playerInput[m_Socket->playerId].keyInput[i];
 	for (int i = 0; i < 3; i++)
-		tempPlayer.mouseInput[i] = m_Socket->pInfo.mouseInput[i];
-		//tempPlayer.mouseInput[i] = m_Input->mouseInput[i];
+		tempPlayer.mouseInput[i] = m_Socket->playerInput[m_Socket->playerId].mouseInput[i];
 
 	// Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(tempPlayer);
@@ -238,6 +239,20 @@ bool SystemClass::Frame()
 	}
 	
 	return true;
+}
+
+playerInfo SystemClass::WrapInput()
+{
+	playerInfo temp;
+	for (int i = 0; i < sizeof(temp.keyInput)/sizeof(int); i++)
+		temp.keyInput[i] = m_Input->keyInput[i];
+	for (int i = 0; i < sizeof(temp.mouseInput); i++)
+		temp.mouseInput[i] = m_Input->mouseInput[i];
+	temp.mouseX = mouseX;
+	temp.mouseY = mouseY;
+	temp.playerId = m_Socket->playerId;
+
+	return temp;
 }
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)

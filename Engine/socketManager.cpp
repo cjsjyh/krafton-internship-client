@@ -1,31 +1,25 @@
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
+#define DEFAULT_BUFLEN 512
+#define DEFAULT_PORT "27015"
 
 #include <iostream>
 #include <sstream>
 
-#include <windows.h>
-
-
 #include <winsock2.h>
+#include <windows.h>
 #include <ws2tcpip.h>
-
-//#include "playerInfo.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
-
-#define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "27015"
-
 #include "socketManager.h"
+
 
 socketManager::socketManager()
 {
-	//pInfo = 0;
-	Initialize();
+	//m_Input = 0;
 }
 
 socketManager::~socketManager()
@@ -50,7 +44,7 @@ bool socketManager::Shutdown()
 	return true;
 }
 
-bool socketManager::Frame(bool IsKeyChanged)
+bool socketManager::Frame(bool IsKeyChanged,playerInfo playerInput)
 {
 	int iResult = 0 ;
 	// Receive until the peer shuts down the connection
@@ -59,7 +53,7 @@ bool socketManager::Frame(bool IsKeyChanged)
 	if (IsKeyChanged)
 	{
 		std::cout << "Key changed!" << std::endl;
-		iResult = sendMessage(ConnectSocket);
+		iResult = sendMessage(ConnectSocket, playerInput);
 		iResult = receiveMessage(ConnectSocket);
 	}
 	else {
@@ -84,6 +78,8 @@ bool socketManager::Frame(bool IsKeyChanged)
 
 int socketManager::Initialize()
 {
+	//m_Input = _m_Input;
+
 	WSADATA wsaData; //Contains information aout the Windows Sockets implementation.
 	int iResult;
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData); // initiate the use of WS2_32.dll // = Winsock version 2.2 used
@@ -132,7 +128,7 @@ int socketManager::Initialize()
 			continue;
 		}
 		else {
-			std::cout << "socket connected!" << std::endl;
+			std::cout << "socket connected!" << std::endl;	
 		}
 		break;
 	}
@@ -144,6 +140,17 @@ int socketManager::Initialize()
 		WSACleanup();
 		return 1;
 	}
+
+	//SET CLIENT ID
+	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
+	playerId = std::stoi(recvBuffer);
+	std::cout << "Client ID: " + std::to_string(playerId) << std::endl;
+	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
+	{
+		playerInfo tempPlayer;
+		playerInput.push_back(tempPlayer);
+	}
+
 	return 0;
 }
 
@@ -184,12 +191,14 @@ int socketManager::receiveMessage(SOCKET ConnectSocket)
 				//pInfo = new playerInfo();
 				//playerInfo pInfo;
 				ia >> pInfo;
-
-				std::cout << "ID: " << pInfo.playerID << std::endl;
-				std::cout << "mouseX: " << pInfo.mouseX << std::endl;
-				std::cout << "mouseY: " << pInfo.mouseY << std::endl << std::endl;
+				
+				playerInput[pInfo.playerId].mouseX = pInfo.mouseX;
+				playerInput[pInfo.playerId].mouseY = pInfo.mouseY;
+				for(int i=0;i<sizeof(pInfo.keyInput)/sizeof(int);i++)
+					playerInput[pInfo.playerId].keyInput[i] = pInfo.keyInput[i];
+				for(int i=0;i<sizeof(pInfo.mouseInput);i++)
+					playerInput[pInfo.playerId].mouseInput[i] = pInfo.mouseInput[i];
 			}
-			//DESERIALIZATION FROM CHAR*
 		}
 	}
 	else if (iResult == 0)
@@ -200,7 +209,7 @@ int socketManager::receiveMessage(SOCKET ConnectSocket)
 	return iResult;
 }
 
-int socketManager::sendMessage(SOCKET ClientSocket)
+int socketManager::sendMessage(SOCKET ClientSocket, playerInfo input)
 {
 	int iSendResult;
 	memset(sendBuffer, 0, sizeof(sendBuffer));
@@ -208,16 +217,16 @@ int socketManager::sendMessage(SOCKET ClientSocket)
 	array_sink sink{ sendBuffer };
 	stream<array_sink> os{ sink };
 
-	bool tempBool[3];
+	/*bool tempBool[3];
 	for (int i = 0; i < 3; i++)
 		tempBool[i] = true;
 	int tempInt[10];
-	tempInt[0] = 0x11;
-	playerInfo T(1, 100, 100, tempBool, tempInt);
+	tempInt[0] = 0x11;*/
+	//playerInfo T(playerId, 100, 100, tempBool, tempInt);
 
 
 	boost::archive::text_oarchive oa(os);
-	oa << T;
+	oa << input;
 	sendBuffer[strlen(sendBuffer)] = '\n';
 
 	std::string msgLen = std::to_string(strlen(sendBuffer));

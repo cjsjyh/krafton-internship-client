@@ -1,11 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: systemclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _SYSTEMCLASS_H_
 #define _SYSTEMCLASS_H_
 
 #define WIN32_LEAN_AND_MEAN
-
 
 class FpsClass;
 class CpuClass;
@@ -14,9 +10,6 @@ class ApplicationClass;
 class socketManager;
 class playerInfo;
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: SystemClass
-////////////////////////////////////////////////////////////////////////////////
 class SystemClass
 {
 public:
@@ -34,7 +27,7 @@ private:
 	bool Frame();
 	void InitializeWindows(int&, int&, int&, int&);
 	void ShutdownWindows();
-
+	playerInfo WrapInput();
 private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;

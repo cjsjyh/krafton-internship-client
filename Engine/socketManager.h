@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _SOCKET_H_
-#define _SOCKET_H_
+#ifndef _SOCKETMANAGER_H_
+#define _SOCKETMANAGER_H_
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -9,7 +9,12 @@
 #include <boost/iostreams/stream.hpp>
 using namespace boost::iostreams;
 
+
+
 #define BUFFER_SIZE 512
+#define MAX_PLAYER_COUNT 2
+
+//class InputClass;
 
 class playerInfo
 {
@@ -17,8 +22,8 @@ class playerInfo
 public:
 	friend class boost::serialization::access;
 
-	playerInfo(int _playerID, int _mouseX, int _mouseY, bool* _mouseInput, int* _keyInput)
-		:playerID(_playerID), mouseX(_mouseX), mouseY(_mouseY)
+	playerInfo(int _playerId, int _mouseX, int _mouseY, bool* _mouseInput, int* _keyInput)
+		:playerId(_playerId), mouseX(_mouseX), mouseY(_mouseY)
 	{
 		for (int i = 0; i < sizeof(_mouseInput); i++)
 			mouseInput[i] = _mouseInput[i];
@@ -32,7 +37,7 @@ public:
 	~playerInfo() {
 
 	}
-	int playerID;
+	int playerId;
 	int mouseX;
 	int mouseY;
 
@@ -41,7 +46,7 @@ public:
 
 	template<class Archive>
 	void serialize(Archive& ar, const unsigned int version) {
-		ar& playerID;
+		ar& playerId;
 		ar& mouseX;
 		ar& mouseY;
 		ar& mouseInput;
@@ -55,25 +60,28 @@ public:
 	socketManager();
 	~socketManager();
 
-	bool Shutdown();
-	bool Frame(bool);
-
-	playerInfo pInfo;
-	int testete;
-private:
 	int Initialize();
+	bool Shutdown();
+	bool Frame(bool,playerInfo);
+
+	int playerId;
+	playerInfo pInfo;
+	std::vector<playerInfo> playerInput;
+private:
+	
 	int receiveMessage(SOCKET);
-	int sendMessage(SOCKET);
+	int sendMessage(SOCKET, playerInfo);
 
 	char sendBuffer[BUFFER_SIZE];
 	char recvBuffer[BUFFER_SIZE];
 	std::vector<int> delimiterIndex;
+	
+
 
 	SOCKET ConnectSocket;
+	//InputClass* m_Input;
 	int count=0;
 };
-
-
 
 
 #endif
