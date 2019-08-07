@@ -28,6 +28,12 @@ SystemClass::SystemClass()
 	playerCount = 2;
 	currentPlayerID = 0;
 	m_Socket = 0;
+
+	tempPlayer.mouseX = tempPlayer.mouseY = 0;
+	for (int i = 0; i < 10; i++)
+		tempPlayer.keyInput[i] = 0;
+	for (int i = 0; i < 3; i++)
+		tempPlayer.mouseInput[i] = false;
 }
 
 
@@ -223,13 +229,17 @@ bool SystemClass::Frame()
 	m_Socket->Frame(IsKeyChanged, WrapInput());
 	
 	//TEMP//
-	PlayerInfotemp tempPlayer;
-	tempPlayer.mouseX = m_Socket->playerInput[m_Socket->playerId].mouseX;
-	tempPlayer.mouseY = m_Socket->playerInput[m_Socket->playerId].mouseY;
-	for (int i = 0; i < 10; i++)
-		tempPlayer.keyInput[i] = m_Socket->playerInput[m_Socket->playerId].keyInput[i];
-	for (int i = 0; i < 3; i++)
-		tempPlayer.mouseInput[i] = m_Socket->playerInput[m_Socket->playerId].mouseInput[i];
+	playerInfo* pInfo = m_Socket->GetNewMessage();
+	if (pInfo != NULL)
+	{
+		tempPlayer.mouseX = pInfo->mouseX;
+		tempPlayer.mouseY = pInfo->mouseY;
+		for (int i = 0; i < 10; i++)
+			tempPlayer.keyInput[i] = pInfo->keyInput[i];
+		for (int i = 0; i < 3; i++)
+			tempPlayer.mouseInput[i] = pInfo->mouseInput[i];
+	}
+	
 
 	// Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(tempPlayer);

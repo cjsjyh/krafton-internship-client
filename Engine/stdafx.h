@@ -44,7 +44,7 @@ using namespace std;
 #define KEY_NUM 7
 
 
-typedef struct PlayerInfotemp {
+typedef struct playerInfoStruct {
 	int playerID;
 	int mouseX;
 	int mouseY;

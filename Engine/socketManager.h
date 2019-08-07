@@ -2,6 +2,10 @@
 #ifndef _SOCKETMANAGER_H_
 #define _SOCKETMANAGER_H_
 
+#include <mutex>
+#include <thread>
+#include <queue>
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
@@ -62,21 +66,27 @@ public:
 
 	int Initialize();
 	bool Shutdown();
+	
 	bool Frame(bool,playerInfo);
+	playerInfo* GetNewMessage();
 
+public:
 	int playerId;
 	playerInfo pInfo;
-	std::vector<playerInfo> playerInput;
-private:
-	
-	int receiveMessage(SOCKET);
-	int sendMessage(SOCKET, playerInfo);
+	std::queue<playerInfo*> serverReadBuffer;
 
+private:
+	void ListenToServer();
+	playerInfo* receiveMessage(SOCKET);
+	int sendMessage(SOCKET, playerInfo);
+	void CopyPlayerInfo(playerInfo*, playerInfo*);
+
+private:
 	char sendBuffer[BUFFER_SIZE];
 	char recvBuffer[BUFFER_SIZE];
 	std::vector<int> delimiterIndex;
 	
-
+	std::mutex* threadLock;
 
 	SOCKET ConnectSocket;
 	//InputClass* m_Input;

@@ -19,61 +19,13 @@
 
 socketManager::socketManager()
 {
+	threadLock = new std::mutex;
 	//m_Input = 0;
 }
 
 socketManager::~socketManager()
 {
 
-}
-
-bool socketManager::Shutdown()
-{
-	int iResult;
-	// shutdown the connection since we're done
-	iResult = shutdown(ConnectSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed with error: %d\n", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-		return false;
-	}
-	// cleanup
-	closesocket(ConnectSocket);
-	WSACleanup();
-	return true;
-}
-
-bool socketManager::Frame(bool IsKeyChanged,playerInfo playerInput)
-{
-	int iResult = 0 ;
-	// Receive until the peer shuts down the connection
-	//sendMessage(ConnectSocket);
-	
-	if (IsKeyChanged)
-	{
-		std::cout << "Key changed!" << std::endl;
-		iResult = sendMessage(ConnectSocket, playerInput);
-		iResult = receiveMessage(ConnectSocket);
-	}
-	else {
-		std::cout << "Key Same!" << std::endl;
-	}
-
-	if (iResult > 0) {
-		std::cout << "Message Received: " + std::to_string(iResult) + " Bytes" << std::endl;
-		//sendMessage(ConnectSocket);
-	}
-
-	else if (iResult == 0)
-		printf("Nothing received...\n");
-	else {
-		printf("recv failed with error: %d\n", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-		return false;
-	}
-	return true;
 }
 
 int socketManager::Initialize()
@@ -128,7 +80,7 @@ int socketManager::Initialize()
 			continue;
 		}
 		else {
-			std::cout << "socket connected!" << std::endl;	
+			std::cout << "socket connected!" << std::endl;
 		}
 		break;
 	}
@@ -140,22 +92,139 @@ int socketManager::Initialize()
 		WSACleanup();
 		return 1;
 	}
-
 	//SET CLIENT ID
 	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
 	playerId = std::stoi(recvBuffer);
-	std::cout << "Client ID: " + std::to_string(playerId) << std::endl;
-	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
-	{
-		playerInfo tempPlayer;
-		playerInput.push_back(tempPlayer);
-	}
+	//Set Dummy for initial value
+	playerInfo* tempPlayer = new playerInfo;
+	serverReadBuffer.push(tempPlayer);
+
+	std::thread t1([&]() {ListenToServer();});
+	t1.detach();
 
 	return 0;
 }
 
-int socketManager::receiveMessage(SOCKET ConnectSocket)
+bool socketManager::Shutdown()
 {
+	int iResult;
+	// shutdown the connection since we're done
+	iResult = shutdown(ConnectSocket, SD_SEND);
+	if (iResult == SOCKET_ERROR) {
+		printf("shutdown failed with error: %d\n", WSAGetLastError());
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return false;
+	}
+	// cleanup
+	closesocket(ConnectSocket);
+	WSACleanup();
+	return true;
+}
+
+bool socketManager::Frame(bool IsKeyChanged,playerInfo playerInput)
+{
+	int iResult = 0 ;
+	// Receive until the peer shuts down the connection
+	//sendMessage(ConnectSocket);
+	
+	if (IsKeyChanged)
+	{
+		//std::cout << "Key changed!" << std::endl;
+		iResult = sendMessage(ConnectSocket, playerInput);
+		//iResult = receiveMessage(ConnectSocket);
+	}
+	return true;
+}
+
+void socketManager::ListenToServer()
+{
+	bool flag = true;
+	while (flag)
+	{
+		std::cout << "Listening" << std::endl;
+		playerInfo* tempMsg = receiveMessage(ConnectSocket);
+		if (tempMsg == NULL)
+		{
+			printf("Receive Failed. terminating thread");
+			flag = false;
+		}
+		else 
+		{
+			threadLock->lock();
+			serverReadBuffer.push(tempMsg);
+			threadLock->unlock();
+		}
+	}
+}
+
+playerInfo* socketManager::GetNewMessage()
+{
+	if (serverReadBuffer.size() > 0)
+	{
+		threadLock->lock();
+		playerInfo* tempMsg = serverReadBuffer.front();
+		serverReadBuffer.pop();
+		threadLock->unlock();
+		return tempMsg;
+	}
+	else
+		return NULL;
+}
+
+playerInfo* socketManager::receiveMessage(SOCKET ConnectSocket)
+{
+	int iResult;
+	playerInfo* pInfoPtr = new playerInfo;
+	playerInfo pInfo;
+
+	//First receive size of data that needs to be read
+	memset(recvBuffer, 0, sizeof(recvBuffer));
+	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
+	if (iResult > 0)
+	{
+		//read to know how many bytes to receive
+		int msgLen = std::stoi(recvBuffer);
+		memset(recvBuffer, 0, sizeof(recvBuffer));
+
+		//read real messages
+		iResult = recv(ConnectSocket, recvBuffer, msgLen, 0); // returns number of bytes received or error
+		if (iResult > 0)
+		{
+			//FIND \n INDEX
+			delimiterIndex.clear();
+			for (int i = 0; i < strlen(recvBuffer); i++)
+				if (recvBuffer[i] == '\n')
+					delimiterIndex.push_back(i);
+
+			//HANDLE EACH MESSAGE BY DELIMITER
+			int prevEnd = -1;
+			for (int i = 0; i < delimiterIndex.size(); i++)
+			{
+				int messageLen = delimiterIndex[i];
+				std::stringstream ss;
+				ss.write(&(recvBuffer[prevEnd + 1]), delimiterIndex[i] - (prevEnd + 1));
+				boost::archive::text_iarchive ia(ss);
+				prevEnd = delimiterIndex[i] + 1;
+
+				//playerInfo pInfo;
+				ia >> pInfo;
+				CopyPlayerInfo(pInfoPtr, &pInfo);
+				std::cout << "[recv]ID: " << pInfoPtr->playerId << std::endl;
+				std::cout << "[recv]mouseX: " << pInfoPtr->mouseX << std::endl;
+				std::cout << "[recv]mouseY: " << pInfoPtr->mouseY << std::endl << std::endl;
+			}
+		}
+		return pInfoPtr;
+	}
+	else
+	{
+		printf("recv failed with error: %d\n", WSAGetLastError());
+		return NULL;
+	}
+
+	return NULL;
+	/*
 	int iResult;
 	//First receive size of data that needs to be read
 	memset(recvBuffer, 0, sizeof(recvBuffer));
@@ -207,6 +276,7 @@ int socketManager::receiveMessage(SOCKET ConnectSocket)
 		printf("recv failed with error: %d\n", WSAGetLastError());
 
 	return iResult;
+	*/
 }
 
 int socketManager::sendMessage(SOCKET ClientSocket, playerInfo input)
@@ -247,4 +317,14 @@ int socketManager::sendMessage(SOCKET ClientSocket, playerInfo input)
 	return iSendResult;
 }
 
+void socketManager::CopyPlayerInfo(playerInfo* dest, playerInfo* src)
+{
+	for (int i = 0; i < sizeof(src->keyInput) / sizeof(int); i++)
+		dest->keyInput[i] = src->keyInput[i];
+	for (int i = 0; i < sizeof(src->mouseInput); i++)
+		dest->mouseInput[i] = src->mouseInput[i];
+	dest->mouseX = src->mouseX;
+	dest->mouseY = src->mouseY;
+	dest->playerId = src->playerId;
+}
 
