@@ -287,14 +287,6 @@ int socketManager::sendMessage(SOCKET ClientSocket, playerInfo input)
 	array_sink sink{ sendBuffer };
 	stream<array_sink> os{ sink };
 
-	/*bool tempBool[3];
-	for (int i = 0; i < 3; i++)
-		tempBool[i] = true;
-	int tempInt[10];
-	tempInt[0] = 0x11;*/
-	//playerInfo T(playerId, 100, 100, tempBool, tempInt);
-
-
 	boost::archive::text_oarchive oa(os);
 	oa << input;
 	sendBuffer[strlen(sendBuffer)] = '\n';

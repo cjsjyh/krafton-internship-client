@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
 
+#include "socketInterface.h"
+
 #include "inputclass.h"
 
 
@@ -169,9 +171,9 @@ bool InputClass::Frame(bool& IsKeyChanged)
 			keyInput[i] = keyCode[i];
 		}
 	}
-	mouseInput[0] = IsLMouseDown();
-	mouseInput[1] = IsRMouseDown();
-	mouseInput[2] = IsMMouseDown();
+	socketInterface::mouseInput[0] = IsLMouseDown();
+	socketInterface::mouseInput[1] = IsRMouseDown();
+	socketInterface::mouseInput[2] = IsMMouseDown();
 
 	//COMPARE WITH PREVIOUS INPUT AND SET
 	IsKeyChanged = false;

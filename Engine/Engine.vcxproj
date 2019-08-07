@@ -176,6 +176,7 @@
     <ClCompile Include="playerInfo.cpp" />
     <ClCompile Include="projectileclass.cpp" />
     <ClCompile Include="skillpatternclass.cpp" />
+    <ClCompile Include="socketInterface.cpp" />
     <ClCompile Include="socketManager.cpp" />
     <ClCompile Include="staticobjclass.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="playerInfo.h" />
     <ClInclude Include="projectileclass.h" />
     <ClInclude Include="skillpatternclass.h" />
+    <ClInclude Include="socketInterface.h" />
     <ClInclude Include="socketManager.h" />
     <ClInclude Include="staticobjclass.h" />
     <ClInclude Include="stdafx.h" />

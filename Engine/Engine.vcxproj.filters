@@ -40,17 +40,20 @@
     <Filter Include="SocketProtocol">
       <UniqueIdentifier>{d956928c-d2d2-4252-ab00-1bdfd69e883a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{faf3447c-6a29-4d0f-a1b5-32d474cb376e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Interface">
+      <UniqueIdentifier>{cbd9b3b9-74d6-4609-9d25-c6ef4b04a091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\System">
+      <UniqueIdentifier>{f3ca004f-cf54-4744-8728-6fb90f6b2b0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interface">
+      <UniqueIdentifier>{20b626f5-f310-4f49-89e5-6b6254856bd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="inputclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="systemclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cameraclass.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
@@ -126,9 +129,6 @@
     <ClCompile Include="imagedecoderclass.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="UIinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="collisionManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
@@ -147,20 +147,29 @@
     <ClCompile Include="ApplicationClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="socketManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="playerInfo.cpp">
       <Filter>SocketProtocol</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="systemclass.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="inputclass.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="socketManager.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="UIinfo.cpp">
+      <Filter>Source Files\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="socketInterface.cpp">
+      <Filter>Source Files\Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inputclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="systemclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="d3dclass.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
@@ -236,9 +245,6 @@
     <ClInclude Include="imagedecoderclass.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="UIinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="collisionManager.h">
       <Filter>Header Files\Manager</Filter>
     </ClInclude>
@@ -254,14 +260,26 @@
     <ClInclude Include="timerclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="playerInfo.h">
+      <Filter>SocketProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="systemclass.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="socketManager.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="inputclass.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
     <ClInclude Include="ApplicationClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="socketManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="UIinfo.h">
+      <Filter>Header Files\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="playerInfo.h">
-      <Filter>SocketProtocol</Filter>
+    <ClInclude Include="socketInterface.h">
+      <Filter>Header Files\Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,8 @@
 #include "ApplicationClass.h"
 #include "socketManager.h"
 
+#include "socketInterface.h"
+
 #include <windows.h>
 
 #include "systemclass.h"
@@ -257,7 +259,8 @@ playerInfo SystemClass::WrapInput()
 	for (int i = 0; i < sizeof(temp.keyInput)/sizeof(int); i++)
 		temp.keyInput[i] = m_Input->keyInput[i];
 	for (int i = 0; i < sizeof(temp.mouseInput); i++)
-		temp.mouseInput[i] = m_Input->mouseInput[i];
+		temp.mouseInput[i] = socketInterface::mouseInput[i];
+		
 	temp.mouseX = mouseX;
 	temp.mouseY = mouseY;
 	temp.playerId = m_Socket->playerId;
