@@ -254,6 +254,7 @@ void ApplicationClass::InitializeMap()
 	for (int i = 0; i < playerCount; i++)
 	{
 		playerclass* player = new playerclass(10, m_D3D);
+		player->tag = "player" + to_string(i);
 		player->SetManager(m_GM, m_IM);
 		m_GM->RegisterObjectToRender(player);
 		m_IM->SetManagers(m_GM, m_UIM, m_D3D);

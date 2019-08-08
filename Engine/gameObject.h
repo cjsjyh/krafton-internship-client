@@ -60,8 +60,11 @@ public:
 	ColliderType GetColliderType();
 	ModelClass* GetModel();
 
+public:
 	CollisionChannel channel;
 	ObjectType objType;
+	string tag;
+
 	float sphere_collSize;
 	float w;
 	int scene;

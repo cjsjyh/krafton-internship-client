@@ -35,6 +35,10 @@ float hpobjects::GetHpPercent()
 	return (float)curHp / maxHp;
 }
 
+void hpobjects::ChangeHp(int hp)
+{
+	curHp = hp;
+}
 
 void hpobjects::Hit(int _damage)
 {

@@ -14,6 +14,7 @@ public:
 	~hpobjects();
 
 	void SetHp(int);
+	void ChangeHp(int);
 	int GetHp();
 	float GetHpPercent();
 

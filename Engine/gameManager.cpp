@@ -186,6 +186,13 @@ void gameManager::CheckCollision()
 {
 	vector<gameObject*> coll1, coll2;
 	m_CM->CollisionManager(coll1, coll2);
+
+	if (coll1.size() > 0)
+	{
+		if (CheckCollisionObjects("playerbullet", "boss", coll1, coll2))
+			printf("player hit boss!\n");
+	}
+
 	return;
 }
 
@@ -252,4 +259,28 @@ bool gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
 	D3DXMatrixRotationY(&temp, -floor->GetRotation().y *0.0174532925f);
 	D3DXVec3TransformCoord(&playerPos, &playerPos, &temp);
 	return m_CM->IsInsideMap(playerPos, floor->GetPosition(), floor->GetScale());
+}
+
+bool gameManager::CheckCollisionObjects(string n1, string n2, vector<gameObject*> v1, vector<gameObject*> v2)
+{
+	for (auto iter1 = v1.begin(); iter1 != v1.end(); iter1++)
+	{
+		if ((*iter1)->GetName() == n1)
+		{
+			for (auto iter2 = v2.begin(); iter2 != v2.end(); iter2++)
+			{
+				if ((*iter2)->GetName() == n2)
+					return true;
+			}
+		}
+		else if ((*iter1)->GetName() == n2)
+		{
+			for (auto iter2 = v2.begin(); iter2 != v2.end(); iter2++)
+			{
+				if ((*iter2)->GetName() == n1)
+					return true;
+			}
+		}
+	}
+	return false;
 }

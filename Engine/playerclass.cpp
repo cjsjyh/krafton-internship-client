@@ -71,6 +71,7 @@ projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
 									PLAYER_BULLET_DAMAGE, device, gameObject::PLAYER_BULLET,PLAYER_BULLET_DELAY,
 									PLAYER_BULLET_DISTANCE);
 		temp->SetDirVector(dirVec);
+		temp->tag = tag + "bullet";
 	}
 	else
 	{

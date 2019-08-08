@@ -6,6 +6,8 @@
 #include "bossclass.h"
 #include "projectileclass.h"
 
+#include "socketInterface.h"
+
 #include "collisionManager.h"
 
 collisionManager::collisionManager(gameManager* _GM)
@@ -34,20 +36,24 @@ bool collisionManager::CollisionManager(vector<gameObject*>& item1, vector<gameO
 				continue;
 			
 
-			flag = false;
+			flag = -1;
 			//서로 타입이 같은 2물체
 			if (srcType == destType)
 			{
 				if (srcType == gameObject::COLLIDER_BOX)
 				{
-					
 					if (SimpleBoxCollision(GM->GetGameObject(i), GM->GetGameObject(j)))
 						flag = CollisionHandler(GM->GetGameObject(i), GM->GetGameObject(j));
 				}
 			}
-
+			
+			//충돌되지 않음
+			if (flag == -1)
+			{
+				continue;
+			}
 			//pop된게 없으므로 서로 충돌된 물체를 등록
-			if (flag == 0)
+			else if (flag == 0)
 			{
 				item1.push_back(GM->GetGameObject(i));
 				item2.push_back(GM->GetGameObject(j));
@@ -191,8 +197,10 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				bullet = (projectileclass*)obj1;
 				flag = 1;
 			}
-
-			boss->Hit(bullet->damage);
+			if (bullet->tag == "player0bullet")
+				socketInterface::bossHitCount++;
+			
+			//boss->Hit(bullet->damage);
 
 			GM->UnregisterObjectToRender((gameObject*)bullet);
 			if (bullet->GetName() == "playerbullet")
@@ -211,6 +219,7 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				player = (playerclass*)obj1;
 				bullet = (projectileclass*)obj2;
 				flag = 2;
+
 			}
 			else
 			{
@@ -218,8 +227,10 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				bullet = (projectileclass*)obj1;
 				flag = 1;
 			}
-
-			player->Hit(bullet->damage);
+			if (player->tag == "player0")
+				socketInterface::playerHitCount++;
+			
+			//player->Hit(bullet->damage);
 
 			GM->UnregisterObjectToRender((gameObject*)bullet);
 			if (bullet->GetName() == "playerbullet")

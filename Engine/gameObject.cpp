@@ -18,6 +18,7 @@ gameObject::gameObject(string objname, CollisionChannel _channel, ColliderType c
 	m_model = 0;
 
 	name = objname;
+	tag = "";
 	collider = col;
 	channel = _channel;
 	objType = UNMOVABLE;
