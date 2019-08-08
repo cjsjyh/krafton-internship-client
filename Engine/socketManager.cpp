@@ -96,10 +96,16 @@ int socketManager::Initialize()
 	//SET CLIENT ID
 	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
 	playerId = std::stoi(recvBuffer);
+	
 	//Set Dummy for initial value
+	/*MsgBundle* tempMsg = new MsgBundle;
 	playerInfo* tempPlayer = new playerInfo;
 	tempPlayer->playerId = 0;
-	serverReadBuffer.push(tempPlayer);
+	
+	tempMsg->ptr = tempPlayer;
+	tempMsg->type = PLAYER_INFO;
+	
+	serverReadBuffer.push(tempMsg);*/
 
 	std::thread t1([&]() {ListenToServer();});
 	t1.detach();
@@ -124,17 +130,12 @@ bool socketManager::Shutdown()
 	return true;
 }
 
-bool socketManager::Frame(bool IsKeyChanged,playerInfo playerInput)
+bool socketManager::Frame(bool IsKeyChanged,playerInfo* playerInput)
 {
 	int iResult = 0 ;
-	// Receive until the peer shuts down the connection
-	//sendMessage(ConnectSocket);
-	
 	if (IsKeyChanged)
 	{
-		//std::cout << "Key changed!" << std::endl;
-		iResult = sendMessage(ConnectSocket, playerInput);
-		//iResult = receiveMessage(ConnectSocket);
+		iResult = sendMessage(ConnectSocket, playerInput, PLAYER_INFO);
 	}
 	return true;
 }
@@ -145,7 +146,7 @@ void socketManager::ListenToServer()
 	while (flag)
 	{
 		std::cout << "Listening" << std::endl;
-		playerInfo* tempMsg = receiveMessage(ConnectSocket);
+		MsgBundle* tempMsg = receiveMessage(ConnectSocket);
 		if (tempMsg == NULL)
 		{
 			printf("Receive Failed. terminating thread");
@@ -160,12 +161,12 @@ void socketManager::ListenToServer()
 	}
 }
 
-playerInfo* socketManager::GetNewMessage()
+MsgBundle* socketManager::GetNewMessage()
 {
 	if (serverReadBuffer.size() > 0)
 	{
 		threadLock->lock();
-		playerInfo* tempMsg = serverReadBuffer.front();
+		MsgBundle* tempMsg = serverReadBuffer.front();
 		serverReadBuffer.pop();
 		threadLock->unlock();
 		return tempMsg;
@@ -174,87 +175,154 @@ playerInfo* socketManager::GetNewMessage()
 		return NULL;
 }
 
-playerInfo* socketManager::receiveMessage(SOCKET ConnectSocket)
+MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 {
 	int iResult;
-	playerInfo* pInfoPtr = new playerInfo;
-	playerInfo pInfo;
 
-	//First receive size of data that needs to be read
+	//Receive Type of Data
 	memset(recvBuffer, 0, sizeof(recvBuffer));
 	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
-	if (iResult > 0)
+	if (iResult <= 0)
 	{
-		//read to know how many bytes to receive
-		int msgLen = std::stoi(recvBuffer);
-		memset(recvBuffer, 0, sizeof(recvBuffer));
-
-		//read real messages
-		iResult = recv(ConnectSocket, recvBuffer, msgLen, 0); // returns number of bytes received or error
-		if (iResult > 0)
-		{
-			//FIND \n INDEX
-			delimiterIndex.clear();
-			for (int i = 0; i < strlen(recvBuffer); i++)
-				if (recvBuffer[i] == '\n')
-					delimiterIndex.push_back(i);
-
-			//HANDLE EACH MESSAGE BY DELIMITER
-			int prevEnd = -1;
-			for (int i = 0; i < delimiterIndex.size(); i++)
-			{
-				int messageLen = delimiterIndex[i];
-				std::stringstream ss;
-				ss.write(&(recvBuffer[prevEnd + 1]), delimiterIndex[i] - (prevEnd + 1));
-				boost::archive::text_iarchive ia(ss);
-				prevEnd = delimiterIndex[i] + 1;
-
-				//playerInfo pInfo;
-				ia >> pInfo;
-				CopyPlayerInfo(pInfoPtr, &pInfo);
-				std::cout << "[recv]ID: " << pInfoPtr->playerId << std::endl;
-				std::cout << "[recv]mouseX: " << pInfoPtr->mouseX << std::endl;
-				std::cout << "[recv]mouseY: " << pInfoPtr->mouseY << std::endl << std::endl;
-			}
-		}
-		return pInfoPtr;
-	}
-	else
-	{
-		printf("recv failed with error: %d\n", WSAGetLastError());
+		printf("[ERROR] Recv Type Failed");
 		return NULL;
 	}
+	int msgType = std::stoi(recvBuffer);
 
+	//Receive Size of Data
+	memset(recvBuffer, 0, sizeof(recvBuffer));
+	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
+	if (iResult <= 0)
+	{
+		printf("[ERROR] Recv Len Failed");
+		return NULL;
+	}
+	int msgLen = std::stoi(recvBuffer);
+
+	//Receive Data
+	memset(recvBuffer, 0, sizeof(recvBuffer));
+	iResult = recv(ConnectSocket, recvBuffer, msgLen, 0);
+	if (iResult > 0)
+	{
+		//FIND \n INDEX
+		/*
+		delimiterIndex.clear();
+		for (int i = 0; i < strlen(recvBuffer); i++)
+			if (recvBuffer[i] == '\n')
+				delimiterIndex.push_back(i);
+
+
+		//HANDLE EACH MESSAGE BY DELIMITER
+		int prevEnd = -1;
+
+		for (int i = 0; i < delimiterIndex.size(); i++)
+		{
+			int messageLen = delimiterIndex[i];
+			std::stringstream ss;
+			ss.write(&(recvBuffer[prevEnd + 1]), delimiterIndex[i] - (prevEnd + 1) );
+			boost::archive::text_iarchive ia(ss);
+			prevEnd = delimiterIndex[i] + 1;
+
+			//playerInfo pInfo;
+			ia >> pInfo;
+			CopyPlayerInfo(pInfoPtr, &pInfo);
+			std::cout << "[recv]ID: " << pInfoPtr->playerId << std::endl;
+			std::cout << "[recv]mouseX: " << pInfoPtr->mouseX << std::endl;
+			std::cout << "[recv]mouseY: " << pInfoPtr->mouseY << std::endl << std::endl;
+		}
+		*/
+		std::stringstream ss;
+		ss.write(recvBuffer, msgLen);
+		boost::archive::text_iarchive ia(ss);
+
+		MsgBundle* msgBundle = new MsgBundle;
+
+		playerInfo* pInfoPtr = new playerInfo;
+		playerInfo pInfo;
+		switch (msgType)
+		{
+		case PLAYER_INFO:
+			ia >> pInfo;
+			CopyPlayerInfo(pInfoPtr, &pInfo);
+
+			msgBundle->ptr = pInfoPtr;
+			msgBundle->type = msgType;
+
+			std::cout << "[recv]ID: " << pInfoPtr->playerId << std::endl;
+			std::cout << "[recv]mouseX: " << pInfoPtr->mouseX << std::endl;
+			std::cout << "[recv]mouseY: " << pInfoPtr->mouseY << std::endl << std::endl;
+			break;
+		case BOSS_INFO:
+
+			break;
+		case ITEM_INFO:
+
+			break;
+		}
+
+		return msgBundle;
+	}
+
+	printf("[ERROR] Recv Msg Failed\n");
 	return NULL;
 }
 
-int socketManager::sendMessage(SOCKET ClientSocket, playerInfo input)
+
+int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 {
 	int iSendResult;
-	memset(sendBuffer, 0, sizeof(sendBuffer));
 
+	memset(sendBuffer, 0, sizeof(sendBuffer));
 	array_sink sink{ sendBuffer };
 	stream<array_sink> os{ sink };
-
 	boost::archive::text_oarchive oa(os);
-	oa << input;
-	sendBuffer[strlen(sendBuffer)] = '\n';
 
-	std::string msgLen = std::to_string(strlen(sendBuffer));
-	const char* msgLenChar = msgLen.c_str();
-	iSendResult = send(ClientSocket, msgLenChar, sizeof(int), 0);
+	playerInfo input;
+	switch (type)
+	{
+	case PLAYER_INFO:
+		CopyPlayerInfo(&input, (playerInfo*)_input);
+		oa << input;
+		break;
+	case BOSS_INFO:
+
+		break;
+	case ITEM_INFO:
+
+		break;
+	}
+
+	//sendBuffer[strlen(sendBuffer)] = '\n';
+
+	iSendResult = 0;
+	while (!iSendResult)
+	{
+		std::string msgType = std::to_string(type);
+		const char* msgTypeChar = msgType.c_str();
+		iSendResult = send(ClientSocket, msgTypeChar, sizeof(int), 0);
+		if (!iSendResult)
+			printf("[ERROR] Send Type Failed\n");
+	}
+
+	iSendResult = 0;
+	while (!iSendResult)
+	{
+		std::string msgLen = std::to_string(strlen(sendBuffer));
+		const char* msgLenChar = msgLen.c_str();
+		iSendResult = send(ClientSocket, msgLenChar, sizeof(int), 0);
+		if (!iSendResult)
+			printf("[ERROR] Send Len Failed\n");
+	}
 
 	iSendResult = send(ClientSocket, sendBuffer, strlen(sendBuffer), 0);
 	if (iSendResult == SOCKET_ERROR) {
-		printf("send failed with error: %d\n", WSAGetLastError());
+		printf("[ERROR] Send Msg Failed with error: %d\n", WSAGetLastError());
 		closesocket(ClientSocket);
 		WSACleanup();
 		return -1;
 	}
 
-	std::cout << sendBuffer << std::endl;
-	printf("Bytes sent: %d\n", iSendResult);
-
+	printf("[Success] Bytes sent: %d\n", iSendResult);
 	return iSendResult;
 }
 
@@ -268,4 +336,3 @@ void socketManager::CopyPlayerInfo(playerInfo* dest, playerInfo* src)
 	dest->mouseY = src->mouseY;
 	dest->playerId = src->playerId;
 }
-

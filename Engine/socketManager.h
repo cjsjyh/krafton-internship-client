@@ -65,27 +65,41 @@ public:
 	}
 };
 
+class MsgBundle
+{
+public:
+	int type;
+	void* ptr;
+};
+
 class socketManager
 {
 public:
+	enum DataType
+	{
+		PLAYER_INFO,
+		BOSS_INFO,
+		ITEM_INFO,
+	};
+
 	socketManager();
 	~socketManager();
 
 	int Initialize();
 	bool Shutdown();
 	
-	bool Frame(bool,playerInfo);
-	playerInfo* GetNewMessage();
+	bool Frame(bool,playerInfo*);
+	MsgBundle* GetNewMessage();
 
 public:
 	int playerId;
 	playerInfo pInfo;
-	std::queue<playerInfo*> serverReadBuffer;
+	std::queue<MsgBundle*> serverReadBuffer;
 
 private:
 	void ListenToServer();
-	playerInfo* receiveMessage(SOCKET);
-	int sendMessage(SOCKET, playerInfo);
+	MsgBundle* receiveMessage(SOCKET);
+	int sendMessage(SOCKET, void*, DataType);
 	void CopyPlayerInfo(playerInfo*, playerInfo*);
 
 private:

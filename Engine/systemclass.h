@@ -28,7 +28,7 @@ private:
 	bool Frame();
 	void InitializeWindows(int&, int&, int&, int&);
 	void ShutdownWindows();
-	playerInfo WrapInput();
+	playerInfo* WrapInput();
 private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;

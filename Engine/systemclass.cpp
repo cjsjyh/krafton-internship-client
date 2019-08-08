@@ -228,37 +228,47 @@ bool SystemClass::Frame()
 	m_Socket->Frame(IsKeyChanged, WrapInput());
 	
 	//TEMP//
-	playerInfo* pInfo = m_Socket->GetNewMessage();
-	if (pInfo != NULL)
+	MsgBundle* newMsg = m_Socket->GetNewMessage();
+	playerInfo* pInfo;
+	if (newMsg != NULL)
 	{
-		if (pInfo->playerId >= 0 && pInfo->playerId < 2)
+		switch (newMsg->type)
 		{
-			socketInterface::mouseX[pInfo->playerId] = pInfo->mouseX;
-			socketInterface::mouseY[pInfo->playerId] = pInfo->mouseY;
-			for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
-				socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
-			for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
-				socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
+		case socketManager::PLAYER_INFO:
+			pInfo = (playerInfo*)(newMsg->ptr);
+			
+			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
+			{
+				socketInterface::mouseX[pInfo->playerId] = pInfo->mouseX;
+				socketInterface::mouseY[pInfo->playerId] = pInfo->mouseY;
+				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
+					socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
+				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
+					socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
 
-			//TEMP
-			socketInterface::mouseX[1] = pInfo->mouseX;
-			socketInterface::mouseY[1] = pInfo->mouseY;
-			for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
-				socketInterface::keyInput[1][i] = pInfo->keyInput[i];
-			for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
-				socketInterface::mouseInput[1][i] = pInfo->mouseInput[i];
+				//TEMP
+				socketInterface::mouseX[1] = pInfo->mouseX;
+				socketInterface::mouseY[1] = pInfo->mouseY;
+				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
+					socketInterface::keyInput[1][i] = pInfo->keyInput[i];
+				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
+					socketInterface::mouseInput[1][i] = pInfo->mouseInput[i];
+			}
+			
+			break;
+		case socketManager::BOSS_INFO:
+
+			break;
+		case socketManager::ITEM_INFO:
+
+			break;
 		}
-		/*tempPlayer.mouseX = pInfo->mouseX;
-		tempPlayer.mouseY = pInfo->mouseY;
-		for (int i = 0; i < 10; i++)
-			tempPlayer.keyInput[i] = pInfo->keyInput[i];
-		for (int i = 0; i < 3; i++)
-			tempPlayer.mouseInput[i] = pInfo->mouseInput[i];*/
 	}
+	
 	
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(tempPlayer);
+	result = m_Graphics->Frame();
 	if (!result)
 	{
 		return false;
@@ -267,20 +277,20 @@ bool SystemClass::Frame()
 	return true;
 }
 
-playerInfo SystemClass::WrapInput()
+playerInfo* SystemClass::WrapInput()
 {
-	playerInfo temp;
-	temp.playerId = m_Socket->playerId;
+	playerInfo* temp = new playerInfo;
+	temp->playerId = m_Socket->playerId;
 
-	temp.mouseX = mouseX;
-	temp.mouseY = mouseY;
-	for (int i = 0; i < sizeof(temp.keyInput)/sizeof(int); i++)
-		temp.keyInput[i] = m_Input->keyInput[i];
-	for (int i = 0; i < sizeof(temp.mouseInput); i++)
-		temp.mouseInput[i] = m_Input->mouseInput[i];
+	temp->mouseX = mouseX;
+	temp->mouseY = mouseY;
+	for (int i = 0; i < sizeof(temp->keyInput)/sizeof(int); i++)
+		temp->keyInput[i] = m_Input->keyInput[i];
+	for (int i = 0; i < sizeof(temp->mouseInput); i++)
+		temp->mouseInput[i] = m_Input->mouseInput[i];
 	
 	for(int i=0;i<3; i++)
-		temp.playerPos[i] = socketInterface::playerPos[i];
+		temp->playerPos[i] = socketInterface::playerPos[i];
 
 	return temp;
 }

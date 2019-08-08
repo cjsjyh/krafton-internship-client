@@ -410,7 +410,7 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int _mouseX, int _mouseY)
 	return stdafx::normalizeVec3(projectedPt);
 }
 
-bool ApplicationClass::Frame(playerInfoStruct playerInput)
+bool ApplicationClass::Frame()
 {
 	bool result;
 
@@ -442,30 +442,33 @@ bool ApplicationClass::Frame(playerInfoStruct playerInput)
 	//-------------------
 	//  SCENE CHANGE
 	//-------------------
-	if (InputClass::IsKeyPressed(playerInput.keyInput, DIK_LSHIFT))
+	for (int i = 0; i < players.size(); i++)
 	{
-		if (frame - last_scene_change_frame > SCENE_CHANGE_COOLTIME)
+		if (InputClass::IsKeyPressed(socketInterface::keyInput[i], DIK_LSHIFT))
 		{
-			last_scene_change_frame = frame;
-			if (m_GM->scene == 0)
+			if (frame - last_scene_change_frame > SCENE_CHANGE_COOLTIME)
 			{
-				m_UIM->ScreenFade(1, -1, 30);
-				vector<string> itemNames;
-				players[0]->SavePlayerPos(m_GM->scene);
-				players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
-				players[0]->SetDirection(1);
-				
-				itemNames = m_IM->ChooseItemFromPool(3,0);
-				InitializeRewardMap(itemNames);
-				m_GM->scene = 1;
-			}
-			else
-			{
-				m_UIM->ScreenFade(1, -1, 30);
-				m_GM->scene = 0;
-				players[0]->SetPosition(players[0]->GetSavedPlayerPos(m_GM->scene));
+				last_scene_change_frame = frame;
+				if (m_GM->scene == 0)
+				{
+					m_UIM->ScreenFade(1, -1, 30);
+					vector<string> itemNames;
+					players[0]->SavePlayerPos(m_GM->scene);
+					players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
+					players[0]->SetDirection(1);
 
-				UninitializeRewardMap();
+					itemNames = m_IM->ChooseItemFromPool(3, 0);
+					InitializeRewardMap(itemNames);
+					m_GM->scene = 1;
+				}
+				else
+				{
+					m_UIM->ScreenFade(1, -1, 30);
+					m_GM->scene = 0;
+					players[0]->SetPosition(players[0]->GetSavedPlayerPos(m_GM->scene));
+
+					UninitializeRewardMap();
+				}
 			}
 		}
 	}
