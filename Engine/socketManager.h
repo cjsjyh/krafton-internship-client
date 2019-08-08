@@ -18,13 +18,13 @@ using namespace boost::iostreams;
 #define MAX_PLAYER_COUNT 2
 
 
-class playerInfo
+class playerInput
 {
 
 public:
 	friend class boost::serialization::access;
 
-	playerInfo(int _playerId, int _mouseX, int _mouseY, bool* _mouseInput, int* _keyInput)
+	playerInput(int _playerId, int _mouseX, int _mouseY, bool* _mouseInput, int* _keyInput)
 		:playerId(_playerId), mouseX(_mouseX), mouseY(_mouseY)
 	{
 		for (int i = 0; i < sizeof(_mouseInput); i++)
@@ -33,10 +33,10 @@ public:
 			keyInput[i] = _keyInput[i];
 	}
 
-	playerInfo() {
+	playerInput() {
 	}
 
-	~playerInfo() {
+	~playerInput() {
 
 	}
 	int playerId;
@@ -88,19 +88,19 @@ public:
 	int Initialize();
 	bool Shutdown();
 	
-	bool Frame(bool,playerInfo*);
+	bool Frame(bool,playerInput*);
 	MsgBundle* GetNewMessage();
 
 public:
 	int playerId;
-	playerInfo pInfo;
+	playerInput pInfo;
 	std::queue<MsgBundle*> serverReadBuffer;
 
 private:
 	void ListenToServer();
 	MsgBundle* receiveMessage(SOCKET);
 	int sendMessage(SOCKET, void*, DataType);
-	void CopyPlayerInfo(playerInfo*, playerInfo*);
+	void CopyPlayerInfo(playerInput*, playerInput*);
 
 private:
 	char sendBuffer[BUFFER_SIZE];

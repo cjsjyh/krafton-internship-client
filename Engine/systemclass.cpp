@@ -229,13 +229,13 @@ bool SystemClass::Frame()
 	
 	//TEMP//
 	MsgBundle* newMsg = m_Socket->GetNewMessage();
-	playerInfo* pInfo;
+	playerInput* pInfo;
 	if (newMsg != NULL)
 	{
 		switch (newMsg->type)
 		{
 		case socketManager::PLAYER_INFO:
-			pInfo = (playerInfo*)(newMsg->ptr);
+			pInfo = (playerInput*)(newMsg->ptr);
 			
 			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
 			{
@@ -277,9 +277,9 @@ bool SystemClass::Frame()
 	return true;
 }
 
-playerInfo* SystemClass::WrapInput()
+playerInput* SystemClass::WrapInput()
 {
-	playerInfo* temp = new playerInfo;
+	playerInput* temp = new playerInput;
 	temp->playerId = m_Socket->playerId;
 
 	temp->mouseX = mouseX;

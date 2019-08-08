@@ -96,16 +96,6 @@ int socketManager::Initialize()
 	//SET CLIENT ID
 	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
 	playerId = std::stoi(recvBuffer);
-	
-	//Set Dummy for initial value
-	/*MsgBundle* tempMsg = new MsgBundle;
-	playerInfo* tempPlayer = new playerInfo;
-	tempPlayer->playerId = 0;
-	
-	tempMsg->ptr = tempPlayer;
-	tempMsg->type = PLAYER_INFO;
-	
-	serverReadBuffer.push(tempMsg);*/
 
 	std::thread t1([&]() {ListenToServer();});
 	t1.detach();
@@ -130,7 +120,7 @@ bool socketManager::Shutdown()
 	return true;
 }
 
-bool socketManager::Frame(bool IsKeyChanged,playerInfo* playerInput)
+bool socketManager::Frame(bool IsKeyChanged,playerInput* playerInput)
 {
 	int iResult = 0 ;
 	if (IsKeyChanged)
@@ -204,41 +194,14 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 	iResult = recv(ConnectSocket, recvBuffer, msgLen, 0);
 	if (iResult > 0)
 	{
-		//FIND \n INDEX
-		/*
-		delimiterIndex.clear();
-		for (int i = 0; i < strlen(recvBuffer); i++)
-			if (recvBuffer[i] == '\n')
-				delimiterIndex.push_back(i);
-
-
-		//HANDLE EACH MESSAGE BY DELIMITER
-		int prevEnd = -1;
-
-		for (int i = 0; i < delimiterIndex.size(); i++)
-		{
-			int messageLen = delimiterIndex[i];
-			std::stringstream ss;
-			ss.write(&(recvBuffer[prevEnd + 1]), delimiterIndex[i] - (prevEnd + 1) );
-			boost::archive::text_iarchive ia(ss);
-			prevEnd = delimiterIndex[i] + 1;
-
-			//playerInfo pInfo;
-			ia >> pInfo;
-			CopyPlayerInfo(pInfoPtr, &pInfo);
-			std::cout << "[recv]ID: " << pInfoPtr->playerId << std::endl;
-			std::cout << "[recv]mouseX: " << pInfoPtr->mouseX << std::endl;
-			std::cout << "[recv]mouseY: " << pInfoPtr->mouseY << std::endl << std::endl;
-		}
-		*/
 		std::stringstream ss;
 		ss.write(recvBuffer, msgLen);
 		boost::archive::text_iarchive ia(ss);
 
 		MsgBundle* msgBundle = new MsgBundle;
 
-		playerInfo* pInfoPtr = new playerInfo;
-		playerInfo pInfo;
+		playerInput* pInfoPtr = new playerInput;
+		playerInput pInfo;
 		switch (msgType)
 		{
 		case PLAYER_INFO:
@@ -277,11 +240,11 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	stream<array_sink> os{ sink };
 	boost::archive::text_oarchive oa(os);
 
-	playerInfo input;
+	playerInput input;
 	switch (type)
 	{
 	case PLAYER_INFO:
-		CopyPlayerInfo(&input, (playerInfo*)_input);
+		CopyPlayerInfo(&input, (playerInput*)_input);
 		oa << input;
 		break;
 	case BOSS_INFO:
@@ -326,7 +289,7 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	return iSendResult;
 }
 
-void socketManager::CopyPlayerInfo(playerInfo* dest, playerInfo* src)
+void socketManager::CopyPlayerInfo(playerInput* dest, playerInput* src)
 {
 	for (int i = 0; i < sizeof(src->keyInput) / sizeof(int); i++)
 		dest->keyInput[i] = src->keyInput[i];

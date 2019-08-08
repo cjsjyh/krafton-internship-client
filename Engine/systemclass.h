@@ -9,7 +9,7 @@ class CpuClass;
 class InputClass;
 class ApplicationClass;
 class socketManager;
-class playerInfo;
+class playerInput;
 
 class SystemClass
 {
@@ -28,7 +28,7 @@ private:
 	bool Frame();
 	void InitializeWindows(int&, int&, int&, int&);
 	void ShutdownWindows();
-	playerInfo* WrapInput();
+	playerInput* WrapInput();
 private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
@@ -46,15 +46,8 @@ private:
 };
 
 
-/////////////////////////
-// FUNCTION PROTOTYPES //
-/////////////////////////
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-
-/////////////
-// GLOBALS //
-/////////////
 static SystemClass* ApplicationHandle = 0;
 
 
