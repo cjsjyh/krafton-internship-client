@@ -14,11 +14,9 @@
 using namespace boost::iostreams;
 
 
-
 #define BUFFER_SIZE 512
 #define MAX_PLAYER_COUNT 2
 
-//class InputClass;
 
 class playerInfo
 {
@@ -42,7 +40,7 @@ public:
 
 	}
 	int playerId;
-	int playerPos_x, playerPos_y, playerPos_z;
+	int playerPos[3];
 	
 	int mouseX, mouseY;
 	bool mouseInput[3];
@@ -55,9 +53,7 @@ public:
 	void serialize(Archive& ar, const unsigned int version) {
 		ar& playerId;
 
-		ar& playerPos_x;
-		ar& playerPos_y;
-		ar& playerPos_z;
+		ar& playerPos;
 
 		ar& mouseX;
 		ar& mouseY;

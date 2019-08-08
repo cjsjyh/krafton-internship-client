@@ -22,6 +22,8 @@
 #include "gameManager.h"
 #include "textfilereader.h"
 
+#include "socketInterface.h"
+
 #include "ApplicationClass.h"
 
 ApplicationClass::ApplicationClass()
@@ -412,18 +414,15 @@ bool ApplicationClass::Frame(playerInfoStruct playerInput)
 {
 	bool result;
 
-	//mouseX = mouseX - screenW / 2;
-	//mouseY = -(mouseY - screenH / 2);
 
 	frame++;
 
 	//Frame Action
 	if (m_GM->scene == 0)
 		boss->Frame(frame);
-	//player->Frame(m_Input->keyInput, m_Input->mouseInput, GetDirectionMouse(mouseX, mouseY) ,frame);
 	
 	for(int i =0; i<players.size(); i++)
-		players[i]->Frame(playerInput.keyInput, playerInput.mouseInput, GetDirectionMouse(playerInput.mouseX, playerInput.mouseY), frame);
+		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(socketInterface::mouseX[i], socketInterface::mouseY[i]), frame);
 	m_GM->Frame();
 	SetCamera(m_GM->scene);
 	

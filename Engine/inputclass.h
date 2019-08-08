@@ -36,7 +36,7 @@ public:
 
 	int keyInput[10];
 	int prevkeyInput[10];
-
+	bool mouseInput[3];
 	bool prevmouseInput[3];
 
 private:

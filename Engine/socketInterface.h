@@ -4,26 +4,27 @@
 
 class socketInterface
 {
-	//player
+	
 public:
-	static int playerId;
-	static int playerPos_x, playerPos_y, playerPos_z;
-	static int mouseX, mouseY;
-	static bool mouseInput[3];
-	static int keyInput[10];
-	static int bossHitCount;
-	static int playerHitCount;
+	//player
+	//To Send
+	static int clientId;
+	static float playerPos[3]; // Myself
+	static int bossHitCount; // Myself
+	static int playerHitCount; // Myself
 
+	//To read
+	static int mouseX[2], mouseY[2];
+	static bool mouseInput[2][3];
+	static int keyInput[2][10];
+	
 	//boss
-	static int bossPos_x, bossPos_y, bossPos_z;
+	static float bossPos[3];
 	static int patternId;
 	static float patternAngle;
 	static int patternDirCount;
-	static int patternSrc_x, patternSrc_y, patternSrc_z;
-	static int patternDest_x, patternDest_y, patternDest_z;
-
-	socketInterface();
-	~socketInterface();
+	static float patternSrc[3];
+	static float patternDest[3];
 };
 
 #endif

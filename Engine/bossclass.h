@@ -54,7 +54,7 @@ private:
 	void InitializeModels();
 	void CheckHp();
 
-	void Fire();
+	void Fire(int delay = 0);
 	void FireDirections(vector<D3DXVECTOR3>, int delay =0);
 	void SetBullet(projectileclass*, D3DXVECTOR3);
 

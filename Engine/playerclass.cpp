@@ -9,6 +9,8 @@
 #include "itemmanagerclass.h"
 #include "skillpatternclass.h"
 
+#include "socketInterface.h"
+
 #include "playerclass.h"
 
 playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
@@ -218,6 +220,10 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 			ObjectInteraction();
 		}
 	}
+
+
+	for(int i=0;i<3;i++)
+		socketInterface::playerPos[i] = GetPosition()[i];
 }
 
 bool playerclass::Dash(int* keys, int frame)

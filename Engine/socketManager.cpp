@@ -16,6 +16,7 @@
 
 #include "socketManager.h"
 
+#include "socketInterface.h"
 
 socketManager::socketManager()
 {
@@ -97,6 +98,7 @@ int socketManager::Initialize()
 	playerId = std::stoi(recvBuffer);
 	//Set Dummy for initial value
 	playerInfo* tempPlayer = new playerInfo;
+	tempPlayer->playerId = 0;
 	serverReadBuffer.push(tempPlayer);
 
 	std::thread t1([&]() {ListenToServer();});
@@ -224,59 +226,6 @@ playerInfo* socketManager::receiveMessage(SOCKET ConnectSocket)
 	}
 
 	return NULL;
-	/*
-	int iResult;
-	//First receive size of data that needs to be read
-	memset(recvBuffer, 0, sizeof(recvBuffer));
-	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
-	if (iResult > 0)
-	{
-		std::cout << "count: " + std::to_string(count++) << std::endl;
-		//read to know how many bytes to receive
-		int msgLen = std::stoi(recvBuffer);
-		memset(recvBuffer, 0, sizeof(recvBuffer));
-		//read real messages
-		iResult = recv(ConnectSocket, recvBuffer, msgLen, 0); // returns number of bytes received or error
-		if (iResult > 0)
-		{
-			//FIND \n INDEX
-			delimiterIndex.clear();
-			for (int i = 0; i < strlen(recvBuffer); i++)
-				if (recvBuffer[i] == '\n')
-					delimiterIndex.push_back(i);
-
-			//HANDLE EACH MESSAGE BY DELIMITER
-			int prevEnd = -1;
-			for (int i = 0; i < delimiterIndex.size(); i++)
-			{
-				int messageLen = delimiterIndex[i];
-				std::stringstream ss;
-				ss.write(&(recvBuffer[prevEnd + 1]), delimiterIndex[i] - (prevEnd + 1));
-				boost::archive::text_iarchive ia(ss);
-				prevEnd = delimiterIndex[i] + 1;
-
-				//if (pInfo)
-				//	delete pInfo;
-				//pInfo = new playerInfo();
-				//playerInfo pInfo;
-				ia >> pInfo;
-				
-				playerInput[pInfo.playerId].mouseX = pInfo.mouseX;
-				playerInput[pInfo.playerId].mouseY = pInfo.mouseY;
-				for(int i=0;i<sizeof(pInfo.keyInput)/sizeof(int);i++)
-					playerInput[pInfo.playerId].keyInput[i] = pInfo.keyInput[i];
-				for(int i=0;i<sizeof(pInfo.mouseInput);i++)
-					playerInput[pInfo.playerId].mouseInput[i] = pInfo.mouseInput[i];
-			}
-		}
-	}
-	else if (iResult == 0)
-		printf("Connection closed\n");
-	else
-		printf("recv failed with error: %d\n", WSAGetLastError());
-
-	return iResult;
-	*/
 }
 
 int socketManager::sendMessage(SOCKET ClientSocket, playerInfo input)

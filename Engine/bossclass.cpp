@@ -56,24 +56,41 @@ void bossclass::SetGameManager(gameManager* _GM)
 
 }
 
-void bossclass::ActivatePattern(BossPattern pat)
+
+void bossclass::CheckHp()
 {
-	vector<D3DXVECTOR3> dirVectors;
-	switch (pat.type)
+	if ((float)curHp / maxHp < BOSS_PHASE3_HP)
 	{
-	case FIRE_AT_PLAYER:
-		Fire();
-		break;
-	case FIRE_IN_FAN:
-		dirVectors = skillpatternclass::FireInFan(pat.dirCount,pat.Angle,GetPosition(), player->GetPosition());
-		FireDirections(dirVectors);
-		break;
-	case FIRE_ALL_DIR:
-		dirVectors = skillpatternclass::FireInCircle(pat.dirCount);
-		FireDirections(dirVectors);
-		break;
+		phase = 2;
+		m_model = model_list[2];
+		SetScale(BOSS_SIZE[1]);
 	}
+	else if ((float)curHp / maxHp < BOSS_PHASE2_HP)
+	{
+		phase = 1;
+		m_model = model_list[1];
+		SetScale(BOSS_SIZE[2]);
+	}
+	else
+		phase = 0;
 }
+
+void bossclass::Frame(int frame)
+{
+	vector<projectileclass*> shootBullets;
+	if (frame % 60 == 0)
+	{
+		int ChosenIndex = rand() % bossPatternPool[phase].size();
+		ActivatePattern(bossPatternPool[phase][ChosenIndex]);
+	}
+	PopQueue(shootBullets);
+	CheckHp();
+
+	//register bullets
+	for (auto iter = shootBullets.begin(); iter != shootBullets.end(); iter++)
+		GM->RegisterObjectToRender(*iter);
+}
+
 
 void bossclass::SetBossPhasePattern()
 {
@@ -112,41 +129,27 @@ void bossclass::SetBossPhasePattern()
 }
 
 
-void bossclass::Frame(int frame)
+void bossclass::ActivatePattern(BossPattern pat)
 {
-	vector<projectileclass*> shootBullets;
-	if (frame % 60 == 0)
+	vector<D3DXVECTOR3> dirVectors;
+	switch (pat.type)
 	{
-		int ChosenIndex = rand() % bossPatternPool[phase].size();
-		ActivatePattern(bossPatternPool[phase][ChosenIndex]);
+	case FIRE_AT_PLAYER:
+		Fire();
+		break;
+	case FIRE_IN_FAN:
+		dirVectors = skillpatternclass::FireInFan(pat.dirCount, pat.Angle, GetPosition(), player->GetPosition());
+		FireDirections(dirVectors);
+		break;
+	case FIRE_ALL_DIR:
+		dirVectors = skillpatternclass::FireInCircle(pat.dirCount);
+		for(int i=0;i<10;i++)
+			FireDirections(dirVectors, 40*i);
+		break;
 	}
-	PopQueue(shootBullets);
-	CheckHp();
-
-	//register bullets
-	for (auto iter = shootBullets.begin(); iter != shootBullets.end(); iter++)
-		GM->RegisterObjectToRender(*iter);
 }
 
-void bossclass::CheckHp()
-{
-	if ((float)curHp / maxHp < BOSS_PHASE3_HP)
-	{
-		phase = 2;
-		m_model = model_list[2];
-		SetScale(BOSS_SIZE[1]);
-	}
-	else if ((float)curHp / maxHp < BOSS_PHASE2_HP)
-	{
-		phase = 1;
-		m_model = model_list[1];
-		SetScale(BOSS_SIZE[2]);
-	}
-	else
-		phase = 0;
-}
-
-void bossclass::Fire()
+void bossclass::Fire(int delay)
 {
 	projectileclass* temp = GM->GetFromBossPool();
 	if (!temp)
@@ -161,7 +164,7 @@ void bossclass::Fire()
 	}
 	
 
-	PushQueue(temp, 0);
+	PushQueue(temp, delay);
 }
 
 void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int delay)

@@ -37,9 +37,6 @@
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{6407c2b3-d8fc-40b6-839e-d49d2bbd218a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SocketProtocol">
-      <UniqueIdentifier>{d956928c-d2d2-4252-ab00-1bdfd69e883a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\System">
       <UniqueIdentifier>{faf3447c-6a29-4d0f-a1b5-32d474cb376e}</UniqueIdentifier>
     </Filter>
@@ -146,9 +143,6 @@
     </ClCompile>
     <ClCompile Include="ApplicationClass.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="playerInfo.cpp">
-      <Filter>SocketProtocol</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files\System</Filter>
@@ -259,9 +253,6 @@
     </ClInclude>
     <ClInclude Include="timerclass.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="playerInfo.h">
-      <Filter>SocketProtocol</Filter>
     </ClInclude>
     <ClInclude Include="systemclass.h">
       <Filter>Header Files\System</Filter>

@@ -8,14 +8,11 @@
 #include "inputclass.h"
 #include "ApplicationClass.h"
 #include "socketManager.h"
-
-#include "socketInterface.h"
-
 #include <windows.h>
 
 #include "systemclass.h"
 
-
+#include "socketInterface.h"
 
 SystemClass::SystemClass()
 {
@@ -234,12 +231,29 @@ bool SystemClass::Frame()
 	playerInfo* pInfo = m_Socket->GetNewMessage();
 	if (pInfo != NULL)
 	{
-		tempPlayer.mouseX = pInfo->mouseX;
+		if (pInfo->playerId >= 0 && pInfo->playerId < 2)
+		{
+			socketInterface::mouseX[pInfo->playerId] = pInfo->mouseX;
+			socketInterface::mouseY[pInfo->playerId] = pInfo->mouseY;
+			for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
+				socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
+			for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
+				socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
+
+			//TEMP
+			socketInterface::mouseX[1] = pInfo->mouseX;
+			socketInterface::mouseY[1] = pInfo->mouseY;
+			for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
+				socketInterface::keyInput[1][i] = pInfo->keyInput[i];
+			for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
+				socketInterface::mouseInput[1][i] = pInfo->mouseInput[i];
+		}
+		/*tempPlayer.mouseX = pInfo->mouseX;
 		tempPlayer.mouseY = pInfo->mouseY;
 		for (int i = 0; i < 10; i++)
 			tempPlayer.keyInput[i] = pInfo->keyInput[i];
 		for (int i = 0; i < 3; i++)
-			tempPlayer.mouseInput[i] = pInfo->mouseInput[i];
+			tempPlayer.mouseInput[i] = pInfo->mouseInput[i];*/
 	}
 	
 
@@ -256,14 +270,17 @@ bool SystemClass::Frame()
 playerInfo SystemClass::WrapInput()
 {
 	playerInfo temp;
+	temp.playerId = m_Socket->playerId;
+
+	temp.mouseX = mouseX;
+	temp.mouseY = mouseY;
 	for (int i = 0; i < sizeof(temp.keyInput)/sizeof(int); i++)
 		temp.keyInput[i] = m_Input->keyInput[i];
 	for (int i = 0; i < sizeof(temp.mouseInput); i++)
-		temp.mouseInput[i] = socketInterface::mouseInput[i];
-		
-	temp.mouseX = mouseX;
-	temp.mouseY = mouseY;
-	temp.playerId = m_Socket->playerId;
+		temp.mouseInput[i] = m_Input->mouseInput[i];
+	
+	for(int i=0;i<3; i++)
+		temp.playerPos[i] = socketInterface::playerPos[i];
 
 	return temp;
 }
