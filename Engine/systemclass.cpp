@@ -272,7 +272,6 @@ bool SystemClass::Frame()
 			printf("Player: %d %d Boss: %d\n", hInfo->playerHp[0], hInfo->playerHp[1], hInfo->bossHp);
 			for (int i = 0; i < 2; i++)
 			{
-				//여기기기기기기
 				socketInterface::playerHp[i] = hInfo->playerHp[i];
 				cout << "Player HP: " + to_string(hInfo->playerHp[i]) << endl;
 			}

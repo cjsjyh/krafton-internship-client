@@ -101,6 +101,12 @@ int socketManager::Initialize()
 	MsgBundle* tempMsg = receiveMessage(ConnectSocket);
 	socketInterface::bossPhase2Hp = ((InitialParamBundle*)(tempMsg->ptr))->bossPhase2Hp;
 	socketInterface::bossPhase3Hp = ((InitialParamBundle*)(tempMsg->ptr))->bossPhase3Hp;
+	socketInterface::playerMaxHp = ((InitialParamBundle*)(tempMsg->ptr))->playerMaxHp;
+	socketInterface::bossMaxHp = ((InitialParamBundle*)(tempMsg->ptr))->bossMaxHp;
+	socketInterface::bossHp = socketInterface::bossMaxHp;
+	for (int i = 0; i < 2; i++)
+		socketInterface::playerHp[i] = socketInterface::playerMaxHp;
+	delete tempMsg;
 
 	std::thread t1([&]() {ListenToServer();});
 	t1.detach();

@@ -9,10 +9,10 @@ bool socketInterface::mouseInput[][3] = { 0, };
 int socketInterface::mouseX[2] = { 0, };
 int socketInterface::mouseY[2] = { 0, };
 int socketInterface::keyInput[2][10] = { 0, };
-int socketInterface::playerHp[2] = { 10, };
-int socketInterface::playerMaxHp = 10;
-int socketInterface::bossHp = 10;
-int socketInterface::bossMaxHp = 10;
+int socketInterface::playerHp[2] = { -1, };
+int socketInterface::playerMaxHp = -1;
+int socketInterface::bossHp = -1;
+int socketInterface::bossMaxHp = -1;
 int socketInterface::bossPhase2Hp = 0;
 int socketInterface::bossPhase3Hp = 0;
 
