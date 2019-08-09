@@ -187,12 +187,12 @@ void ApplicationClass::InitializePlayerParameters()
 		player->PLAYER_DASH_FRAME = m_filereader->paramInt.find("PLAYER_DASH_FRAME")->second;
 		player->PLAYER_DASH_PAUSE_FRAME = m_filereader->paramInt.find("PLAYER_DASH_PAUSE_FRAME")->second;
 
-		player->PLAYER_BULLET_DAMAGE = m_filereader->paramInt.find("PLAYER_BULLET_DAMAGE")->second;
+		//player->PLAYER_BULLET_DAMAGE = m_filereader->paramInt.find("PLAYER_BULLET_DAMAGE")->second;
 		player->PLAYER_BULLET_SPEED = m_filereader->paramFloat.find("PLAYER_BULLET_SPEED")->second;
 		player->PLAYER_BULLET_DISTANCE = m_filereader->paramInt.find("PLAYER_BULLET_DISTANCE")->second;
 		player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
 
-		player->SetHp(m_filereader->paramInt.find("PLAYER_HP")->second);
+		//player->SetHp(m_filereader->paramInt.find("PLAYER_HP")->second);
 		player->PLAYER_INTERACTION_RANGE = m_filereader->paramFloat.find("PLAYER_INTERACTION_RANGE")->second;
 
 		D3DXVECTOR3 playerSize;
@@ -235,9 +235,9 @@ void ApplicationClass::InitializeBossParameters()
 	bossCollSize.z = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_Z")->second;
 	boss->SetCollSize(bossCollSize);
 
-	boss->SetHp(m_filereader->paramInt.find("BOSS_HP")->second);
-	boss->BOSS_PHASE3_HP = m_filereader->paramFloat.find("BOSS_PHASE3_HP")->second;
-	boss->BOSS_PHASE2_HP = m_filereader->paramFloat.find("BOSS_PHASE2_HP")->second;
+	//boss->SetHp(m_filereader->paramInt.find("BOSS_HP")->second);
+	//boss->BOSS_PHASE3_HP = m_filereader->paramFloat.find("BOSS_PHASE3_HP")->second;
+	//boss->BOSS_PHASE2_HP = m_filereader->paramFloat.find("BOSS_PHASE2_HP")->second;
 
 	return;
 }

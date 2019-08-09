@@ -98,7 +98,9 @@ int socketManager::Initialize()
 	socketInterface::playerId = std::stoi(recvBuffer);
 
 	//sendMessage(ConnectSocket, new hpInfo(socketInterface::playerId, socketInterface::bossHitCount, socketInterface::playerHitCount), HP_INFO);
-	receiveMessage(ConnectSocket);
+	MsgBundle* tempMsg = receiveMessage(ConnectSocket);
+	socketInterface::bossPhase2Hp = ((InitialParamBundle*)(tempMsg->ptr))->bossPhase2Hp;
+	socketInterface::bossPhase3Hp = ((InitialParamBundle*)(tempMsg->ptr))->bossPhase3Hp;
 
 	std::thread t1([&]() {ListenToServer();});
 	t1.detach();
@@ -212,17 +214,16 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 
 		playerInput pInfo;
 		hpInfo hpMsg;
-
+		InitialParamBundle paramInfo;
 		switch (msgType)
 		{
 		case PLAYER_INFO:
+			ia >> pInfo;
 			playerInput* pInfoPtr;
 			pInfoPtr = new playerInput;
-			ia >> pInfo;
 			CopyPlayerInfo(pInfoPtr, &pInfo);
 
 			msgBundle->ptr = pInfoPtr;
-			msgBundle->type = msgType;
 			break;
 
 		case BOSS_INFO:
@@ -230,23 +231,28 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 			break;
 
 		case HP_INFO:
-			printf("[Thread] HP start\n");
-			std::cout << recvBuffer << std::endl;
+			ia >> hpMsg;
 			hpInfo* hpInfoPtr;
 			hpInfoPtr = new hpInfo;
-			ia >> hpMsg;
 			CopyHpInfo(hpInfoPtr, &hpMsg);
 
 			msgBundle->ptr = hpInfoPtr;
-			msgBundle->type = msgType;
-			printf("[Thread] HP done\n");
 			break;
 
 		case ITEM_INFO:
+			
+			break;
 
+		case PARAM_INFO:
+			ia >> paramInfo;
+			InitialParamBundle* paramInfoPtr;
+			paramInfoPtr = new InitialParamBundle;
+			CopyInitialParamBundle(paramInfoPtr, &paramInfo);
+
+			msgBundle->ptr = paramInfoPtr;
 			break;
 		}
-
+		msgBundle->type = msgType;
 		return msgBundle;
 	}
 
@@ -266,6 +272,7 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 
 	playerInput pinput;
 	hpInfo hInfo;
+	InitialParamBundle paramInfo;
 	switch (type)
 	{
 	case PLAYER_INFO:
@@ -281,6 +288,10 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	case HP_INFO:
 		CopyHpInfo(&hInfo, (hpInfo*)_input);
 		oa << hInfo;
+		break;
+	case PARAM_INFO:
+		CopyInitialParamBundle(&paramInfo, (InitialParamBundle*)_input);
+		oa << paramInfo;
 		break;
 	}
 
@@ -337,6 +348,12 @@ void socketManager::CopyHpInfo(hpInfo* dest, hpInfo* src)
 	dest->playerHitCount = src->playerHitCount;
 	for(int i=0;i<sizeof(src->playerHp)/sizeof(int);i++)
 		dest->playerHp[i] = src->playerHp[i];
+}
+
+void socketManager::CopyInitialParamBundle(InitialParamBundle* dest, InitialParamBundle* src)
+{
 	dest->bossMaxHp = src->bossMaxHp;
+	dest->bossPhase2Hp = src->bossPhase2Hp;
+	dest->bossPhase3Hp = src->bossPhase3Hp;
 	dest->playerMaxHp = src->playerMaxHp;
 }

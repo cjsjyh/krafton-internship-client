@@ -35,8 +35,9 @@ bool textfilereader::ReadFile(string fname)
 		{
 			fields.push_back(line.substr(0, pos));
 			line = line.substr(pos + 1);
-			
 		}
+		if (line.length() > 0)
+			fields.push_back(line);
 
 		if (fields.size() < 3)
 		{

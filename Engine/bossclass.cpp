@@ -63,13 +63,13 @@ void bossclass::SetGameManager(gameManager* _GM)
 
 void bossclass::CheckHp()
 {
-	if ((float)curHp / maxHp < BOSS_PHASE3_HP)
+	if (curHp <= socketInterface::bossPhase3Hp)
 	{
 		phase = 2;
 		m_model = model_list[2];
 		SetScale(BOSS_SIZE[1]);
 	}
-	else if ((float)curHp / maxHp < BOSS_PHASE2_HP)
+	else if (curHp <= socketInterface::bossPhase2Hp)
 	{
 		phase = 1;
 		m_model = model_list[1];

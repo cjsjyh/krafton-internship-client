@@ -13,6 +13,8 @@ int socketInterface::playerHp[2] = { 10, };
 int socketInterface::playerMaxHp = 10;
 int socketInterface::bossHp = 10;
 int socketInterface::bossMaxHp = 10;
+int socketInterface::bossPhase2Hp = 0;
+int socketInterface::bossPhase3Hp = 0;
 
 
 float socketInterface::bossPos[3] = { 0, };

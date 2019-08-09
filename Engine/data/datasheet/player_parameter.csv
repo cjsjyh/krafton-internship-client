@@ -1,13 +1,11 @@
 PLAYER_BULLET_SPEED,1.1,float,This is bullet speed
-PLAYER_BULLET_DAMAGE,3,int,
-PLAYER_BULLET_SPEED,1,float,
 PLAYER_BULLET_DISTANCE,50,int,
 PLAYER_BULLET_DELAY,0,int,how many frames to wait before moving at max speed
+PLAYER_BULLET_RELOAD,10,int,how many frames to wait to fire again
 PLAYER_SPEED,0.5,float,
 PLAYER_DASH_SPEED,2,float,
 PLAYER_DASH_FRAME,5,int,
-PLAYER_DASH_PAUSE_FRAME,7,int,
-PLAYER_HP,20,int,
+PLAYER_DASH_PAUSE_FRAME,10,int,
 PLAYER_POSITION_X,0,float,
 PLAYER_POSITION_Y,0,float,
 PLAYER_POSITION_Z,0,float,

@@ -21,6 +21,8 @@ public:
 	static int playerMaxHp;
 	static int bossHp;
 	static int bossMaxHp;
+	static int bossPhase2Hp;
+	static int bossPhase3Hp;
 	
 	//boss
 	static float bossPos[3];
