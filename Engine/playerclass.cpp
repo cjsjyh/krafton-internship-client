@@ -53,7 +53,7 @@ void playerclass::InitializeModels()
 	}
 	m_model = model_list[1];
 	
-	
+	maxHp = socketInterface::playerMaxHp;
 }
 
 void playerclass::SetManager(gameManager* _GM, itemmanagerclass* _IM)

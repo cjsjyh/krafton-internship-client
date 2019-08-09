@@ -15,7 +15,6 @@ using namespace boost::iostreams;
 
 
 #define BUFFER_SIZE 512
-#define MAX_PLAYER_COUNT 2
 
 
 class playerInput
@@ -46,22 +45,66 @@ public:
 	bool mouseInput[3];
 	int keyInput[10];
 
-	int bossHitCount;
-	int playerHitCount;
-
 	template<class Archive>
 	void serialize(Archive& ar, const unsigned int version) {
 		ar& playerId;
-
 		ar& playerPos;
 
 		ar& mouseX;
 		ar& mouseY;
 		ar& mouseInput;
 		ar& keyInput;
+	}
+};
 
+
+class hpInfo {
+public:
+	friend class boost::serialization::access;
+
+	hpInfo() {
+		playerId = -1;
+		bossHitCount = -1;
+		playerHitCount = -1;
+		for (int i = 0; i < sizeof(playerHp) / sizeof(int); i++)
+			playerHp[i] = -1;
+		bossHp = -1;
+		playerMaxHp = -1;
+		bossMaxHp = -1;
+	}
+
+	hpInfo(int _playerId, int _bossHit, int _playerHit)
+	{
+		for (int i = 0; i < sizeof(playerHp) / sizeof(int); i++)
+			playerHp[i] = -1;
+		bossHp = -1;
+		bossHitCount = -1;
+		playerMaxHp = -1;
+		bossMaxHp = -1;
+
+		playerId = _playerId;
+		bossHitCount = _bossHit;
+		playerHitCount = _playerHit;
+	}
+
+	int playerId;
+	int playerHp[2];
+	int bossHp;
+	int bossHitCount;
+	int playerHitCount;
+
+	int playerMaxHp;
+	int bossMaxHp;
+
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version) {
+		ar& playerId;
+		ar& playerHp;
+		ar& bossHp;
 		ar& bossHitCount;
 		ar& playerHitCount;
+		ar& playerMaxHp;
+		ar& bossMaxHp;
 	}
 };
 
@@ -79,6 +122,7 @@ public:
 	{
 		PLAYER_INFO,
 		BOSS_INFO,
+		HP_INFO,
 		ITEM_INFO,
 	};
 
@@ -92,7 +136,6 @@ public:
 	MsgBundle* GetNewMessage();
 
 public:
-	int playerId;
 	playerInput pInfo;
 	std::queue<MsgBundle*> serverReadBuffer;
 
@@ -101,6 +144,7 @@ private:
 	MsgBundle* receiveMessage(SOCKET);
 	int sendMessage(SOCKET, void*, DataType);
 	void CopyPlayerInfo(playerInput*, playerInput*);
+	void CopyHpInfo(hpInfo*, hpInfo*);
 
 private:
 	char sendBuffer[BUFFER_SIZE];

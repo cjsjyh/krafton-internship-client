@@ -179,7 +179,7 @@ void ApplicationClass::UninitializeBasic()
 void ApplicationClass::InitializePlayerParameters()
 {		
 	//TEMP//
-	for (int i = 0; i < playerCount; i++)
+	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 	{
 		playerclass* player = players[i];
 		player->PLAYER_SPEED = m_filereader->paramFloat.find("PLAYER_SPEED")->second;
@@ -251,7 +251,7 @@ void ApplicationClass::InitializeMap()
 	floor->SetRotation(D3DXVECTOR3(0, 45, 0));
 	m_GM->RegisterObjectToRender(floor);
 	
-	for (int i = 0; i < playerCount; i++)
+	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 	{
 		playerclass* player = new playerclass(10, m_D3D);
 		player->tag = "player" + to_string(i);
@@ -420,16 +420,23 @@ bool ApplicationClass::Frame()
 
 	//Frame Action
 	if (m_GM->scene == 0)
+	{
 		boss->Frame(frame);
-	
-	for(int i =0; i<players.size(); i++)
+		boss->ChangeHp(socketInterface::bossHp);
+	}
+
+	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
+	{
 		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(socketInterface::mouseX[i], socketInterface::mouseY[i]), frame);
+		players[i]->ChangeHp(socketInterface::playerHp[i]);
+	}
 	m_GM->Frame();
 	SetCamera(m_GM->scene);
 	
 	//PLAYER DEAD
-	if (players[0]->CheckDestroy() || boss->CheckDestroy())
+	if (socketInterface::playerHp[0] <= 0)
 	{
+		/*
 		UninitializeMap();
 		UninitializeBasic();
 
@@ -437,8 +444,17 @@ bool ApplicationClass::Frame()
 		InitializeMap();
 		InitializePlayerParameters();
 		InitializeBossParameters();
+		
 		return true;
+		*/
 	}
+
+	//BOSS DEAD
+	if (socketInterface::bossHp <= 0)
+	{
+
+	}
+
 	
 	//-------------------
 	//  SCENE CHANGE

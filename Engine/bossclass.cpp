@@ -8,6 +8,8 @@
 #include "gameManager.h"
 #include "skillpatternclass.h"
 
+#include "socketInterface.h"
+
 #include <cstdlib>
 #include <ctime>
 
@@ -34,6 +36,8 @@ void bossclass::Initialize()
 	SetBossPhasePattern();
 
 	InitializeModels();
+
+	maxHp = socketInterface::bossMaxHp;
 }
 
 void bossclass::InitializeModels()

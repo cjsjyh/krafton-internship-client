@@ -24,8 +24,6 @@ SystemClass::SystemClass()
 
 	mouseX = mouseY = 0;
 	//TEMP//
-	playerCount = 2;
-	currentPlayerID = 0;
 	m_Socket = 0;
 
 	tempPlayer.mouseX = tempPlayer.mouseY = 0;
@@ -74,6 +72,14 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	m_Socket = new socketManager();
+	if (!m_Socket)
+	{
+		std::cout << "Socket not initialized properly" << std::endl;
+		return false;
+	}
+	m_Socket->Initialize();
+
 	// Create the graphics object.  This object will handle rendering all the graphics for this application.
 	m_Graphics = new ApplicationClass;
 	if(!m_Graphics)
@@ -107,14 +113,6 @@ bool SystemClass::Initialize()
 
 	// Initialize the cpu object.
 	m_Cpu->Initialize();
-
-	m_Socket = new socketManager();
-	if (!m_Socket)
-	{
-		std::cout << "Socket not initialized properly" << std::endl;
-		return false;
-	}
-	m_Socket->Initialize();
 
 	return true;
 }
@@ -150,6 +148,12 @@ void SystemClass::Shutdown()
 	{
 		delete m_Fps;
 		m_Fps = 0;
+	}
+
+	if (m_Socket)
+	{
+		delete m_Socket;
+		m_Socket = 0;
 	}
 
 	// Shutdown the window.
@@ -229,12 +233,12 @@ bool SystemClass::Frame()
 	
 	//TEMP//
 	MsgBundle* newMsg = m_Socket->GetNewMessage();
-	playerInput* pInfo;
 	if (newMsg != NULL)
 	{
 		switch (newMsg->type)
 		{
 		case socketManager::PLAYER_INFO:
+			playerInput* pInfo;
 			pInfo = (playerInput*)(newMsg->ptr);
 			
 			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
@@ -256,11 +260,27 @@ bool SystemClass::Frame()
 			}
 			
 			break;
+
 		case socketManager::BOSS_INFO:
 
 			break;
-		case socketManager::ITEM_INFO:
 
+		case socketManager::HP_INFO:
+			hpInfo* hInfo;
+			hInfo = (hpInfo*)(newMsg->ptr);
+
+			printf("Player: %d %d Boss: %d\n", hInfo->playerHp[0], hInfo->playerHp[1], hInfo->bossHp);
+			for (int i = 0; i < 2; i++)
+			{
+				//여기기기기기기
+				socketInterface::playerHp[i] = hInfo->playerHp[i];
+				cout << "Player HP: " + to_string(hInfo->playerHp[i]) << endl;
+			}
+			socketInterface::bossHp = hInfo->bossHp;
+			break;
+
+		case socketManager::ITEM_INFO:
+			
 			break;
 		}
 	}
@@ -280,7 +300,7 @@ bool SystemClass::Frame()
 playerInput* SystemClass::WrapInput()
 {
 	playerInput* temp = new playerInput;
-	temp->playerId = m_Socket->playerId;
+	temp->playerId = socketInterface::playerId;
 
 	temp->mouseX = mouseX;
 	temp->mouseY = mouseY;

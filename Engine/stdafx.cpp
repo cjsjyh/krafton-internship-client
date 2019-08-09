@@ -2,9 +2,6 @@
 
 #include "stdafx.h"
 
-int playerCount;
-int currentPlayerID;
-
 float stdafx::GetDistance(D3DXVECTOR3 vec1, D3DXVECTOR3 vec2)
 {
 	float length = pow(vec1.x - vec2.x, 2) + pow(vec1.z - vec2.z, 2);

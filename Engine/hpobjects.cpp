@@ -22,7 +22,7 @@ hpobjects::~hpobjects()
 
 void hpobjects::SetHp(int hp)
 {
-	maxHp = curHp = hp;
+	curHp = hp;
 }
 
 int hpobjects::GetHp()

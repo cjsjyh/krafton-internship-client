@@ -95,7 +95,10 @@ int socketManager::Initialize()
 	}
 	//SET CLIENT ID
 	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
-	playerId = std::stoi(recvBuffer);
+	socketInterface::playerId = std::stoi(recvBuffer);
+
+	//sendMessage(ConnectSocket, new hpInfo(socketInterface::playerId, socketInterface::bossHitCount, socketInterface::playerHitCount), HP_INFO);
+	receiveMessage(ConnectSocket);
 
 	std::thread t1([&]() {ListenToServer();});
 	t1.detach();
@@ -126,6 +129,13 @@ bool socketManager::Frame(bool IsKeyChanged,playerInput* playerInput)
 	if (IsKeyChanged)
 	{
 		iResult = sendMessage(ConnectSocket, playerInput, PLAYER_INFO);
+	}
+
+	if (socketInterface::bossHitCount + socketInterface::playerHitCount > 0)
+	{
+		iResult = sendMessage(ConnectSocket, new hpInfo(socketInterface::playerId,socketInterface::bossHitCount, socketInterface::playerHitCount), HP_INFO);
+		socketInterface::bossHitCount = 0;
+		socketInterface::playerHitCount = 0;
 	}
 	return true;
 }
@@ -194,30 +204,44 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 	iResult = recv(ConnectSocket, recvBuffer, msgLen, 0);
 	if (iResult > 0)
 	{
+		MsgBundle* msgBundle = new MsgBundle;
+
 		std::stringstream ss;
 		ss.write(recvBuffer, msgLen);
 		boost::archive::text_iarchive ia(ss);
 
-		MsgBundle* msgBundle = new MsgBundle;
-
-		playerInput* pInfoPtr = new playerInput;
 		playerInput pInfo;
+		hpInfo hpMsg;
+
 		switch (msgType)
 		{
 		case PLAYER_INFO:
+			playerInput* pInfoPtr;
+			pInfoPtr = new playerInput;
 			ia >> pInfo;
 			CopyPlayerInfo(pInfoPtr, &pInfo);
 
 			msgBundle->ptr = pInfoPtr;
 			msgBundle->type = msgType;
-
-			std::cout << "[recv]ID: " << pInfoPtr->playerId << std::endl;
-			std::cout << "[recv]mouseX: " << pInfoPtr->mouseX << std::endl;
-			std::cout << "[recv]mouseY: " << pInfoPtr->mouseY << std::endl << std::endl;
 			break;
+
 		case BOSS_INFO:
 
 			break;
+
+		case HP_INFO:
+			printf("[Thread] HP start\n");
+			std::cout << recvBuffer << std::endl;
+			hpInfo* hpInfoPtr;
+			hpInfoPtr = new hpInfo;
+			ia >> hpMsg;
+			CopyHpInfo(hpInfoPtr, &hpMsg);
+
+			msgBundle->ptr = hpInfoPtr;
+			msgBundle->type = msgType;
+			printf("[Thread] HP done\n");
+			break;
+
 		case ITEM_INFO:
 
 			break;
@@ -240,18 +264,23 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	stream<array_sink> os{ sink };
 	boost::archive::text_oarchive oa(os);
 
-	playerInput input;
+	playerInput pinput;
+	hpInfo hInfo;
 	switch (type)
 	{
 	case PLAYER_INFO:
-		CopyPlayerInfo(&input, (playerInput*)_input);
-		oa << input;
+		CopyPlayerInfo(&pinput, (playerInput*)_input);
+		oa << pinput;
 		break;
 	case BOSS_INFO:
-
+	
 		break;
 	case ITEM_INFO:
 
+		break;
+	case HP_INFO:
+		CopyHpInfo(&hInfo, (hpInfo*)_input);
+		oa << hInfo;
 		break;
 	}
 
@@ -298,4 +327,16 @@ void socketManager::CopyPlayerInfo(playerInput* dest, playerInput* src)
 	dest->mouseX = src->mouseX;
 	dest->mouseY = src->mouseY;
 	dest->playerId = src->playerId;
+}
+
+void socketManager::CopyHpInfo(hpInfo* dest, hpInfo* src)
+{
+	dest->playerId = src->playerId;
+	dest->bossHitCount = src->bossHitCount;
+	dest->bossHp = src->bossHp;
+	dest->playerHitCount = src->playerHitCount;
+	for(int i=0;i<sizeof(src->playerHp)/sizeof(int);i++)
+		dest->playerHp[i] = src->playerHp[i];
+	dest->bossMaxHp = src->bossMaxHp;
+	dest->playerMaxHp = src->playerMaxHp;
 }
