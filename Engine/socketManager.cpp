@@ -131,20 +131,42 @@ bool socketManager::Shutdown()
 	return true;
 }
 
-bool socketManager::Frame(bool IsKeyChanged,playerInput* playerInput)
+bool socketManager::Frame(bool IsKeyChanged, playerInput* playerInput)
 {
-	int iResult = 0 ;
+	int iResult = 0;
+	bool flag;
 	if (IsKeyChanged)
 	{
 		iResult = sendMessage(ConnectSocket, playerInput, PLAYER_INFO);
 	}
 
+	//맞은 사람/보스가 있을 경우
 	if (socketInterface::bossHitCount + socketInterface::playerHitCount > 0)
 	{
-		iResult = sendMessage(ConnectSocket, new hpInfo(socketInterface::playerId,socketInterface::bossHitCount, socketInterface::playerHitCount), HP_INFO);
+		iResult = sendMessage(ConnectSocket, new hpInfo(socketInterface::playerId, socketInterface::bossHitCount, socketInterface::playerHitCount), HP_INFO);
 		socketInterface::bossHitCount = 0;
 		socketInterface::playerHitCount = 0;
 	}
+
+	//힐을 한 경우
+	flag = false;
+	for (int i = 0; i < 2; i++)
+		if (socketInterface::playerHeal[i] > 0)
+			flag = true;
+	if (flag || socketInterface::bossHeal > 0)
+	{
+		hpInfo* tempHp;
+		tempHp = new hpInfo;
+		tempHp->bossHeal = socketInterface::bossHeal;
+		for(int i=0; i<2; i++)
+			tempHp->playerHeal[i] = socketInterface::playerHeal[i];
+		iResult = sendMessage(ConnectSocket, tempHp, HP_INFO);
+
+		socketInterface::bossHeal = 0;
+		for(int i=0; i<2; i++)
+			socketInterface::playerHeal[i] = 0;
+	}
+
 	return true;
 }
 
@@ -352,8 +374,12 @@ void socketManager::CopyHpInfo(hpInfo* dest, hpInfo* src)
 	dest->bossHitCount = src->bossHitCount;
 	dest->bossHp = src->bossHp;
 	dest->playerHitCount = src->playerHitCount;
-	for(int i=0;i<sizeof(src->playerHp)/sizeof(int);i++)
+	for (int i = 0; i < sizeof(src->playerHp) / sizeof(int); i++)
+	{
 		dest->playerHp[i] = src->playerHp[i];
+		dest->playerHeal[i] = src->playerHeal[i];
+	}
+	dest->bossHeal = src->bossHeal;
 }
 
 void socketManager::CopyInitialParamBundle(InitialParamBundle* dest, InitialParamBundle* src)
@@ -363,3 +389,10 @@ void socketManager::CopyInitialParamBundle(InitialParamBundle* dest, InitialPara
 	dest->bossPhase3Hp = src->bossPhase3Hp;
 	dest->playerMaxHp = src->playerMaxHp;
 }
+
+void socketManager::CopyItemInfo(ItemInfo* dest, ItemInfo* src)
+{
+	dest->itemId = src->itemId;
+	dest->playerId = src->itemId;
+}
+

@@ -41,7 +41,7 @@ using namespace std;
 
 #define TO_RADIAN 0.0174532925f
 #define MAX_PLAYER_COUNT 2
-#define KEY_NUM 7
+#define KEY_NUM 8
 
 
 typedef struct playerInfoStruct {

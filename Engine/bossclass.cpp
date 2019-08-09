@@ -82,11 +82,13 @@ void bossclass::CheckHp()
 void bossclass::Frame(int frame)
 {
 	vector<projectileclass*> shootBullets;
+	
 	if (frame % 60 == 0)
 	{
 		int ChosenIndex = rand() % bossPatternPool[phase].size();
 		ActivatePattern(bossPatternPool[phase][ChosenIndex]);
 	}
+	
 	PopQueue(shootBullets);
 	CheckHp();
 

@@ -4,6 +4,8 @@ int socketInterface::playerId = -1;
 float socketInterface::playerPos[3] = { 0, }; // Myself
 int socketInterface::bossHitCount = 0; // Myself
 int socketInterface::playerHitCount = 0; // Myself
+int socketInterface::playerHeal[2] = { 0, };
+int socketInterface::bossHeal = 0;
 
 bool socketInterface::mouseInput[][3] = { 0, };
 int socketInterface::mouseX[2] = { 0, };

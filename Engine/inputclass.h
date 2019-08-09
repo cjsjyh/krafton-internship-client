@@ -53,7 +53,7 @@ private:
 	POINT cursorPos;
 	HWND hwnd;
 
-	const int keyCode[KEY_NUM] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE, DIK_LSHIFT, DIK_RETURN };
+	const int keyCode[KEY_NUM] = { DIK_W, DIK_A,DIK_S,DIK_D,DIK_SPACE, DIK_LSHIFT, DIK_RETURN, DIK_F };
 
 	int m_screenWidth, m_screenHeight;
 	int m_mouseX, m_mouseY;

@@ -187,12 +187,10 @@ void ApplicationClass::InitializePlayerParameters()
 		player->PLAYER_DASH_FRAME = m_filereader->paramInt.find("PLAYER_DASH_FRAME")->second;
 		player->PLAYER_DASH_PAUSE_FRAME = m_filereader->paramInt.find("PLAYER_DASH_PAUSE_FRAME")->second;
 
-		//player->PLAYER_BULLET_DAMAGE = m_filereader->paramInt.find("PLAYER_BULLET_DAMAGE")->second;
 		player->PLAYER_BULLET_SPEED = m_filereader->paramFloat.find("PLAYER_BULLET_SPEED")->second;
 		player->PLAYER_BULLET_DISTANCE = m_filereader->paramInt.find("PLAYER_BULLET_DISTANCE")->second;
 		player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
 
-		//player->SetHp(m_filereader->paramInt.find("PLAYER_HP")->second);
 		player->PLAYER_INTERACTION_RANGE = m_filereader->paramFloat.find("PLAYER_INTERACTION_RANGE")->second;
 
 		D3DXVECTOR3 playerSize;
@@ -235,10 +233,6 @@ void ApplicationClass::InitializeBossParameters()
 	bossCollSize.z = m_filereader->paramFloat.find("BOSS_COLLIDER_SIZE_Z")->second;
 	boss->SetCollSize(bossCollSize);
 
-	//boss->SetHp(m_filereader->paramInt.find("BOSS_HP")->second);
-	//boss->BOSS_PHASE3_HP = m_filereader->paramFloat.find("BOSS_PHASE3_HP")->second;
-	//boss->BOSS_PHASE2_HP = m_filereader->paramFloat.find("BOSS_PHASE2_HP")->second;
-
 	return;
 }
 
@@ -277,6 +271,8 @@ void ApplicationClass::UninitializeMap()
 
 	if (players.size() != 0)
 	{
+		for (int i = 0; i < MAX_PLAYER_COUNT; i++)
+			delete players[i];
 		players.clear();
 	}
 	if (boss)
@@ -427,16 +423,42 @@ bool ApplicationClass::Frame()
 
 	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 	{
-		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(socketInterface::mouseX[i], socketInterface::mouseY[i]), frame);
+		if (socketInterface::playerHp[i] > 0)
+		{
+			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(socketInterface::mouseX[i], socketInterface::mouseY[i]), frame);
+		}
+		else
+		{
+			players[i]->channel = gameObject::INTERACTION;
+		}
 		players[i]->ChangeHp(socketInterface::playerHp[i]);
 	}
 	m_GM->Frame();
 	SetCamera(m_GM->scene);
 	
 	//PLAYER DEAD
-	if (socketInterface::playerHp[0] <= 0)
+	result = false;
+	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
+		if (socketInterface::playerHp[socketInterface::playerId] > 0)
+			result = true;
+	//Both Dead
+	if (!result)
+		printf("Both Player dead!\n");
+		
+	
+	/*
+	UninitializeMap();
+	UninitializeBasic();
+
+	InitializeBasic();
+	InitializeMap();
+	InitializePlayerParameters();
+	InitializeBossParameters();
+	*/
+
+	//BOSS DEAD
+	if (socketInterface::bossHp <= 0)
 	{
-		/*
 		UninitializeMap();
 		UninitializeBasic();
 
@@ -444,15 +466,6 @@ bool ApplicationClass::Frame()
 		InitializeMap();
 		InitializePlayerParameters();
 		InitializeBossParameters();
-		
-		return true;
-		*/
-	}
-
-	//BOSS DEAD
-	if (socketInterface::bossHp <= 0)
-	{
-
 	}
 
 	

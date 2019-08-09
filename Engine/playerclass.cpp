@@ -212,6 +212,11 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 				AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 	}
 	
+	if (InputClass::IsKeyPressed(keys, DIK_F))
+	{
+		ObjectInteraction();
+	}
+
 	if (GM->scene == 1)
 	{
 		NotifyObjectTooltip();
@@ -276,6 +281,14 @@ int playerclass::ObjectInteraction()
 
 	if (hitObj)
 	{
+		if (hitObj->GetName() == "player")
+		{
+			string ObjTag = hitObj->tag;
+			int deadPlayerId = stoi(ObjTag.substr(ObjTag.length()-1, ObjTag.length()));
+			socketInterface::playerHeal[deadPlayerId] = socketInterface::playerMaxHp;
+			printf("===Dead Player Id: %d\n", deadPlayerId);
+		}
+
 		IM->SetItemUsed(hitObj->GetName(), 0);
 	}
 	
