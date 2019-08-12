@@ -369,13 +369,13 @@ void ApplicationClass::Shutdown()
 	return;
 }
 
-D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int playerId)
+D3DXVECTOR3 ApplicationClass::GetDirectionMouse(D3DXVECTOR3 playerPos, int mouseX, int mouseY)
 {
 	D3DXVECTOR3 direction, origin, rayOrigin, rayDirection, projectedPt;
 	D3DXMATRIX projectionMatrix, viewMatrix, inverseViewMatrix, worldMatrix, temp;
 
-	float pointX = ((2.0f * socketInterface::mouseX[playerId]) / screenW) - 1;
-	float pointY = (((2.0f * socketInterface::mouseY[playerId]) / screenH) - 1) * -1;
+	float pointX = ((2.0f * mouseX) / screenW) - 1;
+	float pointY = (((2.0f * mouseY) / screenH) - 1) * -1;
 
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	pointX = pointX / projectionMatrix._11;
@@ -391,7 +391,7 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int playerId)
 	origin = m_Camera->GetPosition();
 
 	m_D3D->GetWorldMatrix(worldMatrix);
-	D3DXMatrixTranslation(&temp, socketInterface::playerPos[playerId][0], socketInterface::playerPos[playerId][1], socketInterface::playerPos[playerId][2]);
+	D3DXMatrixTranslation(&temp, playerPos.x, playerPos.y, playerPos.z);
 	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &temp);
 	D3DXMatrixInverse(&worldMatrix, NULL, &worldMatrix);
 
@@ -407,10 +407,13 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int playerId)
 	return stdafx::normalizeVec3(projectedPt);
 }
 
-bool ApplicationClass::Frame()
+bool ApplicationClass::Frame(int mouseX, int mouseY)
 {
 	bool result;
 
+	D3DXVECTOR3 curDirVec = GetDirectionMouse(players[socketInterface::playerId]->GetPosition(), mouseX, mouseY);
+	for (int i = 0; i < 3; i++)
+		socketInterface::curPlayerDirVec[i] = curDirVec[i];
 
 	frame++;
 
@@ -425,9 +428,12 @@ bool ApplicationClass::Frame()
 	{
 		if (socketInterface::playerHp[i] > 0)
 		{
-			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(i), frame);
-			/*for (int j = 0; j < 3; j++)
+			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]) , frame);
+			/*printf("[%d] ",i);
+			for (int j = 0; j < 3; j++)
 				printf("%f ",socketInterface::playerPos[i][j]);
+			printf("\n");
+			printf("[%d] MOUSEX: %d MOUSEY %d", i,socketInterface::mouseX[i], socketInterface::mouseY[i]);
 			printf("\n");*/
 		}
 		else

@@ -232,6 +232,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
 	if (currentPlayerId == socketInterface::playerId)
 	{
+		stdafx::PrintVector3(vecToMouse);
 		for (int i = 0; i < 3; i++)
 		{
 			socketInterface::curPlayerPos[i] = GetPosition()[i];

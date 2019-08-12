@@ -66,10 +66,10 @@ public:
 	void InitializeRewardMap(vector<string>);
 	void UninitializeRewardMap();
 	void Shutdown();
-	bool Frame();
+	bool Frame(int, int);
 	bool Render();
 private:
-	D3DXVECTOR3 GetDirectionMouse(int);
+	D3DXVECTOR3 GetDirectionMouse(D3DXVECTOR3, int, int);
 	void SetCamera(int);
 
 	textfilereader* m_filereader;

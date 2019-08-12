@@ -1,6 +1,7 @@
 #include "socketInterface.h"
 
 int socketInterface::playerId = -1;
+float socketInterface::curPlayerDirVec[3] = { 0, };
 float socketInterface::curPlayerPos[3] = { 0, }; // Myself
 float socketInterface::playerPos[2][3] = { 0, };
 int socketInterface::bossHitCount = 0; // Myself
@@ -9,8 +10,7 @@ int socketInterface::playerHeal[2] = { 0, };
 int socketInterface::bossHeal = 0;
 
 bool socketInterface::mouseInput[][3] = { 0, };
-int socketInterface::mouseX[2] = { 0, };
-int socketInterface::mouseY[2] = { 0, };
+float socketInterface::mouseDirVec[][3] = { 0, };
 int socketInterface::keyInput[2][10] = { 0, };
 int socketInterface::playerHp[2] = { -1, };
 int socketInterface::playerMaxHp = -1;

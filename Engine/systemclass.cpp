@@ -243,15 +243,15 @@ bool SystemClass::Frame()
 			
 			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
 			{
-				cout << "HANDLING PLAYER ID: " + to_string(pInfo->playerId) << endl;
-				socketInterface::mouseX[pInfo->playerId] = pInfo->mouseX;
-				socketInterface::mouseY[pInfo->playerId] = pInfo->mouseY;
 				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
 					socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
 				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
 					socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
 				for (int i = 0; i < 3; i++)
+				{
 					socketInterface::playerPos[pInfo->playerId][i] = pInfo->playerPos[i];
+					socketInterface::mouseDirVec[pInfo->playerId][i] = pInfo->mouseDirVec[i];
+				}
 				//TEMP
 				/*socketInterface::mouseX[1] = pInfo->mouseX;
 				socketInterface::mouseY[1] = pInfo->mouseY;
@@ -287,7 +287,7 @@ bool SystemClass::Frame()
 	
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame();
+	result = m_Graphics->Frame(mouseX,mouseY);
 	if (!result)
 	{
 		return false;
@@ -301,18 +301,16 @@ playerInput* SystemClass::WrapInput()
 	playerInput* temp = new playerInput;
 	temp->playerId = socketInterface::playerId;
 
-	temp->mouseX = mouseX;
-	temp->mouseY = mouseY;
 	for (int i = 0; i < sizeof(temp->keyInput)/sizeof(int); i++)
 		temp->keyInput[i] = m_Input->keyInput[i];
 	for (int i = 0; i < sizeof(temp->mouseInput); i++)
 		temp->mouseInput[i] = m_Input->mouseInput[i];
 	
-	for(int i=0;i<3; i++)
+	for (int i = 0; i < 3; i++)
+	{
 		temp->playerPos[i] = socketInterface::curPlayerPos[i];
-	for (int j = 0; j < 3; j++)
-		printf("%f ", socketInterface::curPlayerPos[j]);
-	printf("\n");
+		temp->mouseDirVec[i] = socketInterface::curPlayerDirVec[i];
+	}
 
 	return temp;
 }

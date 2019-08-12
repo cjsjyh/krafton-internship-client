@@ -9,6 +9,7 @@ public:
 	//player
 	//To Send
 	static int playerId;
+	static float curPlayerDirVec[3];
 	static float curPlayerPos[3]; // Myself
 	static int bossHitCount; // Myself
 	static int playerHitCount; // Myself
@@ -16,7 +17,7 @@ public:
 	static int bossHeal;
 
 	//To read
-	static int mouseX[2], mouseY[2];
+	static float mouseDirVec[2][3];
 	static bool mouseInput[2][3];
 	static int keyInput[2][10];
 

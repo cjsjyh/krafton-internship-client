@@ -364,9 +364,11 @@ void socketManager::CopyPlayerInfo(playerInput* dest, playerInput* src)
 	for (int i = 0; i < sizeof(src->mouseInput); i++)
 		dest->mouseInput[i] = src->mouseInput[i];
 	for (int i = 0; i < 3; i++)
+	{
 		dest->playerPos[i] = src->playerPos[i];
-	dest->mouseX = src->mouseX;
-	dest->mouseY = src->mouseY;
+		dest->mouseDirVec[i] = src->mouseDirVec[i];
+	}
+	
 	dest->playerId = src->playerId;
 }
 
@@ -402,6 +404,6 @@ void socketManager::PrintPlayerInput(playerInput* temp)
 {
 	printf("PlayerId: %d\n", temp->playerId);
 	printf("PlayerPos: [%d,%d,%d]\n", temp->playerPos[0], temp->playerPos[1], temp->playerPos[2]);
-	printf("mouseX: %d mouseY: %d\n", temp->mouseX, temp->mouseY);
+	//printf("mouseX: %d mouseY: %d\n", temp->mouseX, temp->mouseY);
 	std::cout << "mouseInput: " + std::to_string(temp->mouseInput[0]) << std::endl;
 }

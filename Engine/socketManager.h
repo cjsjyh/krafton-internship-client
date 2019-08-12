@@ -23,13 +23,15 @@ class playerInput
 public:
 	friend class boost::serialization::access;
 
-	playerInput(int _playerId, int _mouseX, int _mouseY, bool* _mouseInput, int* _keyInput)
-		:playerId(_playerId), mouseX(_mouseX), mouseY(_mouseY)
+	playerInput(int _playerId, int* _mouseDirVec, bool* _mouseInput, int* _keyInput)
+		:playerId(_playerId)
 	{
 		for (int i = 0; i < sizeof(_mouseInput); i++)
 			mouseInput[i] = _mouseInput[i];
 		for (int i = 0; i < sizeof(keyInput) / sizeof(int); i++)
 			keyInput[i] = _keyInput[i];
+		for (int i = 0; i < 3; i++)
+			mouseDirVec[i] = _mouseDirVec[i];
 	}
 
 	playerInput() {
@@ -41,7 +43,7 @@ public:
 	int playerId;
 	float playerPos[3];
 	
-	int mouseX, mouseY;
+	float mouseDirVec[3];
 	bool mouseInput[3];
 	int keyInput[10];
 
@@ -50,8 +52,7 @@ public:
 		ar& playerId;
 		ar& playerPos;
 
-		ar& mouseX;
-		ar& mouseY;
+		ar& mouseDirVec;
 		ar& mouseInput;
 		ar& keyInput;
 	}
