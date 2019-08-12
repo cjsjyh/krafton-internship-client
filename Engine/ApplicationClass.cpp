@@ -261,7 +261,7 @@ void ApplicationClass::InitializeMap()
 	boss->SetGameManager(m_GM);
 	m_GM->RegisterObjectToRender(boss);
 
-	midPoint = (players[0]->GetPosition() + boss->GetPosition()) / 2;
+	midPoint = (players[socketInterface::playerId]->GetPosition() + boss->GetPosition()) / 2;
 
 	return;
 }
@@ -369,7 +369,7 @@ void ApplicationClass::Shutdown()
 	return;
 }
 
-D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int _mouseX, int _mouseY)
+D3DXVECTOR3 ApplicationClass::GetDirectionMouse(playerclass* tempPlayer, int _mouseX, int _mouseY)
 {
 	D3DXVECTOR3 direction, origin, rayOrigin, rayDirection, projectedPt;
 	D3DXMATRIX projectionMatrix, viewMatrix, inverseViewMatrix, worldMatrix, temp;
@@ -391,7 +391,7 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int _mouseX, int _mouseY)
 	origin = m_Camera->GetPosition();
 
 	m_D3D->GetWorldMatrix(worldMatrix);
-	D3DXMatrixTranslation(&temp, players[0]->GetPosition().x, players[0]->GetPosition().y, players[0]->GetPosition().z);
+	D3DXMatrixTranslation(&temp, tempPlayer->GetPosition().x, tempPlayer->GetPosition().y, tempPlayer->GetPosition().z);
 	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &temp);
 	D3DXMatrixInverse(&worldMatrix, NULL, &worldMatrix);
 
@@ -425,7 +425,7 @@ bool ApplicationClass::Frame()
 	{
 		if (socketInterface::playerHp[i] > 0)
 		{
-			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(socketInterface::mouseX[i], socketInterface::mouseY[i]), frame);
+			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(players[i], socketInterface::mouseX[i], socketInterface::mouseY[i]), frame);
 		}
 		else
 		{
@@ -525,7 +525,7 @@ bool ApplicationClass::Render()
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	m_Camera->Render(players[0]->GetPosition());
+	m_Camera->Render(players[socketInterface::playerId]->GetPosition());
 	m_Camera->GetBillBoardMatrix(MatrixToFaceCamera);
 	m_Camera->GetViewMatrix(viewMatrix);
 
@@ -580,8 +580,8 @@ void ApplicationClass::SetCamera(int scene)
 {
 	if (scene == 0)
 	{
-		m_Camera->SetViewPoint((players[0]->GetPosition() + boss->GetPosition()) / 2);
-		float distance = stdafx::GetDistance(players[0]->GetPosition(), boss->GetPosition());
+		m_Camera->SetViewPoint((players[socketInterface::playerId]->GetPosition() + boss->GetPosition()) / 2);
+		float distance = stdafx::GetDistance(players[socketInterface::playerId]->GetPosition(), boss->GetPosition());
 		m_Camera->Move(distance);
 	}
 	else if (scene == 1)
