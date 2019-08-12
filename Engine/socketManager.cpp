@@ -250,8 +250,8 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 			playerInput* pInfoPtr;
 			pInfoPtr = new playerInput;
 			CopyPlayerInfo(pInfoPtr, &pInfo);
-
 			msgBundle->ptr = pInfoPtr;
+			
 			break;
 
 		case BOSS_INFO:
@@ -287,7 +287,6 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 	printf("[ERROR] Recv Msg Failed\n");
 	return NULL;
 }
-
 
 int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 {
@@ -364,6 +363,8 @@ void socketManager::CopyPlayerInfo(playerInput* dest, playerInput* src)
 		dest->keyInput[i] = src->keyInput[i];
 	for (int i = 0; i < sizeof(src->mouseInput); i++)
 		dest->mouseInput[i] = src->mouseInput[i];
+	for (int i = 0; i < 3; i++)
+		dest->playerPos[i] = src->playerPos[i];
 	dest->mouseX = src->mouseX;
 	dest->mouseY = src->mouseY;
 	dest->playerId = src->playerId;
@@ -397,3 +398,10 @@ void socketManager::CopyItemInfo(ItemInfo* dest, ItemInfo* src)
 	dest->playerId = src->itemId;
 }
 
+void socketManager::PrintPlayerInput(playerInput* temp)
+{
+	printf("PlayerId: %d\n", temp->playerId);
+	printf("PlayerPos: [%d,%d,%d]\n", temp->playerPos[0], temp->playerPos[1], temp->playerPos[2]);
+	printf("mouseX: %d mouseY: %d\n", temp->mouseX, temp->mouseY);
+	std::cout << "mouseInput: " + std::to_string(temp->mouseInput[0]) << std::endl;
+}

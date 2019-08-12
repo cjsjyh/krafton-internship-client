@@ -174,10 +174,7 @@ bool InputClass::Frame(bool& IsKeyChanged)
 	mouseInput[0] = IsLMouseDown();
 	mouseInput[1] = IsRMouseDown();
 	mouseInput[2] = IsMMouseDown();
-
-	socketInterface::mouseInput[0][0] = mouseInput[0];
-	socketInterface::mouseInput[0][1] = mouseInput[1];
-	socketInterface::mouseInput[0][2] = mouseInput[2];
+	
 
 	//COMPARE WITH PREVIOUS INPUT AND SET
 	IsKeyChanged = false;

@@ -39,7 +39,7 @@ public:
 
 	}
 	int playerId;
-	int playerPos[3];
+	float playerPos[3];
 	
 	int mouseX, mouseY;
 	bool mouseInput[3];
@@ -219,6 +219,8 @@ private:
 	void CopyHpInfo(hpInfo*, hpInfo*);
 	void CopyInitialParamBundle(InitialParamBundle*, InitialParamBundle*);
 	void CopyItemInfo(ItemInfo*, ItemInfo*);
+
+	void PrintPlayerInput(playerInput*);
 
 private:
 	char sendBuffer[BUFFER_SIZE];

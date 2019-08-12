@@ -1,7 +1,8 @@
 #include "socketInterface.h"
 
 int socketInterface::playerId = -1;
-float socketInterface::playerPos[3] = { 0, }; // Myself
+float socketInterface::curPlayerPos[3] = { 0, }; // Myself
+float socketInterface::playerPos[2][3] = { 0, };
 int socketInterface::bossHitCount = 0; // Myself
 int socketInterface::playerHitCount = 0; // Myself
 int socketInterface::playerHeal[2] = { 0, };

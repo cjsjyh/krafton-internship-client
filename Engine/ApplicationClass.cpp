@@ -369,13 +369,13 @@ void ApplicationClass::Shutdown()
 	return;
 }
 
-D3DXVECTOR3 ApplicationClass::GetDirectionMouse(playerclass* tempPlayer, int _mouseX, int _mouseY)
+D3DXVECTOR3 ApplicationClass::GetDirectionMouse(int playerId)
 {
 	D3DXVECTOR3 direction, origin, rayOrigin, rayDirection, projectedPt;
 	D3DXMATRIX projectionMatrix, viewMatrix, inverseViewMatrix, worldMatrix, temp;
 
-	float pointX = ((2.0f * _mouseX) / screenW) - 1;
-	float pointY = (((2.0f * _mouseY) / screenH) - 1) * -1;
+	float pointX = ((2.0f * socketInterface::mouseX[playerId]) / screenW) - 1;
+	float pointY = (((2.0f * socketInterface::mouseY[playerId]) / screenH) - 1) * -1;
 
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	pointX = pointX / projectionMatrix._11;
@@ -391,7 +391,7 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(playerclass* tempPlayer, int _mo
 	origin = m_Camera->GetPosition();
 
 	m_D3D->GetWorldMatrix(worldMatrix);
-	D3DXMatrixTranslation(&temp, tempPlayer->GetPosition().x, tempPlayer->GetPosition().y, tempPlayer->GetPosition().z);
+	D3DXMatrixTranslation(&temp, socketInterface::playerPos[playerId][0], socketInterface::playerPos[playerId][1], socketInterface::playerPos[playerId][2]);
 	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &temp);
 	D3DXMatrixInverse(&worldMatrix, NULL, &worldMatrix);
 
@@ -425,7 +425,10 @@ bool ApplicationClass::Frame()
 	{
 		if (socketInterface::playerHp[i] > 0)
 		{
-			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(players[i], socketInterface::mouseX[i], socketInterface::mouseY[i]), frame);
+			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], GetDirectionMouse(i), frame);
+			/*for (int j = 0; j < 3; j++)
+				printf("%f ",socketInterface::playerPos[i][j]);
+			printf("\n");*/
 		}
 		else
 		{

@@ -69,7 +69,7 @@ public:
 	bool Frame();
 	bool Render();
 private:
-	D3DXVECTOR3 GetDirectionMouse(playerclass*, int, int);
+	D3DXVECTOR3 GetDirectionMouse(int);
 	void SetCamera(int);
 
 	textfilereader* m_filereader;

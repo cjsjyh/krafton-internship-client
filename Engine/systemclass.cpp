@@ -250,7 +250,8 @@ bool SystemClass::Frame()
 					socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
 				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
 					socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
-
+				for (int i = 0; i < 3; i++)
+					socketInterface::playerPos[pInfo->playerId][i] = pInfo->playerPos[i];
 				//TEMP
 				/*socketInterface::mouseX[1] = pInfo->mouseX;
 				socketInterface::mouseY[1] = pInfo->mouseY;
@@ -308,7 +309,10 @@ playerInput* SystemClass::WrapInput()
 		temp->mouseInput[i] = m_Input->mouseInput[i];
 	
 	for(int i=0;i<3; i++)
-		temp->playerPos[i] = socketInterface::playerPos[i];
+		temp->playerPos[i] = socketInterface::curPlayerPos[i];
+	for (int j = 0; j < 3; j++)
+		printf("%f ", socketInterface::curPlayerPos[j]);
+	printf("\n");
 
 	return temp;
 }

@@ -229,9 +229,14 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 		}
 	}
 
-
-	for(int i=0;i<3;i++)
-		socketInterface::playerPos[i] = GetPosition()[i];
+	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
+	if (currentPlayerId == socketInterface::playerId)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			socketInterface::curPlayerPos[i] = GetPosition()[i];
+		}
+	}
 }
 
 bool playerclass::Dash(int* keys, int frame)
