@@ -137,7 +137,7 @@ void InputClass::Shutdown()
 
 bool InputClass::Frame(bool& IsKeyChanged)
 {
-	bool result;
+	bool result, flag;
 	GetCursorPos(&cursorPos);
 	ScreenToClient(hwnd, &cursorPos);
 
@@ -196,7 +196,21 @@ bool InputClass::Frame(bool& IsKeyChanged)
 			prevmouseInput[i] = mouseInput[i];
 		}
 	}
-
+	//mouse가 눌려지고 있는 상태에서 마우스좌표만 변한경우
+	flag = false;
+	if (IsKeyChanged == false)
+	{
+		for (int i = 0; i < 3; i++)
+			if (mouseInput[i] == true)
+				flag = true;
+		if (flag == true)
+		{
+			if (m_mouseX != prevMouseX || m_mouseY != prevMouseY)
+				IsKeyChanged = true;
+		}
+	}
+	prevMouseX = m_mouseX;
+	prevMouseY = m_mouseY;
 
 	return true;
 }

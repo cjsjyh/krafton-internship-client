@@ -34,6 +34,8 @@ public:
 	static bool RightMouseClicked(bool* mouseInput);
 	static bool LeftMouseClicked(bool* mouseInput);
 
+	int prevMouseX;
+	int prevMouseY;
 	int keyInput[10];
 	int prevkeyInput[10];
 	bool mouseInput[3];

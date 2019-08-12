@@ -206,6 +206,8 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	if (Dash(keys, frame));
 	else if (InputClass::IsWASDKeyPressed(keys))
 	{
+		cout << tag + " player frame!" << endl;
+
 		D3DXVECTOR3 nextPos = GetPosition() + GetDirectionVector(direction) * PLAYER_SPEED;
 		if(GM->CheckMovable(nextPos, GetCollSize()))
 			if(GM->CheckMapOut(nextPos))

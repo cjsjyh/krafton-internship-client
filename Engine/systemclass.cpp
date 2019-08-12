@@ -243,6 +243,7 @@ bool SystemClass::Frame()
 			
 			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
 			{
+				cout << "HANDLING PLAYER ID: " + to_string(pInfo->playerId) << endl;
 				socketInterface::mouseX[pInfo->playerId] = pInfo->mouseX;
 				socketInterface::mouseY[pInfo->playerId] = pInfo->mouseY;
 				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
