@@ -25,12 +25,6 @@ SystemClass::SystemClass()
 	mouseX = mouseY = 0;
 	//TEMP//
 	m_Socket = 0;
-
-	tempPlayer.mouseX = tempPlayer.mouseY = 0;
-	for (int i = 0; i < 10; i++)
-		tempPlayer.keyInput[i] = 0;
-	for (int i = 0; i < 3; i++)
-		tempPlayer.mouseInput[i] = false;
 }
 
 

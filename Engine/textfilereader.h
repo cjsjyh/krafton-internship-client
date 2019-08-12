@@ -12,13 +12,14 @@ public:
 	bool ReadFile(string);
 	bool ReadUIFile(string);
 	bool ReadItemFile(string);
-
+	bool ReadPatternFile(string);
 	
 	map<string, int> paramInt;
 	map<string, float> paramFloat;
 	map<string, bool> paramBool;
 
 	vector<UIinfo*> paramUI;
+	vector<vector<BossPatternFile>> pattern;
 
 	map<string, int> ItemInt;
 	map<string, float> ItemFloat;

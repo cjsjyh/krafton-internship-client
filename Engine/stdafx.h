@@ -43,22 +43,16 @@ using namespace std;
 #define MAX_PLAYER_COUNT 2
 #define KEY_NUM 8
 
-
-typedef struct playerInfoStruct {
-	int playerID;
-	int mouseX;
-	int mouseY;
-
-	bool mouseInput[3];
-	int keyInput[10];
-};
-
-
-typedef struct BossInfo {
-	float pos_x;
-	float pos_y;
-	float pos_z;
-};
+typedef struct BossPatternFile {
+	int id;
+	int phase;
+	int dirCount;
+	int angleBetw;
+	int life;
+	int repeat;
+	int delay;
+	int rotAngle;
+}BossPatternFile;
 
 class stdafx
 {

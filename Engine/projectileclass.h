@@ -9,7 +9,7 @@ class D3DClass;
 class projectileclass : public gameObject
 {
 public:
-	projectileclass(string, D3DXVECTOR3, float _speed, int _damage, D3DClass*, gameObject::CollisionChannel, int delay = 20, int _distance=100,  gameObject::ColliderType = COLLIDER_BOX);
+	projectileclass(string, D3DXVECTOR3, float _speed, int _damage, D3DClass*, gameObject::CollisionChannel, int _distance=100, int delay = 20, gameObject::ColliderType = COLLIDER_BOX);
 	~projectileclass();
 
 	void SetDirVector(D3DXVECTOR3);

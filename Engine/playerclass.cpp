@@ -68,8 +68,8 @@ projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
 	if (!temp)
 	{
 		temp = new projectileclass("playerbullet", GetPosition(), PLAYER_BULLET_SPEED,
-									PLAYER_BULLET_DAMAGE, device, gameObject::PLAYER_BULLET,PLAYER_BULLET_DELAY,
-									PLAYER_BULLET_DISTANCE);
+									PLAYER_BULLET_DAMAGE, device, gameObject::PLAYER_BULLET, 
+									PLAYER_BULLET_DISTANCE,PLAYER_BULLET_DELAY);
 		temp->SetDirVector(dirVec);
 		temp->tag = tag + "bullet";
 	}
@@ -190,7 +190,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	{
 		if (!lastLeftClick)
 		{
-			vector<D3DXVECTOR3> temp = skillpatternclass::FireInFan(PLAYER_BULLET_COUNT, PLAYER_BULLET_ANGLE, D3DXVECTOR3(0,0,0), vecToMouse);
+			vector<D3DXVECTOR3> temp = skillpatternclass::FireInFan(PLAYER_BULLET_COUNT, PLAYER_BULLET_ANGLE, vecToMouse);
 			for (auto iter = temp.begin(); iter != temp.end(); iter++)
 			{
 				GM->RegisterObjectToRender(Fire(*iter), GM->scene);

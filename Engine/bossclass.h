@@ -27,19 +27,15 @@ public:
 		int frame;
 	}BulletQueue;
 
-	typedef struct BossPattern {
-		PatternType type;
-		int dirCount;
-		int Angle;
-		int repeat;
-	};
 
 	bossclass(int _hp, int _damage, D3DClass*, playerclass*,  ColliderType col = COLLIDER_BOX);
 	~bossclass();
 
 	void Frame(int);
 	void SetGameManager(gameManager*);
+
 	D3DXVECTOR3 BOSS_SIZE[3];
+	vector<vector<BossPatternFile>> patternFile;
 private:
 	int phase;
 	int damage;
@@ -52,15 +48,15 @@ private:
 	void CheckHp();
 
 	void Fire(int delay = 0);
-	void FireDirections(vector<D3DXVECTOR3>, int delay =0);
-	void SetBullet(projectileclass*, D3DXVECTOR3);
+	void FireDirections(vector<D3DXVECTOR3>, int delay =0, int distance=100);
+	void SetBullet(projectileclass*, D3DXVECTOR3, int distance = 100);
 
 	void PushQueue(projectileclass*, int);
 	void PopQueue(vector<projectileclass*>&);
 
-	void SetBossPhasePattern();
-	void ActivatePattern(BossPattern);
-	vector<vector<BossPattern>> bossPatternPool;
+	//void SetBossPhasePattern();
+	void ActivatePattern(BossPatternFile);
+	vector<vector<BossPatternFile>> bossPatternPool;
 	vector<BulletQueue> bossBullets;
 	gameManager* GM;
 };

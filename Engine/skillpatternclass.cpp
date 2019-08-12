@@ -39,14 +39,14 @@ vector<D3DXVECTOR3> skillpatternclass::FireInCircle(int dir)
 	return dirVectors;
 }
 
-vector<D3DXVECTOR3> skillpatternclass::FireInFan(int dirCount, int angle, D3DXVECTOR3 src, D3DXVECTOR3 dest)
+vector<D3DXVECTOR3> skillpatternclass::FireInFan(int dirCount, int angle, D3DXVECTOR3 _dirVec)
 {
 	vector<D3DXVECTOR3> dirVectors;
 	D3DXVECTOR3 dirVec, middleVec;
 	float angleleft, angleright;
 	D3DXMATRIX rotleft, rotright;
 	
-	middleVec = stdafx::normalizeVec3(dest - src);
+	middleVec = stdafx::normalizeVec3(_dirVec);
 	
 	//Even number of bullet
 	if (dirCount % 2 == 0)

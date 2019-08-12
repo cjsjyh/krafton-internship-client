@@ -6,12 +6,88 @@
 
 textfilereader::textfilereader()
 {
-	
+	for (int i = 0; i < 3; i++)
+	{
+		vector<BossPatternFile> temp;
+		pattern.push_back(temp);
+	}
 }
 
 textfilereader::~textfilereader()
 {
 
+}
+
+bool textfilereader::ReadPatternFile(string fname)
+{
+	fstream in(fname);
+	string line;
+	int pos;
+	if (!in.is_open())
+	{
+		std::cout << "Failed to open file" << endl;
+		return false;
+	}
+
+	while (getline(in, line))
+	{
+		BossPatternFile tempPattern;
+		for (int i = 0; i < 8; i++)
+		{
+			if (i != 0)
+				getline(in, line);
+			vector<string> fields;
+			if (line == "")
+				break;
+
+			while ((pos = line.find(',')) >= 0)
+			{
+				fields.push_back(line.substr(0, pos));
+				line = line.substr(pos + 1);
+			}
+			if (line.length() > 0)
+				fields.push_back(line);
+
+			if (fields.size() < 3)
+			{
+				cout << "[WARNING] INCORRECT DATASHEET FORMAT!" << endl;
+				return false;
+			}
+			switch (i)
+			{
+			case 0:
+				tempPattern.id = stoi(fields[1]);
+				break;
+			case 1:
+				tempPattern.phase = stoi(fields[1]);
+				break;
+			case 2:
+				tempPattern.dirCount = stoi(fields[1]);
+				break;
+			case 3:
+				tempPattern.angleBetw = stoi(fields[1]);
+				break;
+			case 4:
+				tempPattern.life = stoi(fields[1]);
+				break;
+			case 5:
+				tempPattern.repeat = stoi(fields[1]);
+				break;
+			case 6:
+				tempPattern.delay = stoi(fields[1]);
+				break;
+			case 7:
+				tempPattern.rotAngle = stoi(fields[1]);
+				break;
+			default:
+				return false;
+			}
+
+			fields.clear();
+		}
+		pattern[tempPattern.phase].push_back(tempPattern);
+	}
+	return true;
 }
 
 bool textfilereader::ReadFile(string fname)

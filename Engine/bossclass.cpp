@@ -33,7 +33,6 @@ bossclass::~bossclass()
 void bossclass::Initialize()
 {
 	srand((unsigned int)time(NULL));
-	SetBossPhasePattern();
 
 	InitializeModels();
 
@@ -63,13 +62,13 @@ void bossclass::SetGameManager(gameManager* _GM)
 
 void bossclass::CheckHp()
 {
-	if (curHp <= socketInterface::bossPhase3Hp)
+	if (socketInterface::bossHp <= socketInterface::bossPhase3Hp)
 	{
 		phase = 2;
 		m_model = model_list[2];
 		SetScale(BOSS_SIZE[1]);
 	}
-	else if (curHp <= socketInterface::bossPhase2Hp)
+	else if (socketInterface::bossHp <= socketInterface::bossPhase2Hp)
 	{
 		phase = 1;
 		m_model = model_list[1];
@@ -83,10 +82,10 @@ void bossclass::Frame(int frame)
 {
 	vector<projectileclass*> shootBullets;
 	
-	if (frame % 60 == 0)
+	if (frame % 200 == 0)
 	{
-		int ChosenIndex = rand() % bossPatternPool[phase].size();
-		ActivatePattern(bossPatternPool[phase][ChosenIndex]);
+		int ChosenIndex = rand() % patternFile[phase].size();
+		ActivatePattern(patternFile[phase][ChosenIndex]);
 	}
 	
 	PopQueue(shootBullets);
@@ -98,61 +97,22 @@ void bossclass::Frame(int frame)
 }
 
 
-void bossclass::SetBossPhasePattern()
-{
-	for (int i = 0; i < BOSS_PHASE_NUM; i++)
-	{
-		vector<BossPattern> temp;
-		bossPatternPool.push_back(temp);
-	}
-	BossPattern p1_1;
-	p1_1.type = FIRE_AT_PLAYER;
-	BossPattern p1_2;
-	p1_2.type = FIRE_IN_FAN;
-	p1_2.dirCount = 3;
-	p1_2.Angle = 10;
-	bossPatternPool[0].push_back(p1_1);
-	bossPatternPool[0].push_back(p1_2);
-
-	BossPattern p2_1;
-	p2_1.type = FIRE_AT_PLAYER;
-	BossPattern p2_2;
-	p2_2.type = FIRE_IN_FAN;
-	p2_2.dirCount = 5;
-	p2_2.Angle = 10;
-	bossPatternPool[1].push_back(p2_1);
-	bossPatternPool[1].push_back(p2_2);
-
-	BossPattern p3_1;
-	p3_1.type = FIRE_IN_FAN;
-	p3_1.dirCount = 7;
-	p3_1.Angle = 5;
-	BossPattern p3_2;
-	p3_2.type = FIRE_ALL_DIR;
-	p3_2.dirCount = 10;
-	bossPatternPool[2].push_back(p3_1);
-	bossPatternPool[2].push_back(p3_2);
-}
-
-
-void bossclass::ActivatePattern(BossPattern pat)
+void bossclass::ActivatePattern(BossPatternFile pat)
 {
 	vector<D3DXVECTOR3> dirVectors;
-	switch (pat.type)
+	for (int i = 0; i < pat.repeat; i++)
 	{
-	case FIRE_AT_PLAYER:
-		Fire();
-		break;
-	case FIRE_IN_FAN:
-		dirVectors = skillpatternclass::FireInFan(pat.dirCount, pat.Angle, GetPosition(), player->GetPosition());
-		FireDirections(dirVectors);
-		break;
-	case FIRE_ALL_DIR:
-		dirVectors = skillpatternclass::FireInCircle(pat.dirCount);
-		for(int i=0;i<10;i++)
-			FireDirections(dirVectors, 40*i);
-		break;
+		D3DXMATRIX rotMat;
+		float rotAngle = pat.rotAngle * i * 0.0174532925f;;
+		D3DXMatrixRotationY(&rotMat, rotAngle);
+
+		D3DXVECTOR3 dirVec = player->GetPosition() - GetPosition();
+		D3DXVec3TransformCoord(&dirVec, &dirVec, &rotMat);
+
+		dirVectors = skillpatternclass::FireInFan(pat.dirCount, pat.angleBetw, dirVec);
+		FireDirections(dirVectors, pat.delay * i, pat.life);
 	}
+
 }
 
 void bossclass::Fire(int delay)
@@ -173,29 +133,29 @@ void bossclass::Fire(int delay)
 	PushQueue(temp, delay);
 }
 
-void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int delay)
+void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int delay, int distance)
 {
 	for (auto iter = dirVectors.begin(); iter != dirVectors.end(); iter++)
 	{
 		projectileclass* temp = GM->GetFromBossPool();
 		if (!temp)
 		{
-			temp = new projectileclass("bossbullet", GetPosition() + 1.5*(*iter), 1, 3, device, gameObject::BOSS_BULLET);
+			temp = new projectileclass("bossbullet", GetPosition() + 1.5*(*iter), 1, 3, device, gameObject::BOSS_BULLET, distance);
 			temp->SetDirVector(*iter);
 		}
 		else
 		{
-			SetBullet((projectileclass*)temp, *iter);
+			SetBullet((projectileclass*)temp, *iter, distance);
 		}
 		PushQueue(temp, delay);
 	}
 }
 
-void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec)
+void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec, int distance)
 {
 	bullet->SetPosition(GetPosition() + 1.5*dirVec);
 	bullet->SetDirVector(dirVec);
-	bullet->SetDistance(100);
+	bullet->SetDistance(distance);
 	bullet->SetDelay(20);
 }
 

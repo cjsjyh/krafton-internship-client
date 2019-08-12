@@ -1,0 +1,24 @@
+PATTERN_ID,1,int,Dummy
+PATTERN_PHASE,0,int,"Phase 0, Phase 1, Phase2"
+PATTERN_DIRCOUNT,3,int,how many directions to fire at once
+PATTERN_ANGLE_BETW,10,int,angle between each directions
+PATTERN_LIFE_FRAME,20,int,how long will bullets exist
+PATTERN_REPEAT,4,int,number of waves
+PATTERN_DELAY,30,int,delay between waves
+PATTERN_ROTANGLE,0,int,rot angle between waves
+PATTERN_ID,2,int,Dummy
+PATTERN_PHASE,1,int,"Phase 0, Phase 1, Phase2"
+PATTERN_DIRCOUNT,6,int,how many directions to fire at once
+PATTERN_ANGLE_BETW,5,int,angle between each directions
+PATTERN_LIFE_FRAME,200,int,how long will bullets exist
+PATTERN_REPEAT,6,int,number of waves
+PATTERN_DELAY,20,int,delay between waves
+PATTERN_ROTANGLE,30,int,rot angle between waves
+PATTERN_ID,3,int,Dummy
+PATTERN_PHASE,2,int,"Phase 0, Phase 1, Phase2"
+PATTERN_DIRCOUNT,8,int,how many directions to fire at once
+PATTERN_ANGLE_BETW,10,int,angle between each directions
+PATTERN_LIFE_FRAME,200,int,how long will bullets exist
+PATTERN_REPEAT,8,int,number of waves
+PATTERN_DELAY,10,int,delay between waves
+PATTERN_ROTANGLE,20,int,rot angle between waves

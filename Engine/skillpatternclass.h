@@ -10,7 +10,7 @@ public:
 
 	static D3DXVECTOR3 FireAt(D3DXVECTOR3, D3DXVECTOR3);
 	static vector<D3DXVECTOR3> FireInCircle(int);
-	static vector<D3DXVECTOR3> FireInFan(int dirCount, int angle, D3DXVECTOR3 src, D3DXVECTOR3 dest);
+	static vector<D3DXVECTOR3> FireInFan(int dirCount, int angle, D3DXVECTOR3 _dirVec);
 
 private:
 };

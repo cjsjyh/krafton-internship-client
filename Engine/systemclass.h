@@ -40,8 +40,6 @@ private:
 	CpuClass* m_Cpu;
 	socketManager* m_Socket;
 
-	playerInfoStruct tempPlayer;
-
 	int mouseX, mouseY;
 };
 

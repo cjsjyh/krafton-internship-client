@@ -133,7 +133,29 @@ public:
 		ar& itemId;
 	}
 };
+/*
+class BossInfo {
+public:
+	friend class boost::serialization::access;
 
+	BossInfo() {
+		
+	}
+
+	~BossInfo() {
+
+	}
+
+	int patternId;
+	int 
+
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version) {
+		ar& playerId;
+		ar& itemId;
+	}
+};
+*/
 class InitialParamBundle {
 public:
 	friend class boost::serialization::access;

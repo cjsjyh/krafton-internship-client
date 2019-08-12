@@ -130,6 +130,10 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND _hwnd)
 	if (!result)
 		return false;
 
+	result = m_filereader->ReadPatternFile("./data/datasheet/boss_pattern.csv");
+	if (!result)
+		return false;
+
 	// Set baseViewMatrix for UI
 	m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
 	m_Camera->Render(D3DXVECTOR3(0, 0, 0));
@@ -210,6 +214,8 @@ void ApplicationClass::InitializePlayerParameters()
 
 void ApplicationClass::InitializeBossParameters()
 {
+	boss->patternFile = m_filereader->pattern;
+
 	D3DXVECTOR3 bossSize;
 	bossSize.x = m_filereader->paramFloat.find("BOSS_PHASE1_SIZE_X")->second;
 	bossSize.y = m_filereader->paramFloat.find("BOSS_PHASE1_SIZE_Y")->second;
