@@ -286,7 +286,6 @@ int playerclass::ObjectInteraction()
 			string ObjTag = hitObj->tag;
 			int deadPlayerId = stoi(ObjTag.substr(ObjTag.length()-1, ObjTag.length()));
 			socketInterface::playerHeal[deadPlayerId] = socketInterface::playerMaxHp;
-			printf("===Dead Player Id: %d\n", deadPlayerId);
 		}
 
 		IM->SetItemUsed(hitObj->GetName(), 0);

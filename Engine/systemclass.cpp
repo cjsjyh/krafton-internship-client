@@ -251,12 +251,12 @@ bool SystemClass::Frame()
 					socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
 
 				//TEMP
-				socketInterface::mouseX[1] = pInfo->mouseX;
+				/*socketInterface::mouseX[1] = pInfo->mouseX;
 				socketInterface::mouseY[1] = pInfo->mouseY;
 				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
 					socketInterface::keyInput[1][i] = pInfo->keyInput[i];
 				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
-					socketInterface::mouseInput[1][i] = pInfo->mouseInput[i];
+					socketInterface::mouseInput[1][i] = pInfo->mouseInput[i];*/
 			}
 			
 			break;

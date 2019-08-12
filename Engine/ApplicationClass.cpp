@@ -433,6 +433,7 @@ bool ApplicationClass::Frame()
 		}
 		players[i]->ChangeHp(socketInterface::playerHp[i]);
 	}
+	printf("Player HP: %d | %d\n",socketInterface::playerHp[0], socketInterface::playerHp[1]);
 	m_GM->Frame();
 	SetCamera(m_GM->scene);
 	
