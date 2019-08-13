@@ -31,6 +31,7 @@ public:
 	D3DXVECTOR3 GetRotation();
 	D3DXVECTOR3 GetViewPoint();
 	
+	void SetCameraShake(int, float);
 
 	void Render(D3DXVECTOR3);
 	void GetViewMatrix(D3DXMATRIX&);
@@ -42,6 +43,8 @@ private:
 	float m_rotationX, m_rotationY, m_rotationZ;
 	D3DXMATRIX m_viewMatrix;
 	D3DXVECTOR3 viewPoint;
+	int shakeFrame;
+	float shakePower;
 };
 
 #endif

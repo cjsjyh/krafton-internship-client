@@ -31,6 +31,7 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	dashFrame = dashPauseFrame = -1;
 	dashDir = -1;
 	attackType = "basic";
+	ultimateGauge = 100;
 
 	playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
 	InitializeModels();
@@ -217,6 +218,15 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	if (InputClass::IsKeyPressed(keys, DIK_F))
 	{
 		ObjectInteraction();
+	}
+
+	if (InputClass::IsKeyPressed(keys, DIK_LSHIFT))
+	{
+		if (ultimateGauge >= 100)
+		{
+			//ultimateGauge = 0;
+			GM->RemoveAllBullets();
+		}
 	}
 
 	if (GM->scene == 1)

@@ -4,6 +4,7 @@
 #include "gameObject.h"
 #include "bossclass.h"
 #include "projectileclass.h"
+#include "cameraclass.h"
 
 #include "gameManager.h"
 
@@ -79,15 +80,15 @@ void gameManager::RemoveObjectToRender(string item, int _scene)
 	return;
 }
 
-void gameManager::AlphaSort(D3DXVECTOR3 _camPos)
+void gameManager::AlphaSort()
 {
-	camPos = _camPos;
+	camPos = m_Camera->GetPosition();
 	for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
 	{
 		if ((*iter)->GetName() == "floor")
 			(*iter)->w = 9999999;
 		else
-			(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), _camPos);
+			(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), camPos);
 	}
 	std::sort(renderObjects[scene].begin(), renderObjects[scene].end(), CompareDist());
 
@@ -186,6 +187,8 @@ void gameManager::CheckCollision()
 {
 	vector<gameObject*> coll1, coll2;
 	m_CM->CollisionManager(coll1, coll2);
+	if (!m_CM->m_Camera)
+		m_CM->m_Camera = m_Camera;
 
 	if (coll1.size() > 0)
 	{
@@ -199,6 +202,21 @@ void gameManager::CheckCollision()
 bool gameManager::CheckMovable(D3DXVECTOR3 pos, D3DXVECTOR3 len)
 {
 	return m_CM->CheckMovable(pos, len);
+}
+
+void gameManager::RemoveAllBullets()
+{
+	vector<int> bulletIndex;
+	for (int i = renderObjects[0].size()-1; i >= 0; i--)
+	{
+		gameObject* tempObj = renderObjects[0][i];
+		if (tempObj->GetName() == "bossbullet")
+		{
+			//bulletIndex.push_back(distance(iter, renderObjects[0].begin()));
+			UnregisterObjectToRender(tempObj, scene);
+			RegisterToBossPool((projectileclass*)(tempObj));
+		}
+	}
 }
 
 void gameManager::AutoMove()

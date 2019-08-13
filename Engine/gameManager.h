@@ -6,6 +6,7 @@ class collisionManager;
 class gameObject;
 class bossclass;
 class projectileclass;
+class CameraClass;
 
 class gameManager
 {
@@ -37,12 +38,13 @@ public:
 	bool CheckMapOut(D3DXVECTOR3);
 	void AutoMove();
 
+	void RemoveAllBullets();
+
 	gameObject* CheckInteraction(D3DXVECTOR3, int);
 	
-	
+	void AlphaSort();
 
-	void AlphaSort(D3DXVECTOR3);
-
+	CameraClass* m_Camera;
 private:
 	vector<vector<gameObject*>> renderObjects;
 	
@@ -50,6 +52,7 @@ private:
 	vector<projectileclass*> PlayerbulletPool;
 
 	collisionManager* m_CM;
+	
 	D3DXVECTOR3 camPos;
 	gameObject* floor;
 };

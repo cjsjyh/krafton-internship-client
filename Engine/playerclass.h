@@ -54,6 +54,8 @@ public:
 	float PLAYER_BULLET_ANGLE;
 	float PLAYER_BULLET_COUNT;
 
+	int ultimateGauge;
+
 private:
 	projectileclass* Fire(D3DXVECTOR3);
 	void SetBullet(projectileclass*, D3DXVECTOR3);

@@ -13,7 +13,7 @@ projectileclass::projectileclass(string name, D3DXVECTOR3 pos, float _speed, int
 	SetScale(D3DXVECTOR3(0.5, 0.5, 0.5));
 	distance = _distance;
 	speed = _speed;
-	damage = _damage;a
+	damage = _damage;
 	device = _device;
 	delay = _delay;
 

@@ -155,6 +155,7 @@ void ApplicationClass::InitializeBasic()
 	// Create gameManager object
 	m_GM = new gameManager(SCENE_COUNT);
 	m_GM->scene = 0;
+	m_GM->m_Camera = m_Camera;
 
 	m_IM = new itemmanagerclass();
 	m_IM->SetParameter(m_filereader);
@@ -435,12 +436,6 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		if (socketInterface::playerHp[i] > 0)
 		{
 			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]) , frame);
-			/*printf("[%d] ",i);
-			for (int j = 0; j < 3; j++)
-				printf("%f ",socketInterface::playerPos[i][j]);
-			printf("\n");
-			printf("[%d] MOUSEX: %d MOUSEY %d", i,socketInterface::mouseX[i], socketInterface::mouseY[i]);
-			printf("\n");*/
 		}
 		else
 		{
@@ -448,7 +443,6 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		}
 		players[i]->ChangeHp(socketInterface::playerHp[i]);
 	}
-	//printf("Player HP: %d | %d\n",socketInterface::playerHp[0], socketInterface::playerHp[1]);
 	m_GM->Frame();
 	SetCamera(m_GM->scene);
 	
@@ -460,17 +454,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 	//Both Dead
 	/*if (!result)
 		printf("Both Player dead!\n");*/
-		
 	
-	/*
-	UninitializeMap();
-	UninitializeBasic();
-
-	InitializeBasic();
-	InitializeMap();
-	InitializePlayerParameters();
-	InitializeBossParameters();
-	*/
 
 	//BOSS DEAD
 	if (socketInterface::bossHp <= 0)
@@ -484,41 +468,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		InitializeBossParameters();
 	}
 
-	
-	//-------------------
-	//  SCENE CHANGE
-	//-------------------
-	for (int i = 0; i < players.size(); i++)
-	{
-		if (InputClass::IsKeyPressed(socketInterface::keyInput[i], DIK_LSHIFT))
-		{
-			if (frame - last_scene_change_frame > SCENE_CHANGE_COOLTIME)
-			{
-				last_scene_change_frame = frame;
-				if (m_GM->scene == 0)
-				{
-					m_UIM->ScreenFade(1, -1, 30);
-					vector<string> itemNames;
-					players[0]->SavePlayerPos(m_GM->scene);
-					players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
-					players[0]->SetDirection(1);
 
-					itemNames = m_IM->ChooseItemFromPool(3, 0);
-					InitializeRewardMap(itemNames);
-					m_GM->scene = 1;
-				}
-				else
-				{
-					m_UIM->ScreenFade(1, -1, 30);
-					m_GM->scene = 0;
-					players[0]->SetPosition(players[0]->GetSavedPlayerPos(m_GM->scene));
-
-					UninitializeRewardMap();
-				}
-			}
-		}
-	}
-	
 	// Render the graphics scene.
 	result = Render();
 	if(!result)
@@ -553,7 +503,7 @@ bool ApplicationClass::Render()
 	m_D3D->TurnOnAlphaBlending();
 
 	//render floor first
-	m_GM->AlphaSort(m_Camera->GetPosition());
+	m_GM->AlphaSort();
 	int size = m_GM->GetRenderObjectCount();
 	for (int i = 0; i < size; i++)
 	{

@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <cstdlib>
+#include <ctime>
+
 #include "cameraclass.h"
 
 
@@ -16,6 +19,11 @@ CameraClass::CameraClass()
 	viewPoint.x = 0;
 	viewPoint.y = 0;
 	viewPoint.z = 0;
+
+	shakeFrame = 0;
+	shakePower = 1;
+	
+	srand((unsigned int)time(NULL));
 }
 
 CameraClass::~CameraClass()
@@ -88,22 +96,39 @@ D3DXVECTOR3 CameraClass::GetViewPoint()
 	return viewPoint;
 }
 
+void CameraClass::SetCameraShake(int _duration, float _strength)
+{
+	shakeFrame = _duration;
+	shakePower = _strength;
+}
+
 
 void CameraClass::Render(D3DXVECTOR3 camViewPt)
 {
 	D3DXVECTOR3 up, position, lookAt;
 	float yaw, pitch, roll;
 	D3DXMATRIX rotationMatrix;
-
+	float tempX = 0;
+	float tempY = 0;
 
 	// Setup the vector that points upwards.
 	up.x = 0.0f;
 	up.y = 1.0f;
 	up.z = 0.0f;
 
+	if (shakeFrame-- > 0)
+	{
+		tempX = (float)(rand() % 200 - 100) / 100;
+		cout << "Shake1: " + to_string(tempX) << endl;
+		if (tempX == 0)
+			tempX = 1;
+		tempX *= shakePower;
+		cout << "Shake2: " + to_string(tempX) << endl;
+	}
+
 	// Setup the position of the camera in the world.
-	position.x = m_positionX;
-	position.y = m_positionY;
+	position.x = m_positionX + tempX;
+	position.y = m_positionY + tempY;
 	position.z = m_positionZ;
 
 	// Setup where the camera is looking by default.

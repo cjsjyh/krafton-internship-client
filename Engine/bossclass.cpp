@@ -82,7 +82,7 @@ void bossclass::Frame(int frame)
 {
 	vector<projectileclass*> shootBullets;
 	
-	if (frame % 200 == 0)
+	if (frame % 100 == 0)
 	{
 		int ChosenIndex = rand() % patternFile[phase].size();
 		ActivatePattern(patternFile[phase][ChosenIndex]);

@@ -5,6 +5,7 @@
 #include "playerclass.h"
 #include "bossclass.h"
 #include "projectileclass.h"
+#include "cameraclass.h"
 
 #include "socketInterface.h"
 
@@ -13,6 +14,7 @@
 collisionManager::collisionManager(gameManager* _GM)
 {
 	GM = _GM;
+	m_Camera = 0;
 }
 
 collisionManager::~collisionManager()
@@ -227,8 +229,11 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				bullet = (projectileclass*)obj1;
 				flag = 1;
 			}
-			if (player->tag == "player0")
+			if (player->tag == "player" + to_string(socketInterface::playerId))
+			{
+				m_Camera->SetCameraShake(10, 0.7);
 				socketInterface::playerHitCount++;
+			}
 			
 			//player->Hit(bullet->damage);
 

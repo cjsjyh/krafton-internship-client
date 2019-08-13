@@ -7,6 +7,7 @@ class gameManager;
 class bossclass;
 class playerclass;
 class projectileclass;
+class CameraClass;
 
 using namespace std;
 
@@ -20,6 +21,8 @@ public:
 	gameObject* InteractionManager(D3DXVECTOR3, int);
 
 	bool IsInsideMap(D3DXVECTOR3, D3DXVECTOR3, D3DXVECTOR3);
+
+	CameraClass* m_Camera;
 private:
 	bool CheckMatch(gameObject*, gameObject*, int, int);
 	bool CheckInOne(gameObject*, int, int);
