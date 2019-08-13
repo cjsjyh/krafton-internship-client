@@ -28,7 +28,7 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	PLAYER_BULLET_COUNT = 1;
 	PLAYER_BULLET_ANGLE = 0;
 
-	dashFrame = dashPauseFrame = -1;
+	dashFrame = dashPauseFrame = lastFPress = -1;
 	dashDir = -1;
 	attackType = "basic";
 	ultimateGauge = 100;
@@ -207,7 +207,6 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	if (Dash(keys, frame));
 	else if (InputClass::IsWASDKeyPressed(keys))
 	{
-		cout << tag + " player frame!" << endl;
 
 		D3DXVECTOR3 nextPos = GetPosition() + GetDirectionVector(direction) * PLAYER_SPEED;
 		if(GM->CheckMovable(nextPos, GetCollSize()))
@@ -217,7 +216,11 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	
 	if (InputClass::IsKeyPressed(keys, DIK_F))
 	{
-		ObjectInteraction();
+		if (frame - lastFPress > 100)
+		{
+			lastFPress = frame;
+			ObjectInteraction();
+		}
 	}
 
 	if (InputClass::IsKeyPressed(keys, DIK_LSHIFT))
@@ -303,10 +306,11 @@ int playerclass::ObjectInteraction()
 		{
 			string ObjTag = hitObj->tag;
 			int deadPlayerId = stoi(ObjTag.substr(ObjTag.length()-1, ObjTag.length()));
-			socketInterface::playerHeal[deadPlayerId] = socketInterface::playerMaxHp;
+			if(socketInterface::playerHp[deadPlayerId] <= 0)
+				socketInterface::playerHeal[deadPlayerId] = socketInterface::playerMaxHp;
 		}
 
-		IM->SetItemUsed(hitObj->GetName(), 0);
+		//IM->SetItemUsed(hitObj->GetName(), 0);
 	}
 	
 	return 1;

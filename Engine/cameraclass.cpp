@@ -119,11 +119,9 @@ void CameraClass::Render(D3DXVECTOR3 camViewPt)
 	if (shakeFrame-- > 0)
 	{
 		tempX = (float)(rand() % 200 - 100) / 100;
-		cout << "Shake1: " + to_string(tempX) << endl;
 		if (tempX == 0)
 			tempX = 1;
 		tempX *= shakePower;
-		cout << "Shake2: " + to_string(tempX) << endl;
 	}
 
 	// Setup the position of the camera in the world.
