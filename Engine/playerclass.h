@@ -69,7 +69,7 @@ private:
 	int direction;
 	int dashFrame, dashPauseFrame;
 	int lastLeftClick;
-	int lastFPress;
+	int lastFPress, resurrectionCount;
 	int dashDir;
 	vector<D3DXVECTOR3> playerPosSave;
 	vector<string> playerItems;

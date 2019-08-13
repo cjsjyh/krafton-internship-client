@@ -2,7 +2,7 @@ PATTERN_ID,1,int,Dummy
 PATTERN_PHASE,0,int,"Phase 0, Phase 1, Phase2"
 PATTERN_DIRCOUNT,3,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,10,int,angle between each directions
-PATTERN_LIFE_FRAME,20,int,how long will bullets exist
+PATTERN_LIFE_FRAME,40,int,how long will bullets exist
 PATTERN_REPEAT,4,int,number of waves
 PATTERN_DELAY,30,int,delay between waves
 PATTERN_ROTANGLE,0,int,rot angle between waves

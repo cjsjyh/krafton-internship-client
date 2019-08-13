@@ -29,6 +29,7 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	PLAYER_BULLET_ANGLE = 0;
 
 	dashFrame = dashPauseFrame = lastFPress = -1;
+	resurrectionCount = 2;
 	dashDir = -1;
 	attackType = "basic";
 	ultimateGauge = 100;
@@ -214,12 +215,16 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 				AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 	}
 	
-	if (InputClass::IsKeyPressed(keys, DIK_F))
+	if (InputClass::IsKeyPressed(keys, DIK_F) && tag == "player" + to_string(socketInterface::playerId))
 	{
 		if (frame - lastFPress > 100)
 		{
-			lastFPress = frame;
-			ObjectInteraction();
+			if (resurrectionCount > 0)
+			{
+				--resurrectionCount;
+				lastFPress = frame;
+				ObjectInteraction();
+			}
 		}
 	}
 
@@ -245,7 +250,6 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
 	if (currentPlayerId == socketInterface::playerId)
 	{
-		stdafx::PrintVector3(vecToMouse);
 		for (int i = 0; i < 3; i++)
 		{
 			socketInterface::curPlayerPos[i] = GetPosition()[i];
@@ -306,8 +310,13 @@ int playerclass::ObjectInteraction()
 		{
 			string ObjTag = hitObj->tag;
 			int deadPlayerId = stoi(ObjTag.substr(ObjTag.length()-1, ObjTag.length()));
-			if(socketInterface::playerHp[deadPlayerId] <= 0)
+			if (socketInterface::playerHp[deadPlayerId] <= 0)
+			{
+				printf("Resurrection!\n");
 				socketInterface::playerHeal[deadPlayerId] = socketInterface::playerMaxHp;
+			}
+			else
+				printf("Player Not Dead!\n");
 		}
 
 		//IM->SetItemUsed(hitObj->GetName(), 0);

@@ -453,7 +453,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 			result = true;
 	//Both Dead
 	/*if (!result)
-		printf("Both Player dead!\n");*/
+	("Both Player dead!\n");*/
 	
 
 	//BOSS DEAD
