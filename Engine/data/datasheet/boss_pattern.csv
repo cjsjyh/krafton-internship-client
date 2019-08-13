@@ -1,6 +1,6 @@
-PATTERN_ID,1,int,Dummy
+﻿PATTERN_ID,1,int,Dummy
 PATTERN_PHASE,0,int,"Phase 0, Phase 1, Phase2"
-BULLET_TYPE,1,int,"straight(0), follow player(1)"
+BULLET_TYPE,0,int,"straight(0), follow player(1)"
 BULLET_SLOW_FRAME,100,int,frame before bullet accelerates
 BULLET_SPEED,0.7,float,
 PATTERN_DIRCOUNT,3,int,how many directions to fire at once

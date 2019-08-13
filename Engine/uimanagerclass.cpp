@@ -183,11 +183,11 @@ bool uimanagerclass::Render()
 	device->GetOrthoMatrix(orthoMatrix);
 
 	//SetUI(mouseX, mouseY, fps, cpu);
-	result = m_Text->Render(device->GetDeviceContext(), worldMatrix, orthoMatrix);
+	/*result = m_Text->Render(device->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if (!result)
 	{
 		return false;
-	}
+	}*/
 
 	if (player == 0)
 		player = (playerclass*)GM->GetGameObject("player");
