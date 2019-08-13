@@ -55,6 +55,7 @@ private:
 	
 	D3DXVECTOR3 camPos;
 	gameObject* floor;
+	vector<gameObject*> players;
 };
 
 #endif

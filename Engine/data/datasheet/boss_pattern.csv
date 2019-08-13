@@ -1,13 +1,19 @@
 PATTERN_ID,1,int,Dummy
 PATTERN_PHASE,0,int,"Phase 0, Phase 1, Phase2"
+BULLET_TYPE,1,int,"straight(0), follow player(1)"
+BULLET_SLOW_FRAME,100,int,frame before bullet accelerates
+BULLET_SPEED,0.7,float,
 PATTERN_DIRCOUNT,3,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,10,int,angle between each directions
-PATTERN_LIFE_FRAME,40,int,how long will bullets exist
+PATTERN_LIFE_FRAME,200,int,how long will bullets exist
 PATTERN_REPEAT,4,int,number of waves
 PATTERN_DELAY,30,int,delay between waves
 PATTERN_ROTANGLE,0,int,rot angle between waves
 PATTERN_ID,2,int,Dummy
 PATTERN_PHASE,1,int,"Phase 0, Phase 1, Phase2"
+BULLET_TYPE,1,int,"straight(0), follow player(1)"
+BULLET_SLOW_FRAME,50,int,frame before bullet accelerates
+BULLET_SPEED,1,float,
 PATTERN_DIRCOUNT,6,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,5,int,angle between each directions
 PATTERN_LIFE_FRAME,200,int,how long will bullets exist
@@ -16,6 +22,9 @@ PATTERN_DELAY,20,int,delay between waves
 PATTERN_ROTANGLE,30,int,rot angle between waves
 PATTERN_ID,3,int,Dummy
 PATTERN_PHASE,2,int,"Phase 0, Phase 1, Phase2"
+BULLET_TYPE,1,int,"straight(0), follow player(1)"
+BULLET_SLOW_FRAME,10,int,frame before bullet accelerates
+BULLET_SPEED,1,float,
 PATTERN_DIRCOUNT,8,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,10,int,angle between each directions
 PATTERN_LIFE_FRAME,200,int,how long will bullets exist

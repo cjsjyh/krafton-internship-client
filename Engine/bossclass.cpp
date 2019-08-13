@@ -37,6 +37,7 @@ void bossclass::Initialize()
 	InitializeModels();
 
 	maxHp = socketInterface::bossMaxHp;
+
 }
 
 void bossclass::InitializeModels()
@@ -84,12 +85,21 @@ void bossclass::Frame(int frame)
 	
 	if (frame % 100 == 0)
 	{
-		int ChosenIndex = rand() % patternFile[phase].size();
-		ActivatePattern(patternFile[phase][ChosenIndex]);
+		if (socketInterface::bossPatternQueue.size() > 0){
+			int ChosenIndex = socketInterface::bossPatternQueue.front();
+			socketInterface::bossPatternQueue.pop();
+			ActivatePattern(patternFile[phase][ChosenIndex]);
+		}
 	}
 	
 	PopQueue(shootBullets);
 	CheckHp();
+
+	//쏠 총알이 하나도 없는 경우 디폴트를 넣음
+	/*if (shootBullets.size() == 0) {
+		ActivatePattern(patternFile[phase][0]);
+		PopQueue(shootBullets);
+	}*/
 
 	//register bullets
 	for (auto iter = shootBullets.begin(); iter != shootBullets.end(); iter++)
@@ -110,11 +120,11 @@ void bossclass::ActivatePattern(BossPatternFile pat)
 		D3DXVec3TransformCoord(&dirVec, &dirVec, &rotMat);
 
 		dirVectors = skillpatternclass::FireInFan(pat.dirCount, pat.angleBetw, dirVec);
-		FireDirections(dirVectors, pat.delay * i, pat.life);
+		FireDirections(dirVectors, pat.delay * i, pat.life, pat.bullet_slow_frame, pat.bullet_speed, pat.bullet_type);
 	}
 
 }
-
+/*
 void bossclass::Fire(int delay)
 {
 	projectileclass* temp = GM->GetFromBossPool();
@@ -132,31 +142,34 @@ void bossclass::Fire(int delay)
 
 	PushQueue(temp, delay);
 }
-
-void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int delay, int distance)
+*/
+void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int fireDelay, int distance, int slowFrame, float bulletSpeed, int bulletType)
 {
 	for (auto iter = dirVectors.begin(); iter != dirVectors.end(); iter++)
 	{
 		projectileclass* temp = GM->GetFromBossPool();
 		if (!temp)
 		{
-			temp = new projectileclass("bossbullet", GetPosition() + 1.5*(*iter), 1, 3, device, gameObject::BOSS_BULLET, distance);
+			temp = new projectileclass("bossbullet", GetPosition() + 1.5*(*iter), bulletSpeed, 3, device, gameObject::BOSS_BULLET, distance,slowFrame);
+			temp->type = bulletType;
 			temp->SetDirVector(*iter);
 		}
 		else
 		{
-			SetBullet((projectileclass*)temp, *iter, distance);
+			SetBullet((projectileclass*)temp, *iter, distance, slowFrame, bulletSpeed, bulletType);
 		}
-		PushQueue(temp, delay);
+		PushQueue(temp, fireDelay);
 	}
 }
 
-void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec, int distance)
+void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec, int distance, int slowFrame, float bulletSpeed, int bulletType)
 {
 	bullet->SetPosition(GetPosition() + 1.5*dirVec);
+	bullet->SetDelay(slowFrame);
+	bullet->SetSpeed(bulletSpeed);
 	bullet->SetDirVector(dirVec);
 	bullet->SetDistance(distance);
-	bullet->SetDelay(20);
+	bullet->type = bulletType;
 }
 
 

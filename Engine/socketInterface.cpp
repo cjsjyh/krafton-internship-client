@@ -1,3 +1,5 @@
+#include <queue>
+
 #include "socketInterface.h"
 
 int socketInterface::playerId = -1;
@@ -20,6 +22,7 @@ int socketInterface::bossPhase2Hp = 0;
 int socketInterface::bossPhase3Hp = 0;
 
 
+std::queue<int> socketInterface::bossPatternQueue;
 float socketInterface::bossPos[3] = { 0, };
 int socketInterface::patternId=0;
 float socketInterface::patternAngle = 0.0f;

@@ -175,7 +175,6 @@ void socketManager::ListenToServer()
 	bool flag = true;
 	while (flag)
 	{
-		std::cout << "Listening" << std::endl;
 		MsgBundle* tempMsg = receiveMessage(ConnectSocket);
 		if (tempMsg == NULL)
 		{
@@ -243,6 +242,7 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 		playerInput pInfo;
 		hpInfo hpMsg;
 		InitialParamBundle paramInfo;
+		BossInfo bInfo;
 		switch (msgType)
 		{
 		case PLAYER_INFO:
@@ -251,11 +251,14 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 			pInfoPtr = new playerInput;
 			CopyPlayerInfo(pInfoPtr, &pInfo);
 			msgBundle->ptr = pInfoPtr;
-			
 			break;
 
 		case BOSS_INFO:
-
+			ia >> bInfo;
+			BossInfo* bInfoPtr;
+			bInfoPtr = new BossInfo;
+			CopyBossInfo(bInfoPtr, &bInfo);
+			msgBundle->ptr = bInfoPtr;
 			break;
 
 		case HP_INFO:
@@ -263,7 +266,6 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 			hpInfo* hpInfoPtr;
 			hpInfoPtr = new hpInfo;
 			CopyHpInfo(hpInfoPtr, &hpMsg);
-
 			msgBundle->ptr = hpInfoPtr;
 			break;
 
@@ -300,6 +302,7 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	playerInput pinput;
 	hpInfo hInfo;
 	InitialParamBundle paramInfo;
+	BossInfo bInfo;
 	switch (type)
 	{
 	case PLAYER_INFO:
@@ -307,7 +310,8 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 		oa << pinput;
 		break;
 	case BOSS_INFO:
-	
+		CopyBossInfo(&bInfo, (BossInfo*)_input);
+		oa << &bInfo;
 		break;
 	case ITEM_INFO:
 
@@ -315,15 +319,12 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	case HP_INFO:
 		CopyHpInfo(&hInfo, (hpInfo*)_input);
 		oa << hInfo;
-		//std::cout <<"HP:" <<  sendBuffer << std::endl;
 		break;
 	case PARAM_INFO:
 		CopyInitialParamBundle(&paramInfo, (InitialParamBundle*)_input);
 		oa << paramInfo;
 		break;
 	}
-
-	//sendBuffer[strlen(sendBuffer)] = '\n';
 
 	iSendResult = 0;
 	while (!iSendResult)
@@ -398,6 +399,11 @@ void socketManager::CopyItemInfo(ItemInfo* dest, ItemInfo* src)
 {
 	dest->itemId = src->itemId;
 	dest->playerId = src->itemId;
+}
+
+void socketManager::CopyBossInfo(BossInfo* dest, BossInfo* src)
+{
+	dest->patternId = src->patternId;
 }
 
 void socketManager::PrintPlayerInput(playerInput* temp)

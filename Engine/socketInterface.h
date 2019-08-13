@@ -27,6 +27,7 @@ public:
 	static int playerAttackType[2];
 	static int playerPassiveType[2];
 
+	static std::queue<int> bossPatternQueue;
 	static int bossHp;
 	static int bossMaxHp;
 	static int bossPhase2Hp;

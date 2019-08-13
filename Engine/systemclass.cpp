@@ -226,58 +226,63 @@ bool SystemClass::Frame()
 	m_Socket->Frame(IsKeyChanged, WrapInput());
 	
 	//TEMP//
+	int handleCount = 0;
 	MsgBundle* newMsg = m_Socket->GetNewMessage();
-	if (newMsg != NULL)
+	while (newMsg != NULL)
 	{
-		switch (newMsg->type)
+		handleCount++;
+		if (newMsg != NULL)
 		{
-		case socketManager::PLAYER_INFO:
-			playerInput* pInfo;
-			pInfo = (playerInput*)(newMsg->ptr);
-			
-			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
+			switch (newMsg->type)
 			{
-				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
-					socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
-				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
-					socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
-				for (int i = 0; i < 3; i++)
+			case socketManager::PLAYER_INFO:
+				playerInput* pInfo;
+				pInfo = (playerInput*)(newMsg->ptr);
+
+				if (pInfo->playerId >= 0 && pInfo->playerId < 2)
 				{
-					socketInterface::playerPos[pInfo->playerId][i] = pInfo->playerPos[i];
-					socketInterface::mouseDirVec[pInfo->playerId][i] = pInfo->mouseDirVec[i];
+					for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
+						socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
+					for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
+						socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
+					for (int i = 0; i < 3; i++)
+					{
+						socketInterface::playerPos[pInfo->playerId][i] = pInfo->playerPos[i];
+						socketInterface::mouseDirVec[pInfo->playerId][i] = pInfo->mouseDirVec[i];
+					}
 				}
-				//TEMP
-				/*socketInterface::mouseX[1] = pInfo->mouseX;
-				socketInterface::mouseY[1] = pInfo->mouseY;
-				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
-					socketInterface::keyInput[1][i] = pInfo->keyInput[i];
-				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
-					socketInterface::mouseInput[1][i] = pInfo->mouseInput[i];*/
+				delete pInfo;
+				break;
+
+			case socketManager::BOSS_INFO:
+				BossInfo* bInfo;
+				bInfo = (BossInfo*)(newMsg->ptr);
+				socketInterface::bossPatternQueue.push(bInfo->patternId);
+				delete bInfo;
+				break;
+
+			case socketManager::HP_INFO:
+				hpInfo* hInfo;
+				hInfo = (hpInfo*)(newMsg->ptr);
+
+				for (int i = 0; i < 2; i++)
+				{
+					socketInterface::playerHp[i] = hInfo->playerHp[i];
+				}
+				socketInterface::bossHp = hInfo->bossHp;
+				delete hInfo;
+				break;
+
+			case socketManager::ITEM_INFO:
+
+				break;
 			}
-			
-			break;
-
-		case socketManager::BOSS_INFO:
-
-			break;
-
-		case socketManager::HP_INFO:
-			hpInfo* hInfo;
-			hInfo = (hpInfo*)(newMsg->ptr);
-
-			for (int i = 0; i < 2; i++)
-			{
-				socketInterface::playerHp[i] = hInfo->playerHp[i];
-			}
-			socketInterface::bossHp = hInfo->bossHp;
-			break;
-
-		case socketManager::ITEM_INFO:
-			
-			break;
 		}
+		delete newMsg;
+		newMsg = 0;
+		newMsg = m_Socket->GetNewMessage();
 	}
-	
+	std::cout << "Handled " + std::to_string(handleCount) << std::endl;
 	
 
 	// Do the frame processing for the graphics object.

@@ -58,6 +58,11 @@ void projectileclass::SetDelay(int _delay)
 	delay = _delay;
 }
 
+void projectileclass::SetSpeed(float _speed)
+{
+	speed = _speed;
+}
+
 void projectileclass::Move(float multiplier)
 {
 	AdjustPosition(dirVector * multiplier);

@@ -28,6 +28,7 @@
 using namespace DirectX;
 
 #include <vector>
+#include <queue>
 #include <map>
 #include <algorithm>
 #include <math.h>
@@ -46,6 +47,9 @@ using namespace std;
 typedef struct BossPatternFile {
 	int id;
 	int phase;
+	int bullet_type;
+	int bullet_slow_frame;
+	float bullet_speed;
 	int dirCount;
 	int angleBetw;
 	int life;

@@ -133,29 +133,33 @@ public:
 		ar& itemId;
 	}
 };
-/*
+
 class BossInfo {
 public:
 	friend class boost::serialization::access;
 
 	BossInfo() {
-		
+		patternId = 0;
 	}
+
+	BossInfo(int _patternId) {
+		patternId = _patternId;
+	}
+
+	
 
 	~BossInfo() {
 
 	}
 
 	int patternId;
-	int 
 
 	template<class Archive>
 	void serialize(Archive& ar, const unsigned int version) {
-		ar& playerId;
-		ar& itemId;
+		ar& patternId;
 	}
 };
-*/
+
 class InitialParamBundle {
 public:
 	friend class boost::serialization::access;
@@ -242,6 +246,7 @@ private:
 	void CopyHpInfo(hpInfo*, hpInfo*);
 	void CopyInitialParamBundle(InitialParamBundle*, InitialParamBundle*);
 	void CopyItemInfo(ItemInfo*, ItemInfo*);
+	void CopyBossInfo(BossInfo*, BossInfo*);
 
 	void PrintPlayerInput(playerInput*);
 

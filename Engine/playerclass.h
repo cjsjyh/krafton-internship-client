@@ -44,6 +44,7 @@ public:
 	int PLAYER_DASH_FRAME;
 	int PLAYER_DASH_PAUSE_FRAME;
 	float PLAYER_INTERACTION_RANGE;
+	int PLAYER_DASH_COOLTIME;
 
 	//player bullet parameters
 	int PLAYER_BULLET_RELOAD;
@@ -67,7 +68,7 @@ private:
 	int ObjectInteraction();
 
 	int direction;
-	int dashFrame, dashPauseFrame;
+	int dashFrame, dashPauseFrame, dashCoolTime;
 	int lastLeftClick;
 	int lastFPress, resurrectionCount;
 	int dashDir;

@@ -27,8 +27,9 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	PLAYER_BULLET_RELOAD = 10;
 	PLAYER_BULLET_COUNT = 1;
 	PLAYER_BULLET_ANGLE = 0;
+	PLAYER_DASH_COOLTIME = 20;
 
-	dashFrame = dashPauseFrame = lastFPress = -1;
+	dashFrame = dashPauseFrame = lastFPress = dashCoolTime = -1;
 	resurrectionCount = 2;
 	dashDir = -1;
 	attackType = "basic";
@@ -205,6 +206,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	SetDirection(keys);
 
 	//Dashing
+	dashCoolTime--;
 	if (Dash(keys, frame));
 	else if (InputClass::IsWASDKeyPressed(keys))
 	{
@@ -259,7 +261,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 
 bool playerclass::Dash(int* keys, int frame)
 {
-	if (keys[4] == DIK_SPACE || dashFrame != -1)
+	if ((keys[4] == DIK_SPACE || dashFrame != -1) && dashCoolTime <= 0)
 	{
 		//START DASH
 		if (dashFrame == -1)
@@ -286,6 +288,7 @@ bool playerclass::Dash(int* keys, int frame)
 					{
 						dashFrame = -1;
 						dashPauseFrame = -1;
+						dashCoolTime = PLAYER_DASH_COOLTIME;
 					}
 				}
 			}

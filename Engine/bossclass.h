@@ -47,9 +47,9 @@ private:
 	void InitializeModels();
 	void CheckHp();
 
-	void Fire(int delay = 0);
-	void FireDirections(vector<D3DXVECTOR3>, int delay =0, int distance=100);
-	void SetBullet(projectileclass*, D3DXVECTOR3, int distance = 100);
+	//void Fire(int delay = 0);
+	void FireDirections(vector<D3DXVECTOR3>, int fireDelay =0, int distance=100, int slowFrame=20, float bulletSpeed=1, int bulletType =0);
+	void SetBullet(projectileclass*, D3DXVECTOR3, int distance = 100, int slowFrame=20, float bulletSpeed=1, int bulletType = 0);
 
 	void PushQueue(projectileclass*, int);
 	void PopQueue(vector<projectileclass*>&);

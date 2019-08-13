@@ -6,6 +6,9 @@
 #include "projectileclass.h"
 #include "cameraclass.h"
 
+#include <stdlib.h>
+#include <ctime>
+
 #include "gameManager.h"
 
 struct CompareDist
@@ -27,6 +30,7 @@ gameManager::gameManager(int sceneCount)
 	
 	//scene = 0;
 	floor = 0;
+	srand((unsigned int)time(NULL));
 }
 
 gameManager::~gameManager()
@@ -42,6 +46,8 @@ void gameManager::Frame()
 
 void gameManager::RegisterObjectToRender(gameObject *item, int _scene)
 {
+	if (item->GetName() == "player")
+		players.push_back(item);
 	renderObjects[_scene].push_back(item);
 	return;
 }
@@ -234,10 +240,19 @@ void gameManager::AutoMove()
 			{
 				bullet->delay--;
 				bullet->Move(0.1);
-
 			}
 			else
 			{
+				switch (bullet->type)
+				{
+				//follow player
+				case 1:
+					cout << "Follow Player!!" << endl;
+					int targetIndex = rand() % players.size();
+					bullet->SetDirVector(stdafx::normalizeVec3(players[0]->GetPosition() - bullet->GetPosition()));
+					break;
+				}
+
 				bullet->Move(1);
 				if (temp->CheckDestroy())
 				{

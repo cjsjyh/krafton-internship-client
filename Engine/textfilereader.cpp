@@ -32,7 +32,7 @@ bool textfilereader::ReadPatternFile(string fname)
 	while (getline(in, line))
 	{
 		BossPatternFile tempPattern;
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 11; i++)
 		{
 			if (i != 0)
 				getline(in, line);
@@ -62,21 +62,30 @@ bool textfilereader::ReadPatternFile(string fname)
 				tempPattern.phase = stoi(fields[1]);
 				break;
 			case 2:
-				tempPattern.dirCount = stoi(fields[1]);
+				tempPattern.bullet_type = stoi(fields[1]);
 				break;
 			case 3:
-				tempPattern.angleBetw = stoi(fields[1]);
+				tempPattern.bullet_slow_frame = stoi(fields[1]);
 				break;
 			case 4:
-				tempPattern.life = stoi(fields[1]);
+				tempPattern.bullet_speed = stof(fields[1]);
 				break;
 			case 5:
-				tempPattern.repeat = stoi(fields[1]);
+				tempPattern.dirCount = stoi(fields[1]);
 				break;
 			case 6:
-				tempPattern.delay = stoi(fields[1]);
+				tempPattern.angleBetw = stoi(fields[1]);
 				break;
 			case 7:
+				tempPattern.life = stoi(fields[1]);
+				break;
+			case 8:
+				tempPattern.repeat = stoi(fields[1]);
+				break;
+			case 9:
+				tempPattern.delay = stoi(fields[1]);
+				break;
+			case 10:
 				tempPattern.rotAngle = stoi(fields[1]);
 				break;
 			default:

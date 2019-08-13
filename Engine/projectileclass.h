@@ -20,9 +20,11 @@ public:
 	bool CheckDestroy();
 	void SetDistance(int);
 	void SetDelay(int);
+	void SetSpeed(float);
 
 	int damage;
 	int delay;
+	int type;//0 = straight // 1 = follow player
 protected:
 
 
