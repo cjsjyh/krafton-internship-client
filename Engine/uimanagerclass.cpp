@@ -20,7 +20,8 @@ uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _
 	m_TextureShader = 0;
 	m_Text = 0;
 	m_ImageDecoder = 0;
-	player = 0;
+	player[0] = 0;
+	player[1] = 0;
 	boss = 0;
 	GM = 0;
 	camera = 0;
@@ -190,11 +191,11 @@ bool uimanagerclass::Render()
 	}*/
 
 	if (player[0] == 0)
-		player[0] = (playerclass*)GM->GetGameObjectByTag("player1");
+		player[0] = (playerclass*)(GM->GetGameObjectByTag("player0"));
 	if (player[1] == 0)
-		player[1] = (playerclass*)GM->GetGameObjectByTag("player2");
+		player[1] = (playerclass*)(GM->GetGameObjectByTag("player1"));
 	if (boss == 0)
-		boss = (bossclass*)GM->GetGameObject("boss");
+		boss = (bossclass*)(GM->GetGameObject("boss"));
 
 	RenderUI(m_UI, parameters, "");
 
@@ -235,6 +236,7 @@ bool uimanagerclass::Render()
 	*/
 	RenderUI(m_ItemUI, itemParameters, "");
 
+	return true;
 }
 
 void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIparam, string fname)
