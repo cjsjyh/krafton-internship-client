@@ -104,7 +104,7 @@ int playerclass::GetDirection()
 float playerclass::GetUltiPercent()
 {
 	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
-	return (float)socketInterface::playerUltiGauge[currentPlayerId] / (float)maxUltimateGauge;
+	return (float)socketInterface::curPlayerUltiGauge / (float)maxUltimateGauge;
 }
 
 void playerclass::SetDirection(int* keys)
@@ -238,9 +238,8 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
 	if (InputClass::IsKeyPressed(keys, DIK_LSHIFT))
 	{
-		if (socketInterface::playerUltiGauge[currentPlayerId] >= maxUltimateGauge)
+		if (socketInterface::curPlayerUltiGauge >= maxUltimateGauge)
 		{
-			socketInterface::playerUltiGauge[currentPlayerId] = 0;
 			socketInterface::curPlayerUltiGauge = 0;
 			socketInterface::UltiUsed = true;
 			GM->RemoveAllBullets();

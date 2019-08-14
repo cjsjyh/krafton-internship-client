@@ -299,14 +299,13 @@ playerInput* SystemClass::WrapInput()
 
 	for (int i = 0; i < sizeof(temp->keyInput) / sizeof(int); i++)
 	{
-		if (m_Input->keyInput[i] == DIK_LSHIFT)
+		/*if (m_Input->keyInput[i] == DIK_LSHIFT)
 		{
-			playerclass* curPlayer = m_Graphics->players[socketInterface::playerId];
 			if (socketInterface::UltiUsed)
 				socketInterface::UltiUsed = false;
 			else
 				continue;
-		}
+		}*/
 		temp->keyInput[i] = m_Input->keyInput[i];
 	}
 	for (int i = 0; i < sizeof(temp->mouseInput); i++)

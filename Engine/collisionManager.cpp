@@ -175,17 +175,17 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 {
 	if (CheckAnyInOne(obj1,obj2,gameObject::PLAYER_BULLET, gameObject::BOSS_BULLET))
 	{
+		string myBulletName = "player" + to_string(socketInterface::playerId) + "bullet";
 		//BOTH ARE BULLETS
 		if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET, gameObject::PLAYER_BULLET))
 		{
-			if (obj1->tag == "player0bullet" || obj2->tag == "player0bullet")
+			if (obj1->tag == myBulletName || obj2->tag == myBulletName)
 			{
 				if (player0 == 0)
 					player0 = (playerclass*)(GM->GetGameObjectByTag("player" + to_string(socketInterface::playerId)));
 				if (socketInterface::curPlayerUltiGauge < player0->maxUltimateGauge)
 				{
 					socketInterface::curPlayerUltiGauge++;
-					socketInterface::playerUltiGauge[socketInterface::playerId]++;
 				}
 			}
 			GM->UnregisterObjectToRender(obj1);
@@ -210,7 +210,7 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				bullet = (projectileclass*)obj1;
 				flag = 1;
 			}
-			if (bullet->tag == "player0bullet")
+			if (bullet->tag == myBulletName)
 			{
 				socketInterface::bossHitCount++;
 				
@@ -219,7 +219,6 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				if (socketInterface::curPlayerUltiGauge < player0->maxUltimateGauge)
 				{
 					socketInterface::curPlayerUltiGauge += 2;
-					socketInterface::playerUltiGauge[socketInterface::playerId] += 2;
 				}
 			}
 
