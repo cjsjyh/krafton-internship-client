@@ -45,7 +45,7 @@ private:
 	CameraClass* camera;
 	gameManager* GM;
 	bossclass* boss;
-	playerclass* player;
+	playerclass* player[2];
 	timerclass* timer;
 
 	int screenWidth, screenHeight;

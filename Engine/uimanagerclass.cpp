@@ -189,14 +189,17 @@ bool uimanagerclass::Render()
 		return false;
 	}*/
 
-	if (player == 0)
-		player = (playerclass*)GM->GetGameObject("player");
+	if (player[0] == 0)
+		player[0] = (playerclass*)GM->GetGameObjectByTag("player1");
+	if (player[1] == 0)
+		player[1] = (playerclass*)GM->GetGameObjectByTag("player2");
 	if (boss == 0)
 		boss = (bossclass*)GM->GetGameObject("boss");
 
 	RenderUI(m_UI, parameters, "");
 
 	//Set player item images
+	/*
 	if (player->GetPlayerItemSize() > m_ItemUI.size())
 	{
 		int width, height;
@@ -229,7 +232,7 @@ bool uimanagerclass::Render()
 			m_ItemUI.push_back(temp);
 		}
 	}
-
+	*/
 	RenderUI(m_ItemUI, itemParameters, "");
 
 }
@@ -257,7 +260,12 @@ void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIpar
 		}
 		else if (UIparam[i]->uiname == "PLAYER_HPBAR_FRONT")
 		{
-			float playerHp = player->GetHpPercent();
+			float playerHp = player[0]->GetHpPercent();
+			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
+		}
+		else if (UIparam[i]->uiname == "PLAYER2_HPBAR_FRONT")
+		{
+			float playerHp = player[1]->GetHpPercent();
 			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
 		}
 

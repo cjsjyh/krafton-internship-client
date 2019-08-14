@@ -188,6 +188,21 @@ gameObject* gameManager::GetGameObject(string name, int _scene)
 	return NULL;
 }
 
+gameObject* gameManager::GetGameObjectByTag(string tag, int _scene)
+{
+	int curScene;
+	if (_scene != -1)
+		curScene = _scene;
+	else
+		curScene = scene;
+
+	for (auto iter = renderObjects[curScene].begin(); iter != renderObjects[curScene].end(); iter++)
+	{
+		if ((*iter)->tag == tag)
+			return *iter;
+	}
+	return NULL;
+}
 
 void gameManager::CheckCollision()
 {

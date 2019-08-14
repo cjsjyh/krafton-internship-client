@@ -26,6 +26,7 @@ public:
 	int GetRenderObjectCount(int _scene = -1);
 	gameObject* GetGameObject(int index, int _scene = -1);
 	gameObject* GetGameObject(string name, int _scene = -1);
+	gameObject* GetGameObjectByTag(string tag, int _scene = -1);
 
 	void RegisterToBossPool(projectileclass* item);
 	projectileclass* GetFromBossPool();
