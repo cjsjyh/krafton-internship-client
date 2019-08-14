@@ -16,6 +16,33 @@ using namespace boost::iostreams;
 
 #define BUFFER_SIZE 512
 
+class FrameInfo {
+public:
+	friend class boost::serialization::access;
+
+	FrameInfo()
+	{
+		
+	}
+
+	FrameInfo(int num, int id)
+	{
+		playerId = id;
+		frameNum = num;
+	}
+	
+	~FrameInfo() {
+		
+	}
+	int playerId;
+	int frameNum;
+
+	template<class Archive>
+	void serialize(Archive& ar, const unsigned int version) {
+		ar& playerId;
+		ar& frameNum;
+	}
+};
 
 class playerInput
 {
@@ -212,6 +239,7 @@ public:
 		HP_INFO,
 		ITEM_INFO,
 		PARAM_INFO,
+		FRAME_INFO,
 	};
 
 	enum ItemType
@@ -235,6 +263,7 @@ public:
 public:
 	playerInput pInfo;
 	std::queue<MsgBundle*> serverReadBuffer;
+	std::queue<MsgBundle*> frameCount;
 
 private:
 	void ListenToServer();
@@ -246,8 +275,8 @@ private:
 	void CopyInitialParamBundle(InitialParamBundle*, InitialParamBundle*);
 	void CopyItemInfo(ItemInfo*, ItemInfo*);
 	void CopyBossInfo(BossInfo*, BossInfo*);
+	void CopyFrameInfo(FrameInfo*, FrameInfo*);
 
-	void PrintPlayerInput(playerInput*);
 
 private:
 	char sendBuffer[BUFFER_SIZE];
@@ -258,7 +287,8 @@ private:
 
 	SOCKET ConnectSocket;
 	//InputClass* m_Input;
-	int count=0;
+	int frame;
+	int frameTo;
 };
 
 

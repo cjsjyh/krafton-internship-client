@@ -47,7 +47,6 @@ ApplicationClass::ApplicationClass()
 	screenW = screenH = 0;
 	last_scene_change_frame = 0;
 	SCENE_CHANGE_COOLTIME = 60;
-	
 }
 
 ApplicationClass::~ApplicationClass()

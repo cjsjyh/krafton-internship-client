@@ -226,59 +226,55 @@ bool SystemClass::Frame()
 	MsgBundle* newMsg = m_Socket->GetNewMessage();
 	while (newMsg != NULL)
 	{
-		if (newMsg != NULL)
+		switch (newMsg->type)
 		{
-			switch (newMsg->type)
+		case socketManager::PLAYER_INFO:
+			playerInput* pInfo;
+			pInfo = (playerInput*)(newMsg->ptr);
+
+			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
 			{
-			case socketManager::PLAYER_INFO:
-				playerInput* pInfo;
-				pInfo = (playerInput*)(newMsg->ptr);
-
-				if (pInfo->playerId >= 0 && pInfo->playerId < 2)
+				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
+					socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
+				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
+					socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
+				for (int i = 0; i < 3; i++)
 				{
-					for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
-						socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
-					for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
-						socketInterface::mouseInput[pInfo->playerId][i] = pInfo->mouseInput[i];
-					for (int i = 0; i < 3; i++)
-					{
-						socketInterface::playerPos[pInfo->playerId][i] = pInfo->playerPos[i];
-						socketInterface::mouseDirVec[pInfo->playerId][i] = pInfo->mouseDirVec[i];
-					}
+					socketInterface::playerPos[pInfo->playerId][i] = pInfo->playerPos[i];
+					socketInterface::mouseDirVec[pInfo->playerId][i] = pInfo->mouseDirVec[i];
 				}
-				delete pInfo;
-				break;
-
-			case socketManager::BOSS_INFO:
-				BossInfo* bInfo;
-				bInfo = (BossInfo*)(newMsg->ptr);
-				socketInterface::bossPatternQueue.push(bInfo->patternId);
-				delete bInfo;
-				break;
-
-			case socketManager::HP_INFO:
-				hpInfo* hInfo;
-				hInfo = (hpInfo*)(newMsg->ptr);
-
-				for (int i = 0; i < 2; i++)
-				{
-					socketInterface::playerHp[i] = hInfo->playerHp[i];
-				}
-				socketInterface::bossHp = hInfo->bossHp;
-				delete hInfo;
-				break;
-
-			case socketManager::ITEM_INFO:
-
-				break;
 			}
+			delete pInfo;
+			break;
+
+		case socketManager::BOSS_INFO:
+			BossInfo* bInfo;
+			bInfo = (BossInfo*)(newMsg->ptr);
+			socketInterface::bossPatternQueue.push(bInfo->patternId);
+			delete bInfo;
+			break;
+
+		case socketManager::HP_INFO:
+			hpInfo* hInfo;
+			hInfo = (hpInfo*)(newMsg->ptr);
+
+			for (int i = 0; i < 2; i++)
+			{
+				socketInterface::playerHp[i] = hInfo->playerHp[i];
+			}
+			socketInterface::bossHp = hInfo->bossHp;
+			delete hInfo;
+			break;
+
+		case socketManager::ITEM_INFO:
+
+			break;
 		}
 		delete newMsg;
 		newMsg = 0;
 		newMsg = m_Socket->GetNewMessage();
 	}
 	
-
 	// Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(mouseX,mouseY);
 	if (!result)

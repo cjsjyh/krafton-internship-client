@@ -21,6 +21,8 @@
 socketManager::socketManager()
 {
 	threadLock = new std::mutex;
+	frame = 0;
+	frameTo = 0;
 	//m_Input = 0;
 }
 
@@ -135,6 +137,31 @@ bool socketManager::Frame(bool IsKeyChanged, playerInput* playerInput)
 {
 	int iResult = 0;
 	bool flag;
+
+	if (frame++ % 20 == 0)
+	{
+		FrameInfo* fInfo;
+		fInfo = new FrameInfo(frame, socketInterface::playerId);
+		sendMessage(ConnectSocket, fInfo, FRAME_INFO);
+	}
+
+	while (frame != 0)
+	{
+		std::cout << "Frame: " + std::to_string(frame) << std::endl;
+		if (frameTo > frame)
+			break;
+		while (frameCount.size() > 0) 
+		{
+			MsgBundle* temp = frameCount.front();
+			frameCount.pop();
+			int tempFrame = ((FrameInfo*)(temp->ptr))->frameNum;
+			if (tempFrame > frameTo)
+				frameTo = tempFrame;
+		}
+
+		
+	}
+
 	if (IsKeyChanged)
 	{
 		iResult = sendMessage(ConnectSocket, playerInput, PLAYER_INFO);
@@ -184,7 +211,10 @@ void socketManager::ListenToServer()
 		else 
 		{
 			threadLock->lock();
-			serverReadBuffer.push(tempMsg);
+			if (tempMsg->type == FRAME_INFO)
+				frameCount.push(tempMsg);
+			else
+				serverReadBuffer.push(tempMsg);
 			threadLock->unlock();
 		}
 	}
@@ -243,6 +273,7 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 		hpInfo hpMsg;
 		InitialParamBundle paramInfo;
 		BossInfo bInfo;
+		FrameInfo fInfo;
 		switch (msgType)
 		{
 		case PLAYER_INFO:
@@ -278,8 +309,15 @@ MsgBundle* socketManager::receiveMessage(SOCKET ConnectSocket)
 			InitialParamBundle* paramInfoPtr;
 			paramInfoPtr = new InitialParamBundle;
 			CopyInitialParamBundle(paramInfoPtr, &paramInfo);
-
 			msgBundle->ptr = paramInfoPtr;
+			break;
+
+		case FRAME_INFO:
+			ia >> fInfo;
+			FrameInfo* fInfoPtr;
+			fInfoPtr = new FrameInfo;
+			CopyFrameInfo(fInfoPtr, &fInfo);
+			msgBundle->ptr = fInfoPtr;
 			break;
 		}
 		msgBundle->type = msgType;
@@ -303,6 +341,7 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	hpInfo hInfo;
 	InitialParamBundle paramInfo;
 	BossInfo bInfo;
+	FrameInfo fInfo;
 	switch (type)
 	{
 	case PLAYER_INFO:
@@ -323,6 +362,10 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 	case PARAM_INFO:
 		CopyInitialParamBundle(&paramInfo, (InitialParamBundle*)_input);
 		oa << paramInfo;
+		break;
+	case FRAME_INFO:
+		CopyFrameInfo(&fInfo, (FrameInfo*)_input);
+		oa << fInfo;
 		break;
 	}
 
@@ -404,4 +447,10 @@ void socketManager::CopyItemInfo(ItemInfo* dest, ItemInfo* src)
 void socketManager::CopyBossInfo(BossInfo* dest, BossInfo* src)
 {
 	dest->patternId = src->patternId;
+}
+
+void socketManager::CopyFrameInfo(FrameInfo* dest, FrameInfo* src)
+{
+	dest->playerId = src->playerId;
+	dest->frameNum = src->frameNum;
 }
