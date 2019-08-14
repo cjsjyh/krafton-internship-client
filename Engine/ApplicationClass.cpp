@@ -434,14 +434,11 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 
 	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 	{
-		if (socketInterface::playerHp[i] > 0)
-		{
-			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]) , frame);
-		}
-		else
+		if (socketInterface::playerHp[i] <= 0)
 		{
 			players[i]->channel = gameObject::INTERACTION;
 		}
+		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), frame);
 		players[i]->ChangeHp(socketInterface::playerHp[i]);
 	}
 	m_GM->Frame();

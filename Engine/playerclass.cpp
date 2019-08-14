@@ -191,51 +191,55 @@ D3DXVECTOR3 playerclass::GetDirectionVector(int dir)
 void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int frame)
 {
 	//CAN CLICK AGAIN!
-	if (frame - lastLeftClick > PLAYER_BULLET_RELOAD)
-		lastLeftClick = 0;
+	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
 
-	if (InputClass::LeftMouseClicked(mousePress))
+	if (socketInterface::playerHp[currentPlayerId] > 0)
 	{
-		if (!lastLeftClick)
+		if (frame - lastLeftClick > PLAYER_BULLET_RELOAD)
+			lastLeftClick = 0;
+
+		if (InputClass::LeftMouseClicked(mousePress))
 		{
-			vector<D3DXVECTOR3> temp = skillpatternclass::FireInFan(PLAYER_BULLET_COUNT, PLAYER_BULLET_ANGLE, vecToMouse);
-			for (auto iter = temp.begin(); iter != temp.end(); iter++)
+			if (!lastLeftClick)
 			{
-				GM->RegisterObjectToRender(Fire(*iter), GM->scene);
+				vector<D3DXVECTOR3> temp = skillpatternclass::FireInFan(PLAYER_BULLET_COUNT, PLAYER_BULLET_ANGLE, vecToMouse);
+				for (auto iter = temp.begin(); iter != temp.end(); iter++)
+				{
+					GM->RegisterObjectToRender(Fire(*iter), GM->scene);
+				}
+
+				lastLeftClick = frame;
 			}
-			
-			lastLeftClick = frame;
 		}
-	}
 
-	SetDirection(keys);
+		SetDirection(keys);
 
-	//Dashing
-	dashCoolTime--;
-	if (Dash(keys, frame));
-	else if (InputClass::IsWASDKeyPressed(keys))
-	{
+		//Dashing
+		dashCoolTime--;
+		if (Dash(keys, frame));
+		else if (InputClass::IsWASDKeyPressed(keys))
+		{
 
-		D3DXVECTOR3 nextPos = GetPosition() + GetDirectionVector(direction) * PLAYER_SPEED;
-		if(GM->CheckMovable(nextPos, GetCollSize()))
-			if(GM->CheckMapOut(nextPos))
-				AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
+			D3DXVECTOR3 nextPos = GetPosition() + GetDirectionVector(direction) * PLAYER_SPEED;
+			if (GM->CheckMovable(nextPos, GetCollSize()))
+				if (GM->CheckMapOut(nextPos))
+					AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
+		}
+
+		if (InputClass::IsKeyPressed(keys, DIK_F) && tag == "player" + to_string(socketInterface::playerId))
+		{
+			if (frame - lastFPress > 100)
+			{
+				if (resurrectionCount > 0)
+				{
+					--resurrectionCount;
+					lastFPress = frame;
+					ObjectInteraction();
+				}
+			}
+		}
 	}
 	
-	if (InputClass::IsKeyPressed(keys, DIK_F) && tag == "player" + to_string(socketInterface::playerId))
-	{
-		if (frame - lastFPress > 100)
-		{
-			if (resurrectionCount > 0)
-			{
-				--resurrectionCount;
-				lastFPress = frame;
-				ObjectInteraction();
-			}
-		}
-	}
-
-	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
 	if (InputClass::IsKeyPressed(keys, DIK_LSHIFT))
 	{
 		if (socketInterface::curPlayerUltiGauge >= maxUltimateGauge)
