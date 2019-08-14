@@ -302,7 +302,9 @@ playerInput* SystemClass::WrapInput()
 		if (m_Input->keyInput[i] == DIK_LSHIFT)
 		{
 			playerclass* curPlayer = m_Graphics->players[socketInterface::playerId];
-			if (socketInterface::curPlayerUltiGauge < curPlayer->maxUltimateGauge)
+			if (socketInterface::UltiUsed)
+				socketInterface::UltiUsed = false;
+			else
 				continue;
 		}
 		temp->keyInput[i] = m_Input->keyInput[i];

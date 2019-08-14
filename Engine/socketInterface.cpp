@@ -12,6 +12,7 @@ int socketInterface::playerHeal[2] = { 0, };
 int socketInterface::bossHeal = 0;
 int socketInterface::curPlayerUltiGauge = 0;
 int socketInterface::playerUltiGauge[2] = { 0, };
+bool socketInterface::UltiUsed = false;
 
 bool socketInterface::mouseInput[][3] = { 0, };
 float socketInterface::mouseDirVec[][3] = { 0, };

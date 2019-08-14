@@ -242,6 +242,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 		{
 			socketInterface::playerUltiGauge[currentPlayerId] = 0;
 			socketInterface::curPlayerUltiGauge = 0;
+			socketInterface::UltiUsed = true;
 			GM->RemoveAllBullets();
 		}
 	}

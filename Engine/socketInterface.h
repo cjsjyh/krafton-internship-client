@@ -16,6 +16,7 @@ public:
 	static int playerHeal[2];
 	static int bossHeal;
 	static int curPlayerUltiGauge;
+	static bool UltiUsed;
 
 	//To read
 	static float mouseDirVec[2][3];
