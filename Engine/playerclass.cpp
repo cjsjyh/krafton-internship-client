@@ -33,7 +33,7 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	resurrectionCount = 2;
 	dashDir = -1;
 	attackType = "basic";
-	ultimateGauge = 100;
+	ultimateGauge = 0;
 
 	playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
 	InitializeModels();
@@ -100,6 +100,11 @@ void playerclass::SetSpeed(float _speed)
 int playerclass::GetDirection()
 {
 	return direction;
+}
+
+float playerclass::GetUltiPercent()
+{
+	return (float)ultimateGauge / (float)maxUltimateGauge;
 }
 
 void playerclass::SetDirection(int* keys)
@@ -232,9 +237,9 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 
 	if (InputClass::IsKeyPressed(keys, DIK_LSHIFT))
 	{
-		if (ultimateGauge >= 100)
+		if (ultimateGauge >= maxUltimateGauge)
 		{
-			//ultimateGauge = 0;
+			ultimateGauge = 0;
 			GM->RemoveAllBullets();
 		}
 	}

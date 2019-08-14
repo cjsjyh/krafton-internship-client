@@ -21,8 +21,8 @@ public:
 	gameObject* InteractionManager(D3DXVECTOR3, int);
 
 	bool IsInsideMap(D3DXVECTOR3, D3DXVECTOR3, D3DXVECTOR3);
-
 	CameraClass* m_Camera;
+
 private:
 	bool CheckMatch(gameObject*, gameObject*, int, int);
 	bool CheckInOne(gameObject*, int, int);
@@ -39,6 +39,7 @@ private:
 	bool MoveCollisionChannel(gameObject*);
 
 	gameManager* GM;
+	playerclass* player0;
 };
 
 #endif

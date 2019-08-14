@@ -270,6 +270,11 @@ void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIpar
 			float playerHp = player[1]->GetHpPercent();
 			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
 		}
+		else if (UIparam[i]->uiname == "PLAYER_ULTI_FRONT")
+		{
+			float playerUlti = player[0]->GetUltiPercent();
+			D3DXMatrixScaling(&worldMatrix, playerUlti, 1, 1);
+		}
 
 		result = UIComp[i]->Render(device->GetDeviceContext(), 0, 0);
 

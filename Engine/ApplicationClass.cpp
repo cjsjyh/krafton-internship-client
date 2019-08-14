@@ -198,7 +198,7 @@ void ApplicationClass::InitializePlayerParameters()
 		player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
 
 		player->PLAYER_INTERACTION_RANGE = m_filereader->paramFloat.find("PLAYER_INTERACTION_RANGE")->second;
-
+		player->maxUltimateGauge = m_filereader->paramInt.find("PLAYER_MAX_ULTI_GAUGE")->second;
 		D3DXVECTOR3 playerSize;
 		playerSize.x = m_filereader->paramFloat.find("PLAYER_SIZE_X")->second;
 		playerSize.y = m_filereader->paramFloat.find("PLAYER_SIZE_Y")->second;

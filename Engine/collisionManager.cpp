@@ -15,6 +15,7 @@ collisionManager::collisionManager(gameManager* _GM)
 {
 	GM = _GM;
 	m_Camera = 0;
+	player0 = 0;
 }
 
 collisionManager::~collisionManager()
@@ -177,6 +178,13 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 		//BOTH ARE BULLETS
 		if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET, gameObject::PLAYER_BULLET))
 		{
+			if (obj1->tag == "player0bullet" || obj2->tag == "player0bullet")
+			{
+				if (player0 == 0)
+					player0 = (playerclass*)(GM->GetGameObjectByTag("player0"));
+				if(player0->ultimateGauge < player0->maxUltimateGauge)
+					player0->ultimateGauge++;
+			}
 			GM->UnregisterObjectToRender(obj1);
 			GM->UnregisterObjectToRender(obj2);
 			return 3;
@@ -200,9 +208,13 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				flag = 1;
 			}
 			if (bullet->tag == "player0bullet")
+			{
 				socketInterface::bossHitCount++;
-			
-			//boss->Hit(bullet->damage);
+				if (player0 == 0)
+					player0 = (playerclass*)(GM->GetGameObjectByTag("player0"));
+				if (player0->ultimateGauge < player0->maxUltimateGauge)
+					player0->ultimateGauge += 2;
+			}
 
 			GM->UnregisterObjectToRender((gameObject*)bullet);
 			if (bullet->GetName() == "playerbullet")

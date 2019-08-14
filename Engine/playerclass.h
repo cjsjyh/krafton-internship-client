@@ -27,6 +27,7 @@ public:
 	void SetDirection(int*);
 	void SetDirection(int);
 	int GetDirection();
+	float GetUltiPercent();
 	void SetImage();
 	void SetSpeed(float);
 
@@ -56,7 +57,7 @@ public:
 	float PLAYER_BULLET_COUNT;
 
 	int ultimateGauge;
-
+	int maxUltimateGauge;
 private:
 	projectileclass* Fire(D3DXVECTOR3);
 	void SetBullet(projectileclass*, D3DXVECTOR3);
