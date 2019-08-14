@@ -94,7 +94,11 @@ void gameManager::AlphaSort()
 		if ((*iter)->GetName() == "floor")
 			(*iter)->w = 9999999;
 		else
-			(*iter)->w = stdafx::GetDistance((*iter)->GetPosition(), camPos);
+		{
+			D3DXVECTOR3 v1 = D3DXVECTOR3(0, (*iter)->GetPosition().y, (*iter)->GetPosition().z);
+			D3DXVECTOR3 v2 = D3DXVECTOR3(0, camPos.y, camPos.z);
+			(*iter)->w = stdafx::GetDistance(v1, v2);
+		}
 	}
 	std::sort(renderObjects[scene].begin(), renderObjects[scene].end(), CompareDist());
 

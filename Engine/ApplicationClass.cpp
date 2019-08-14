@@ -508,15 +508,23 @@ bool ApplicationClass::Render()
 	int size = m_GM->GetRenderObjectCount();
 	for (int i = 0; i < size; i++)
 	{
+		D3DXVECTOR4 colorMultiply = D3DXVECTOR4(1,1,1,1);
 		gameObject* temp = m_GM->GetGameObject(i);
 		temp->GetModel()->Render(m_D3D->GetDeviceContext());
 		temp->GetWorldMatrix(worldMatrix);
 		if (temp->GetName() != "floor")
 			worldMatrix = MatrixToFaceCamera *  worldMatrix;
+		if (temp->GetName() == "player")
+		{
+			if (((playerclass*)temp)->GetHp() <= 0)
+			{
+				colorMultiply = D3DXVECTOR4(0.5, 0.5, 0.5, 1);
+			}
+		}
 		
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix,
 			viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
-			m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+			m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),colorMultiply,colorMultiply);
 
 		if (!result)
 		{
