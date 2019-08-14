@@ -56,7 +56,6 @@ public:
 	float PLAYER_BULLET_ANGLE;
 	float PLAYER_BULLET_COUNT;
 
-	int ultimateGauge;
 	int maxUltimateGauge;
 private:
 	projectileclass* Fire(D3DXVECTOR3);

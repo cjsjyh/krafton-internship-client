@@ -182,8 +182,11 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 			{
 				if (player0 == 0)
 					player0 = (playerclass*)(GM->GetGameObjectByTag("player0"));
-				if(player0->ultimateGauge < player0->maxUltimateGauge)
-					player0->ultimateGauge++;
+				if (socketInterface::curPlayerUltiGauge < player0->maxUltimateGauge)
+				{
+					socketInterface::curPlayerUltiGauge++;
+					socketInterface::playerUltiGauge[socketInterface::playerId]++;
+				}
 			}
 			GM->UnregisterObjectToRender(obj1);
 			GM->UnregisterObjectToRender(obj2);
@@ -212,8 +215,11 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 				socketInterface::bossHitCount++;
 				if (player0 == 0)
 					player0 = (playerclass*)(GM->GetGameObjectByTag("player0"));
-				if (player0->ultimateGauge < player0->maxUltimateGauge)
-					player0->ultimateGauge += 2;
+				if (socketInterface::curPlayerUltiGauge < player0->maxUltimateGauge)
+				{
+					socketInterface::curPlayerUltiGauge += 2;
+					socketInterface::playerUltiGauge[socketInterface::playerId] += 2;
+				}
 			}
 
 			GM->UnregisterObjectToRender((gameObject*)bullet);

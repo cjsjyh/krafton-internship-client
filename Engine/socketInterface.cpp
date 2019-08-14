@@ -10,6 +10,8 @@ int socketInterface::bossHitCount = 0; // Myself
 int socketInterface::playerHitCount = 0; // Myself
 int socketInterface::playerHeal[2] = { 0, };
 int socketInterface::bossHeal = 0;
+int socketInterface::curPlayerUltiGauge = 0;
+int socketInterface::playerUltiGauge[2] = { 0, };
 
 bool socketInterface::mouseInput[][3] = { 0, };
 float socketInterface::mouseDirVec[][3] = { 0, };

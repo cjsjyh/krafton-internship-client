@@ -10,6 +10,7 @@ class InputClass;
 class ApplicationClass;
 class socketManager;
 class playerInput;
+class playerclass;
 
 class SystemClass
 {

@@ -33,7 +33,6 @@ playerclass::playerclass(int _hp, D3DClass* _device, D3DXVECTOR3 pos)
 	resurrectionCount = 2;
 	dashDir = -1;
 	attackType = "basic";
-	ultimateGauge = 0;
 
 	playerPosSave.push_back(D3DXVECTOR3(0, 0, 0));
 	InitializeModels();
@@ -104,7 +103,8 @@ int playerclass::GetDirection()
 
 float playerclass::GetUltiPercent()
 {
-	return (float)ultimateGauge / (float)maxUltimateGauge;
+	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
+	return (float)socketInterface::playerUltiGauge[currentPlayerId] / (float)maxUltimateGauge;
 }
 
 void playerclass::SetDirection(int* keys)
@@ -235,11 +235,12 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 		}
 	}
 
+	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
 	if (InputClass::IsKeyPressed(keys, DIK_LSHIFT))
 	{
-		if (ultimateGauge >= maxUltimateGauge)
+		if (socketInterface::playerUltiGauge[currentPlayerId] >= maxUltimateGauge)
 		{
-			ultimateGauge = 0;
+			socketInterface::playerUltiGauge[currentPlayerId] = 0;
 			GM->RemoveAllBullets();
 		}
 	}
@@ -254,7 +255,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 		}
 	}
 
-	int currentPlayerId = stoi(tag.substr(tag.length() - 1, tag.length()));
+	
 	if (currentPlayerId == socketInterface::playerId)
 	{
 		for (int i = 0; i < 3; i++)

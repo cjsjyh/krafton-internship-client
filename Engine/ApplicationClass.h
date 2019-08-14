@@ -68,6 +68,9 @@ public:
 	void Shutdown();
 	bool Frame(int, int);
 	bool Render();
+
+	vector<playerclass*> players;
+
 private:
 	D3DXVECTOR3 GetDirectionMouse(D3DXVECTOR3, int, int);
 	void SetCamera(int);
@@ -77,8 +80,7 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	uimanagerclass* m_UIM;
-	
-	vector<playerclass*> players;
+
 	bossclass* boss;
 	gameManager* m_GM;
 	itemmanagerclass* m_IM;

@@ -58,7 +58,6 @@ public:
 	}
 };
 
-
 class hpInfo {
 public:
 	friend class boost::serialization::access;

@@ -15,6 +15,7 @@ public:
 	static int playerHitCount; // Myself
 	static int playerHeal[2];
 	static int bossHeal;
+	static int curPlayerUltiGauge;
 
 	//To read
 	static float mouseDirVec[2][3];
@@ -26,6 +27,7 @@ public:
 	static int playerHp[2];
 	static int playerAttackType[2];
 	static int playerPassiveType[2];
+	static int playerUltiGauge[2];
 
 	static std::queue<int> bossPatternQueue;
 	static int bossHp;

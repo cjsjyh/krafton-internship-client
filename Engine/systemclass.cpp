@@ -10,6 +10,7 @@
 #include "socketManager.h"
 #include <windows.h>
 
+#include "playerclass.h"
 #include "systemclass.h"
 
 #include "socketInterface.h"
@@ -217,10 +218,6 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-	//----------------------
-	//  check key input
-	//----------------------
-	//keyboard
 	m_Input->GetMouseLocation(mouseX, mouseY);
 
 	m_Socket->Frame(IsKeyChanged, WrapInput());
@@ -300,8 +297,16 @@ playerInput* SystemClass::WrapInput()
 	playerInput* temp = new playerInput;
 	temp->playerId = socketInterface::playerId;
 
-	for (int i = 0; i < sizeof(temp->keyInput)/sizeof(int); i++)
+	for (int i = 0; i < sizeof(temp->keyInput) / sizeof(int); i++)
+	{
+		if (m_Input->keyInput[i] == DIK_LSHIFT)
+		{
+			playerclass* curPlayer = m_Graphics->players[socketInterface::playerId];
+			if (socketInterface::curPlayerUltiGauge < curPlayer->maxUltimateGauge)
+				continue;
+		}
 		temp->keyInput[i] = m_Input->keyInput[i];
+	}
 	for (int i = 0; i < sizeof(temp->mouseInput); i++)
 		temp->mouseInput[i] = m_Input->mouseInput[i];
 	
