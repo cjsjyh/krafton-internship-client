@@ -11,6 +11,7 @@
 #include "textureshaderclass.h"
 #include "textclass.h"
 
+#include "socketInterface.h"
 #include "timerclass.h"
 
 #include "uimanagerclass.h"
@@ -272,7 +273,7 @@ void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIpar
 		}
 		else if (UIparam[i]->uiname == "PLAYER_ULTI_FRONT")
 		{
-			float playerUlti = player[0]->GetUltiPercent();
+			float playerUlti = player[socketInterface::playerId]->GetUltiPercent();
 			D3DXMatrixScaling(&worldMatrix, playerUlti, 1, 1);
 		}
 

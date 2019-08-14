@@ -241,6 +241,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 		if (socketInterface::playerUltiGauge[currentPlayerId] >= maxUltimateGauge)
 		{
 			socketInterface::playerUltiGauge[currentPlayerId] = 0;
+			socketInterface::curPlayerUltiGauge = 0;
 			GM->RemoveAllBullets();
 		}
 	}
