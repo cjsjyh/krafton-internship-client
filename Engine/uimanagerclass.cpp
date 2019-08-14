@@ -192,9 +192,9 @@ bool uimanagerclass::Render()
 	}*/
 
 	if (player[0] == 0)
-		player[0] = (playerclass*)(GM->GetGameObjectByTag("player0"));
+		player[0] = (playerclass*)(GM->GetGameObjectByTag("player"+to_string(socketInterface::playerId)));
 	if (player[1] == 0)
-		player[1] = (playerclass*)(GM->GetGameObjectByTag("player1"));
+		player[1] = (playerclass*)(GM->GetGameObjectByTag("player1"+to_string(abs(socketInterface::playerId-1))));
 	if (boss == 0)
 		boss = (bossclass*)(GM->GetGameObject("boss"));
 

@@ -124,25 +124,7 @@ void bossclass::ActivatePattern(BossPatternFile pat)
 	}
 
 }
-/*
-void bossclass::Fire(int delay)
-{
-	projectileclass* temp = GM->GetFromBossPool();
-	if (!temp)
-	{
-		temp = new projectileclass("bossbullet", GetPosition(), 1, 3, device, gameObject::BOSS_BULLET);
-		temp->SetDirVector(skillpatternclass::FireAt(GetPosition(), player->GetPosition()));
-		temp->AdjustPosition(temp->GetDirVector());
-	}
-	else
-	{
-		SetBullet(temp, skillpatternclass::FireAt(GetPosition(), player->GetPosition()));
-	}
-	
 
-	PushQueue(temp, delay);
-}
-*/
 void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int fireDelay, int distance, int slowFrame, float bulletSpeed, int bulletType)
 {
 	for (auto iter = dirVectors.begin(); iter != dirVectors.end(); iter++)
@@ -185,8 +167,7 @@ void bossclass::PopQueue(vector<projectileclass*>& shootBullet)
 {
 	for (int i = bossBullets.size() -1; i >= 0; i--)
 	{
-		bossBullets[i].frame--;
-		if (bossBullets[i].frame <= 0)
+		if (bossBullets[i].frame-- <= 0)
 		{
 			shootBullet.push_back(bossBullets[i].bullet);
 			bossBullets.erase(bossBullets.begin() + i);

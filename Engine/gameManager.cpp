@@ -28,7 +28,6 @@ gameManager::gameManager(int sceneCount)
 	
 	m_CM = new collisionManager(this);
 	
-	//scene = 0;
 	floor = 0;
 	srand((unsigned int)time(NULL));
 }
@@ -255,11 +254,13 @@ void gameManager::AutoMove()
 		{
 			projectileclass* bullet = (projectileclass*)temp;
 
+			//Move slow
 			if (bullet->delay > 0)
 			{
 				bullet->delay--;
 				bullet->Move(0.1);
 			}
+			//Move at normal speed
 			else
 			{
 				switch (bullet->type)
@@ -305,9 +306,12 @@ bool gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
 {
 	D3DXMATRIX temp;
 	//find floor and set
-	for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
-		if ((*iter)->GetName() == "floor")
-			floor = *iter;
+	if (!floor)
+	{
+		for (auto iter = renderObjects[scene].begin(); iter != renderObjects[scene].end(); iter++)
+			if ((*iter)->GetName() == "floor")
+				floor = *iter;
+	}
 	D3DXMatrixRotationY(&temp, -floor->GetRotation().y *0.0174532925f);
 	D3DXVec3TransformCoord(&playerPos, &playerPos, &temp);
 	return m_CM->IsInsideMap(playerPos, floor->GetPosition(), floor->GetScale());

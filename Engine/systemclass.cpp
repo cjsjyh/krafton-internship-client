@@ -223,11 +223,9 @@ bool SystemClass::Frame()
 	m_Socket->Frame(IsKeyChanged, WrapInput());
 	
 	//TEMP//
-	int handleCount = 0;
 	MsgBundle* newMsg = m_Socket->GetNewMessage();
 	while (newMsg != NULL)
 	{
-		handleCount++;
 		if (newMsg != NULL)
 		{
 			switch (newMsg->type)
@@ -279,7 +277,6 @@ bool SystemClass::Frame()
 		newMsg = 0;
 		newMsg = m_Socket->GetNewMessage();
 	}
-	std::cout << "Handled " + std::to_string(handleCount) << std::endl;
 	
 
 	// Do the frame processing for the graphics object.
@@ -299,13 +296,12 @@ playerInput* SystemClass::WrapInput()
 
 	for (int i = 0; i < sizeof(temp->keyInput) / sizeof(int); i++)
 	{
-		/*if (m_Input->keyInput[i] == DIK_LSHIFT)
+		if (m_Input->keyInput[i] == DIK_LSHIFT)
 		{
-			if (socketInterface::UltiUsed)
-				socketInterface::UltiUsed = false;
-			else
+			playerclass* tempPlayer = m_Graphics->players[0];
+			if (socketInterface::curPlayerUltiGauge < tempPlayer->maxUltimateGauge)
 				continue;
-		}*/
+		}
 		temp->keyInput[i] = m_Input->keyInput[i];
 	}
 	for (int i = 0; i < sizeof(temp->mouseInput); i++)

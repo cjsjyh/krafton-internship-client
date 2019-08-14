@@ -405,11 +405,3 @@ void socketManager::CopyBossInfo(BossInfo* dest, BossInfo* src)
 {
 	dest->patternId = src->patternId;
 }
-
-void socketManager::PrintPlayerInput(playerInput* temp)
-{
-	printf("PlayerId: %d\n", temp->playerId);
-	printf("PlayerPos: [%d,%d,%d]\n", temp->playerPos[0], temp->playerPos[1], temp->playerPos[2]);
-	//printf("mouseX: %d mouseY: %d\n", temp->mouseX, temp->mouseY);
-	std::cout << "mouseInput: " + std::to_string(temp->mouseInput[0]) << std::endl;
-}
