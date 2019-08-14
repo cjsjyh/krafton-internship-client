@@ -242,12 +242,8 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 	
 	if (InputClass::IsKeyPressed(keys, DIK_LSHIFT))
 	{
-		if (socketInterface::curPlayerUltiGauge >= maxUltimateGauge)
-		{
-			socketInterface::curPlayerUltiGauge = 0;
-			socketInterface::UltiUsed = true;
-			GM->RemoveAllBullets();
-		}
+		socketInterface::curPlayerUltiGauge = 0;
+		GM->RemoveAllBullets();
 	}
 
 	if (GM->scene == 1)
