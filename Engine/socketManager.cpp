@@ -140,10 +140,10 @@ bool socketManager::Frame(bool IsKeyChanged, playerInput* playerInput)
 	int iResult = 0;
 	bool flag;
 
-	if (frame++ % 17 == 0)
+	if (frame++ % 60 == 50 || frame == 1)
 	{
 		FrameInfo* fInfo;
-		fInfo = new FrameInfo(frame, socketInterface::playerId);
+		fInfo = new FrameInfo(frame+10, socketInterface::playerId);
 		sendMessage(ConnectSocket, fInfo, FRAME_INFO);
 	}
 

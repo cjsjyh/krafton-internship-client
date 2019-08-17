@@ -41,6 +41,8 @@ private:
 	CpuClass* m_Cpu;
 	socketManager* m_Socket;
 
+	int lastFixFrame;
+
 	int mouseX, mouseY;
 };
 
