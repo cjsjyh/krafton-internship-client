@@ -7,6 +7,7 @@ class socketInterface
 	
 public:
 
+	static int frame;
 	//player
 	//To Send
 	static int playerId;

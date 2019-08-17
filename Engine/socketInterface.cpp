@@ -2,6 +2,8 @@
 
 #include "socketInterface.h"
 
+int socketInterface::frame = 0;
+
 int socketInterface::playerId = -1;
 float socketInterface::curPlayerDirVec[3] = { 0, };
 float socketInterface::curPlayerPos[3] = { 0, }; // Myself

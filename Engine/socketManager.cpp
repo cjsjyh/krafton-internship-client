@@ -3,6 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
+//#define IP_ADDRESS "10.99.1.93"
+#define IP_ADDRESS "192.168.55.136"
 
 #include <iostream>
 #include <sstream>
@@ -55,7 +57,7 @@ int socketManager::Initialize()
 	ConnectSocket = INVALID_SOCKET;
 
 	// Resolve the server address and port
-	iResult = getaddrinfo("10.99.1.93", DEFAULT_PORT, &hints, &result);
+	iResult = getaddrinfo(IP_ADDRESS, DEFAULT_PORT, &hints, &result);
 	if (iResult != 0) {
 		printf("getaddrinfo failed with error: %d\n", iResult);
 		WSACleanup();
@@ -138,7 +140,7 @@ bool socketManager::Frame(bool IsKeyChanged, playerInput* playerInput)
 	int iResult = 0;
 	bool flag;
 
-	if (frame++ % 20 == 0)
+	if (frame++ % 17 == 0)
 	{
 		FrameInfo* fInfo;
 		fInfo = new FrameInfo(frame, socketInterface::playerId);
@@ -397,7 +399,7 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 		return -1;
 	}
 
-	printf("[Success] Bytes sent: %d\n", iSendResult);
+	//printf("[Success] Bytes sent: %d\n", iSendResult);
 	return iSendResult;
 }
 

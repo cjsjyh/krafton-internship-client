@@ -43,7 +43,6 @@ ApplicationClass::ApplicationClass()
 	floor = rewardfloor = 0;
 
 	mouseX = mouseY = 0;
-	frame = 0;
 	screenW = screenH = 0;
 	last_scene_change_frame = 0;
 	SCENE_CHANGE_COOLTIME = 60;
@@ -422,12 +421,12 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 	for (int i = 0; i < 3; i++)
 		socketInterface::curPlayerDirVec[i] = curDirVec[i];
 
-	frame++;
+	socketInterface::frame++;
 
 	//Frame Action
 	if (m_GM->scene == 0)
 	{
-		boss->Frame(frame);
+		boss->Frame(socketInterface::frame);
 		boss->ChangeHp(socketInterface::bossHp);
 	}
 
@@ -437,7 +436,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		{
 			players[i]->channel = gameObject::INTERACTION;
 		}
-		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), frame);
+		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), socketInterface::frame);
 		players[i]->ChangeHp(socketInterface::playerHp[i]);
 	}
 	m_GM->Frame();
@@ -544,8 +543,39 @@ bool ApplicationClass::Render()
 
 	return true;
 }
+/*
+void ApplicationClass::Rewind(int count)
+{
+	int reverseKeyInput[sizeof(socketInterface::keyInput)/sizeof(int)];
+	bool dummyMouseInput[sizeof(socketInterface::mouseInput)];
 
-
+	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
+	{
+		if (socketInterface::playerHp[i] <= 0)
+		{
+			players[i]->channel = gameObject::INTERACTION;
+		}
+		//Set reverse Key
+		for (int j = 0; j < sizeof(socketInterface::keyInput) / sizeof(int); j++)
+		{
+			//reverse if pressed
+			if(socketInterface::keyInput[i][j])
+				reverseKeyInput[j] = !socketInterface::keyInput[i][j];
+			//keep unpressed
+			else
+				reverseKeyInput[j] = socketInterface::keyInput[i][j];
+		}
+		//Reverse by count
+		for (int j = 0; j < count; j++)
+		{
+			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), socketInterface::frame);
+			players[i]->ChangeHp(socketInterface::playerHp[i]);
+		}
+	}
+	
+	//Rewind GameManager
+}
+*/
 void ApplicationClass::SetCamera(int scene)
 {
 	if (scene == 0)

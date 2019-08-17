@@ -68,6 +68,7 @@ public:
 	void Shutdown();
 	bool Frame(int, int);
 	bool Render();
+	void Rewind(int);
 
 	vector<playerclass*> players;
 
@@ -93,7 +94,6 @@ private:
 	D3DXVECTOR3 midPoint;
 	HWND hwnd;
 	int mouseX, mouseY;
-	int frame;
 	int screenW, screenH;
 	int last_scene_change_frame, SCENE_CHANGE_COOLTIME;
 };

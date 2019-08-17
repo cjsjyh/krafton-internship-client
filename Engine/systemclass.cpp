@@ -234,6 +234,16 @@ bool SystemClass::Frame()
 
 			if (pInfo->playerId >= 0 && pInfo->playerId < 2)
 			{
+				//Set player pos for other players
+				if (socketInterface::frame % 60 == 0)
+				{
+					//if (pInfo->playerId != socketInterface::playerId)
+					{
+						D3DXVECTOR3 tempPlayerPos = D3DXVECTOR3(pInfo->playerPos[0], pInfo->playerPos[1], pInfo->playerPos[2]);
+						m_Graphics->players[pInfo->playerId]->SetPosition(tempPlayerPos);
+					}
+				}
+
 				for (int i = 0; i < sizeof(pInfo->keyInput) / sizeof(int); i++)
 					socketInterface::keyInput[pInfo->playerId][i] = pInfo->keyInput[i];
 				for (int i = 0; i < sizeof(pInfo->mouseInput); i++)
@@ -259,9 +269,8 @@ bool SystemClass::Frame()
 			hInfo = (hpInfo*)(newMsg->ptr);
 
 			for (int i = 0; i < 2; i++)
-			{
 				socketInterface::playerHp[i] = hInfo->playerHp[i];
-			}
+
 			socketInterface::bossHp = hInfo->bossHp;
 			delete hInfo;
 			break;
