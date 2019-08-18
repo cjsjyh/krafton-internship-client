@@ -449,6 +449,8 @@ void socketManager::CopyItemInfo(ItemInfo* dest, ItemInfo* src)
 void socketManager::CopyBossInfo(BossInfo* dest, BossInfo* src)
 {
 	dest->patternId = src->patternId;
+	dest->frame = src->frame;
+	dest->targetId = src->targetId;
 }
 
 void socketManager::CopyFrameInfo(FrameInfo* dest, FrameInfo* src)

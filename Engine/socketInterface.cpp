@@ -28,6 +28,8 @@ int socketInterface::bossPhase3Hp = 0;
 
 
 std::queue<int> socketInterface::bossPatternQueue;
+std::queue<int> socketInterface::bossPatternFrame;
+std::queue<int> socketInterface::bossPatternTarget;
 float socketInterface::bossPos[3] = { 0, };
 int socketInterface::patternId=0;
 float socketInterface::patternAngle = 0.0f;

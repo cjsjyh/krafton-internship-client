@@ -263,6 +263,8 @@ bool SystemClass::Frame()
 			BossInfo* bInfo;
 			bInfo = (BossInfo*)(newMsg->ptr);
 			socketInterface::bossPatternQueue.push(bInfo->patternId);
+			socketInterface::bossPatternFrame.push(bInfo->frame);
+			socketInterface::bossPatternTarget.push(bInfo->targetId);
 			delete bInfo;
 			break;
 

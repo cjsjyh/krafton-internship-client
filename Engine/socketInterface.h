@@ -33,6 +33,8 @@ public:
 	static int playerUltiGauge[2];
 
 	static std::queue<int> bossPatternQueue;
+	static std::queue<int> bossPatternFrame;
+	static std::queue<int> bossPatternTarget;
 	static int bossHp;
 	static int bossMaxHp;
 	static int bossPhase2Hp;

@@ -83,13 +83,19 @@ void bossclass::Frame(int frame)
 {
 	vector<projectileclass*> shootBullets;
 	
-	if (frame % 100 == 0)
-	{
-		if (socketInterface::bossPatternQueue.size() > 0){
-			int ChosenIndex = socketInterface::bossPatternQueue.front();
-			socketInterface::bossPatternQueue.pop();
-			ActivatePattern(patternFile[phase][ChosenIndex]);
+	while (socketInterface::bossPatternQueue.size() > 0){
+		if (socketInterface::bossPatternFrame.front() > socketInterface::frame)
+		{
+			printf("Frame not ready yet! PatterFrame: %d CurrentFrame: %d\n",socketInterface::bossPatternFrame.front(),socketInterface::frame);
+			printf("bullet queue size: %d\n", bossBullets.size());
+			break;
 		}
+		printf("Handling Pattern id: %d\n",socketInterface::bossPatternQueue.front());
+		socketInterface::bossPatternFrame.pop();
+
+		int ChosenIndex = socketInterface::bossPatternQueue.front();
+		socketInterface::bossPatternQueue.pop();
+		ActivatePattern(patternFile[phase][ChosenIndex]);
 	}
 	
 	PopQueue(shootBullets);

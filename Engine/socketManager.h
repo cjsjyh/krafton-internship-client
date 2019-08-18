@@ -182,11 +182,13 @@ public:
 
 	int patternId;
 	int frame;
+	int targetId;
 
 	template<class Archive>
 	void serialize(Archive& ar, const unsigned int version) {
 		ar& patternId;
 		ar& frame;
+		ar& targetId;
 	}
 };
 
