@@ -15,7 +15,7 @@
 
 #include "bossclass.h"
 
-bossclass::bossclass(int _hp, int _damage, D3DClass* _device, playerclass* _player, ColliderType col)
+bossclass::bossclass(int _hp, int _damage, D3DClass* _device, vector<playerclass*> _player, ColliderType col)
 	:hpobjects("boss", _hp, _device, BOSS, col)
 {
 	curHp = _hp;
@@ -95,7 +95,9 @@ void bossclass::Frame(int frame)
 
 		int ChosenIndex = socketInterface::bossPatternQueue.front();
 		socketInterface::bossPatternQueue.pop();
-		ActivatePattern(patternFile[phase][ChosenIndex]);
+		
+		ActivatePattern(patternFile[phase][ChosenIndex], socketInterface::bossPatternTarget.front());
+		socketInterface::bossPatternTarget.pop();
 	}
 	
 	PopQueue(shootBullets);
@@ -113,7 +115,7 @@ void bossclass::Frame(int frame)
 }
 
 
-void bossclass::ActivatePattern(BossPatternFile pat)
+void bossclass::ActivatePattern(BossPatternFile pat, int targetId)
 {
 	vector<D3DXVECTOR3> dirVectors;
 	for (int i = 0; i < pat.repeat; i++)
@@ -122,7 +124,7 @@ void bossclass::ActivatePattern(BossPatternFile pat)
 		float rotAngle = pat.rotAngle * i * 0.0174532925f;;
 		D3DXMatrixRotationY(&rotMat, rotAngle);
 
-		D3DXVECTOR3 dirVec = player->GetPosition() - GetPosition();
+		D3DXVECTOR3 dirVec = player[targetId]->GetPosition() - GetPosition();
 		D3DXVec3TransformCoord(&dirVec, &dirVec, &rotMat);
 
 		dirVectors = skillpatternclass::FireInFan(pat.dirCount, pat.angleBetw, dirVec);

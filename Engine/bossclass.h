@@ -28,7 +28,7 @@ public:
 	}BulletQueue;
 
 
-	bossclass(int _hp, int _damage, D3DClass*, playerclass*,  ColliderType col = COLLIDER_BOX);
+	bossclass(int _hp, int _damage, D3DClass*, vector<playerclass*>,  ColliderType col = COLLIDER_BOX);
 	~bossclass();
 
 	void Frame(int);
@@ -40,7 +40,7 @@ private:
 	int phase;
 	int damage;
 
-	playerclass* player;
+	vector<playerclass*> player;
 	ModelClass* bullet_model;
 
 	void Initialize();
@@ -53,7 +53,7 @@ private:
 	void PushQueue(projectileclass*, int);
 	void PopQueue(vector<projectileclass*>&);
 
-	void ActivatePattern(BossPatternFile);
+	void ActivatePattern(BossPatternFile, int);
 	vector<vector<BossPatternFile>> bossPatternPool;
 	vector<BulletQueue> bossBullets;
 	gameManager* GM;

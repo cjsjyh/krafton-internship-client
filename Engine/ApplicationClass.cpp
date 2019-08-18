@@ -262,7 +262,7 @@ void ApplicationClass::InitializeMap()
 	}
 	players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
 
-	boss = new bossclass(30, 1, m_D3D, players[0]);
+	boss = new bossclass(30, 1, m_D3D, players);
 	boss->SetPosition(D3DXVECTOR3(0, 0, 20));
 	boss->SetGameManager(m_GM);
 	m_GM->RegisterObjectToRender(boss);
