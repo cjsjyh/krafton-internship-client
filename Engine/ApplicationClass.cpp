@@ -435,6 +435,11 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		if (socketInterface::playerHp[i] <= 0)
 		{
 			players[i]->channel = gameObject::INTERACTION;
+			socketInterface::playerUltiGauge[i] = 0;
+		}
+		else
+		{
+			players[i]->channel = gameObject::PLAYER;
 		}
 		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), socketInterface::frame);
 		players[i]->ChangeHp(socketInterface::playerHp[i]);
@@ -445,23 +450,26 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 	//PLAYER DEAD
 	result = false;
 	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
-		if (socketInterface::playerHp[socketInterface::playerId] > 0)
+		if (socketInterface::playerHp[i] > 0)
 			result = true;
-	//Both Dead
-	/*if (!result)
-	("Both Player dead!\n");*/
 	
+	if (socketInterface::playerHp[0] <= 0)
+		result = false;
 
-	//BOSS DEAD
-	if (socketInterface::bossHp <= 0)
+	//BOSS DEAD or BOTH PLAYER DEAD > RESTART
+	if (!result || socketInterface::bossHp <= 0)
 	{
-		UninitializeMap();
+		printf("=======GAME OVER!========\n");
+		m_UIM->ScreenFade(1,-1,60);
+		m_GM->RemoveAllBullets();
+		
+		/*UninitializeMap();
 		UninitializeBasic();
 
 		InitializeBasic();
 		InitializeMap();
 		InitializePlayerParameters();
-		InitializeBossParameters();
+		InitializeBossParameters();*/
 	}
 
 

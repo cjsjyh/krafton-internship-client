@@ -208,6 +208,7 @@ bool SystemClass::Frame()
 {
 	bool result;
 	bool IsKeyChanged;
+	bool forceBreak = false;
 	m_Fps->Frame();
 	m_Cpu->Frame();
 	//cout << "CPU: " + to_string(m_Cpu->GetCpuPercentage()) << " FPS: " + to_string(m_Fps->GetFps()) << endl;
@@ -225,7 +226,7 @@ bool SystemClass::Frame()
 	
 	//TEMP//
 	MsgBundle* newMsg = m_Socket->GetNewMessage();
-	while (newMsg != NULL)
+	while (newMsg != NULL && !forceBreak)
 	{
 		switch (newMsg->type)
 		{
@@ -274,9 +275,19 @@ bool SystemClass::Frame()
 
 			for (int i = 0; i < 2; i++)
 				socketInterface::playerHp[i] = hInfo->playerHp[i];
-
 			socketInterface::bossHp = hInfo->bossHp;
 			delete hInfo;
+
+			//check if gameover
+			result = false;
+			for (int i = 0; i < MAX_PLAYER_COUNT; i++)
+				if (socketInterface::playerHp[i] > 0)
+					result = true;
+			if (socketInterface::playerHp[0] <= 0)
+				result = false;
+			if (!result)
+				forceBreak = true;
+
 			break;
 
 		case socketManager::ITEM_INFO:

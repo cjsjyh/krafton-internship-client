@@ -76,7 +76,11 @@ void bossclass::CheckHp()
 		SetScale(BOSS_SIZE[2]);
 	}
 	else
+	{
 		phase = 0;
+		m_model = model_list[0];
+		SetScale(BOSS_SIZE[0]);
+	}
 }
 
 void bossclass::Frame(int frame)
