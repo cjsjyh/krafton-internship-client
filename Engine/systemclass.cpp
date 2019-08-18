@@ -236,7 +236,7 @@ bool SystemClass::Frame()
 			//Set player pos for other players
 			if (socketInterface::frame - lastFixFrame > 30)
 			{
-				//if (pInfo->playerId != socketInterface::playerId)
+				if (pInfo->playerId != socketInterface::playerId)
 				{
 					lastFixFrame = socketInterface::frame;
 					D3DXVECTOR3 tempPlayerPos = D3DXVECTOR3(pInfo->playerPos[0], pInfo->playerPos[1], pInfo->playerPos[2]);
