@@ -283,8 +283,10 @@ bool SystemClass::Frame()
 			for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 				if (socketInterface::playerHp[i] > 0)
 					result = true;
-			if (socketInterface::playerHp[0] <= 0)
+			if (socketInterface::bossHp <= 0)
 				result = false;
+			//if (socketInterface::playerHp[0] <= 0)
+			//	result = false;
 			if (!result)
 				forceBreak = true;
 

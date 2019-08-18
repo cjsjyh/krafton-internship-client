@@ -60,6 +60,11 @@ void bossclass::SetGameManager(gameManager* _GM)
 
 }
 
+void bossclass::ClearBullet()
+{
+	bossBullets.clear();
+}
+
 
 void bossclass::CheckHp()
 {

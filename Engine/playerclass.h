@@ -57,6 +57,7 @@ public:
 	float PLAYER_BULLET_COUNT;
 
 	int maxUltimateGauge;
+	int resurrectionCount;
 private:
 	projectileclass* Fire(D3DXVECTOR3);
 	void SetBullet(projectileclass*, D3DXVECTOR3);
@@ -70,7 +71,7 @@ private:
 	int direction;
 	int dashFrame, dashPauseFrame, dashCoolTime;
 	int lastLeftClick;
-	int lastFPress, resurrectionCount;
+	int lastFPress;
 	int dashDir;
 	vector<D3DXVECTOR3> playerPosSave;
 	vector<string> playerItems;

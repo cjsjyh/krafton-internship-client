@@ -436,6 +436,8 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		{
 			players[i]->channel = gameObject::INTERACTION;
 			socketInterface::playerUltiGauge[i] = 0;
+			if (i == socketInterface::playerId)
+				socketInterface::curPlayerUltiGauge = 0;
 		}
 		else
 		{
@@ -452,9 +454,8 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 		if (socketInterface::playerHp[i] > 0)
 			result = true;
-	
-	if (socketInterface::playerHp[0] <= 0)
-		result = false;
+	//if (socketInterface::playerHp[0] <= 0)
+			//	result = false;
 
 	//BOSS DEAD or BOTH PLAYER DEAD > RESTART
 	if (!result || socketInterface::bossHp <= 0)
@@ -463,13 +464,14 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		m_UIM->ScreenFade(1,-1,60);
 		m_GM->RemoveAllBullets();
 		
-		/*UninitializeMap();
-		UninitializeBasic();
-
-		InitializeBasic();
-		InitializeMap();
-		InitializePlayerParameters();
-		InitializeBossParameters();*/
+		players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
+		players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
+		for (int i = 0; i < 2; i++)
+		{
+			players[i]->resurrectionCount = 2;
+			socketInterface::playerUltiGauge[i] = 0;
+		}
+		socketInterface::curPlayerUltiGauge = 0;
 	}
 
 

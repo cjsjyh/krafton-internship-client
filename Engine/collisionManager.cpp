@@ -154,7 +154,7 @@ bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 		return true;
 
 	else if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET, gameObject::PLAYER_BULLET))
-		return true;
+		return false;
 
 	else if (CheckMatch(obj1, obj2, gameObject::BOSS, gameObject::PLAYER_BULLET))
 		return true;

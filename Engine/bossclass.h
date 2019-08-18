@@ -33,6 +33,7 @@ public:
 
 	void Frame(int);
 	void SetGameManager(gameManager*);
+	void ClearBullet();
 
 	D3DXVECTOR3 BOSS_SIZE[3];
 	vector<vector<BossPatternFile>> patternFile;
