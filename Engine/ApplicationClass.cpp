@@ -425,7 +425,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 	{
 		bool flag = false;
 		//stop user from passing startscreen too fast
-		if (blockInputFrame++ > 60)
+		if (blockInputFrame++ > 120)
 		{
 			flag = true;
 			for (int i = 0; i < playerCount; i++)
