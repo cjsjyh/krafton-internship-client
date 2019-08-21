@@ -15,7 +15,8 @@ public:
 	void SetDirVector(D3DXVECTOR3);
 	D3DXVECTOR3 GetDirVector();
 	bool checkDistance();
-	
+	int GetFrame();
+
 	void Move(float);
 	bool CheckDestroy();
 	void SetDistance(int);

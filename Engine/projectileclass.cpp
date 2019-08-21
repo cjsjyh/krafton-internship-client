@@ -38,6 +38,11 @@ bool projectileclass::checkDistance()
 	return false;
 }
 
+int projectileclass::GetFrame()
+{
+	return distance;
+}
+
 void projectileclass::SetDistance(int _dist)
 {
 	distance = _dist;

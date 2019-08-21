@@ -291,6 +291,29 @@ void gameManager::AutoMove()
 						RemoveObjectToRender(temp, scene);
 					}
 				}
+				else
+				{
+					if (temp->GetName() == "bossbullet" && bullet->GetFrame() < 50)
+					{
+						if (!CheckMapOut(temp->GetPosition()))
+						{
+							if (temp->GetName() == "bossbullet")
+							{
+								UnregisterObjectToRender(temp, scene);
+								RegisterToBossPool((projectileclass*)temp);
+							}
+							else if (temp->GetName() == "playerbullet")
+							{
+								UnregisterObjectToRender(temp, scene);
+								RegisterToPlayerPool((projectileclass*)temp);
+							}
+							else
+							{
+								RemoveObjectToRender(temp, scene);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
