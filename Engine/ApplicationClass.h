@@ -95,6 +95,9 @@ private:
 	int mouseX, mouseY;
 	int screenW, screenH;
 	int last_scene_change_frame, SCENE_CHANGE_COOLTIME;
+	
+	bool playerReady[2];
+	int blockInputFrame;
 };
 
 #endif

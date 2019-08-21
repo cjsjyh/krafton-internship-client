@@ -285,8 +285,6 @@ bool SystemClass::Frame()
 					result = true;
 			if (socketInterface::bossHp <= 0)
 				result = false;
-			//if (socketInterface::playerHp[0] <= 0)
-			//	result = false;
 			if (!result)
 				forceBreak = true;
 

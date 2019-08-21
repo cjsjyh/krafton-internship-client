@@ -28,12 +28,13 @@ public:
 	void SetValues(int, int, CameraClass*, gameManager*);
 	void ReplaceUI(string, string);
 	void ScreenFade(float, float, int);
+	void ToggleStartScreen();
 
 	vector<BitmapClass*> m_UI;
 	vector<UIinfo*> parameters;
 	vector<BitmapClass*> m_ItemUI;
 	vector<UIinfo*> itemParameters;
-
+	bool startScreenOn;
 private:
 	bool SetUI(int, int, int, int);
 	void RenderUI(vector<BitmapClass*>, vector<UIinfo*>, string fname);
@@ -52,6 +53,7 @@ private:
 	HWND hwnd;
 	D3DXMATRIX baseViewMatrix;
 	float blindAlpha;
+	
 };
 
 #endif

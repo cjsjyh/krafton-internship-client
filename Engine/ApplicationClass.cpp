@@ -46,6 +46,8 @@ ApplicationClass::ApplicationClass()
 	screenW = screenH = 0;
 	last_scene_change_frame = 0;
 	SCENE_CHANGE_COOLTIME = 60;
+	playerReady[0] = playerReady[1] = false;
+	blockInputFrame = 0;
 }
 
 ApplicationClass::~ApplicationClass()
@@ -415,69 +417,105 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(D3DXVECTOR3 playerPos, int mouse
 
 bool ApplicationClass::Frame(int mouseX, int mouseY)
 {
+	const int playerCount = 1;
 	bool result;
 
-	D3DXVECTOR3 curDirVec = GetDirectionMouse(players[socketInterface::playerId]->GetPosition(), mouseX, mouseY);
-	for (int i = 0; i < 3; i++)
-		socketInterface::curPlayerDirVec[i] = curDirVec[i];
-
-	socketInterface::frame++;
-
-	//Frame Action
-	if (m_GM->scene == 0)
-	{
-		boss->Frame(socketInterface::frame);
-		boss->ChangeHp(socketInterface::bossHp);
-	}
-
-	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
-	{
-		if (socketInterface::playerHp[i] <= 0)
-		{
-			players[i]->channel = gameObject::INTERACTION;
-			socketInterface::playerUltiGauge[i] = 0;
-			if (i == socketInterface::playerId)
-				socketInterface::curPlayerUltiGauge = 0;
-		}
-		else
-		{
-			players[i]->channel = gameObject::PLAYER;
-		}
-		players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), socketInterface::frame);
-		players[i]->ChangeHp(socketInterface::playerHp[i]);
-	}
-	m_GM->Frame();
-	SetCamera(m_GM->scene);
 	
-	//PLAYER DEAD
-	result = false;
-	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
-		if (socketInterface::playerHp[i] > 0)
-			result = true;
-	//if (socketInterface::playerHp[0] <= 0)
-			//	result = false;
-
-	//BOSS DEAD or BOTH PLAYER DEAD > RESTART
-	if (!result || socketInterface::bossHp <= 0)
+	if (m_UIM->startScreenOn)
 	{
-		printf("=======GAME OVER!========\n");
-		m_UIM->ScreenFade(1,-1,60);
-		m_GM->RemoveAllBullets();
-		
-		players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
-		players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
-		for (int i = 0; i < 2; i++)
+		bool flag = false;
+		//stop user from passing startscreen too fast
+		if (blockInputFrame++ > 60)
 		{
-			players[i]->resurrectionCount = 2;
-			socketInterface::playerUltiGauge[i] = 0;
+			flag = true;
+			for (int i = 0; i < playerCount; i++)
+			{
+				if (!playerReady[i])
+					flag = false;
+			}
 		}
-		socketInterface::curPlayerUltiGauge = 0;
+		//All players ready
+		if (flag)
+		{
+			m_UIM->ToggleStartScreen();
+			for (int i = 0; i < playerCount; i++)
+				playerReady[i] = false;
+			m_UIM->ScreenFade(1, -1, 60);
+		}
+
+		for (int i = 0; i < playerCount; i++)
+		{
+			if (InputClass::IsAnyKeyPressed(socketInterface::keyInput[i]) || socketInterface::mouseInput[i][0])
+				playerReady[i] = true;
+		}
 	}
+	else
+	{
+
+		D3DXVECTOR3 curDirVec = GetDirectionMouse(players[socketInterface::playerId]->GetPosition(), mouseX, mouseY);
+		for (int i = 0; i < 3; i++)
+			socketInterface::curPlayerDirVec[i] = curDirVec[i];
+
+		socketInterface::frame++;
+
+		//BOSS
+		if (m_GM->scene == 0)
+		{
+			boss->Frame(socketInterface::frame);
+			boss->ChangeHp(socketInterface::bossHp);
+		}
 
 
-	// Render the graphics scene.
+		//PLAYER
+		for (int i = 0; i < MAX_PLAYER_COUNT; i++)
+		{
+			if (socketInterface::playerHp[i] <= 0)
+			{
+				players[i]->channel = gameObject::INTERACTION;
+				socketInterface::playerUltiGauge[i] = 0;
+				if (i == socketInterface::playerId)
+					socketInterface::curPlayerUltiGauge = 0;
+			}
+			else
+			{
+				players[i]->channel = gameObject::PLAYER;
+			}
+			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), socketInterface::frame);
+			players[i]->ChangeHp(socketInterface::playerHp[i]);
+		}
+		m_GM->Frame();
+		SetCamera(m_GM->scene);
+
+		//PLAYER DEAD
+		result = false;
+		cout << "PLAYERHP: " + to_string(socketInterface::playerHp[0]) << endl;
+		for (int i = 0; i < 1; i++)
+			if (socketInterface::playerHp[i] > 0)
+				result = true;
+
+		//BOSS DEAD or BOTH PLAYER DEAD > RESTART
+		if (!result || socketInterface::bossHp <= 0)
+		{
+			printf("=======GAME OVER!========\n");
+			m_UIM->ScreenFade(1, -1, 60);
+			m_UIM->ToggleStartScreen();
+			m_GM->RemoveAllBullets();
+			blockInputFrame = 0;
+
+			players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
+			players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
+			for (int i = 0; i < 2; i++)
+			{
+				players[i]->resurrectionCount = 2;
+				socketInterface::playerUltiGauge[i] = 0;
+			}
+			socketInterface::curPlayerUltiGauge = 0;
+		}
+
+	}
+		// Render the graphics scene.
 	result = Render();
-	if(!result)
+	if (!result)
 	{
 		return false;
 	}
@@ -503,40 +541,39 @@ bool ApplicationClass::Render()
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	m_D3D->GetOrthoMatrix(orthoMatrix);
 	
-	//-----------------
-	// Transformation
-	//-----------------
 	m_D3D->TurnOnAlphaBlending();
 
-	//render floor first
-	m_GM->AlphaSort();
-	int size = m_GM->GetRenderObjectCount();
-	for (int i = 0; i < size; i++)
+	if (!m_UIM->startScreenOn)
 	{
-		D3DXVECTOR4 colorMultiply = D3DXVECTOR4(1,1,1,1);
-		gameObject* temp = m_GM->GetGameObject(i);
-		temp->GetModel()->Render(m_D3D->GetDeviceContext());
-		temp->GetWorldMatrix(worldMatrix);
-		if (temp->GetName() != "floor")
-			worldMatrix = MatrixToFaceCamera *  worldMatrix;
-		if (temp->GetName() == "player")
+		//render floor first
+		m_GM->AlphaSort();
+		int size = m_GM->GetRenderObjectCount();
+		for (int i = 0; i < size; i++)
 		{
-			if (((playerclass*)temp)->GetHp() <= 0)
+			D3DXVECTOR4 colorMultiply = D3DXVECTOR4(1, 1, 1, 1);
+			gameObject* temp = m_GM->GetGameObject(i);
+			temp->GetModel()->Render(m_D3D->GetDeviceContext());
+			temp->GetWorldMatrix(worldMatrix);
+			if (temp->GetName() != "floor")
+				worldMatrix = MatrixToFaceCamera * worldMatrix;
+			if (temp->GetName() == "player")
 			{
-				colorMultiply = D3DXVECTOR4(0.5, 0.5, 0.5, 1);
+				if (((playerclass*)temp)->GetHp() <= 0)
+				{
+					colorMultiply = D3DXVECTOR4(0.5, 0.5, 0.5, 1);
+				}
+			}
+
+			result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix,
+				viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
+				m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), colorMultiply, colorMultiply);
+
+			if (!result)
+			{
+				return false;
 			}
 		}
-		
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), temp->GetModel()->GetIndexCount(), worldMatrix,
-			viewMatrix, projectionMatrix, temp->GetModel()->GetTexture(), m_Light->GetDirection(),
-			m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),colorMultiply,colorMultiply);
-
-		if (!result)
-		{
-			return false;
-		}
 	}
-
 
 	//---------------------
 	//   TEXT

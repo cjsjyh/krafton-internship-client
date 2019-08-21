@@ -316,6 +316,14 @@ bool InputClass::IsKeyPressed(int* arr, int key)
 	return false;
 }
 
+bool InputClass::IsAnyKeyPressed(int* arr)
+{
+	for (int i = 0; i < KEY_NUM; i++)
+		if (arr[i] != 0)
+			return true;
+	return false;
+}
+
 bool InputClass::IsLMouseDown()
 {
 	if (m_mouseState.rgbButtons[0] & 0x80)

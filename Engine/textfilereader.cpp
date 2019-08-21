@@ -202,6 +202,9 @@ bool textfilereader::ReadUIFile(string fname)
 		}
 		//temp->pos_x -= temp->size_x / 2;
 		//temp->pos_y -= temp->size_y / 2;
+		temp->toShow = false;
+		if (temp->uiname == "START_SCREEN")
+			temp->toShow = true;
 		paramUI.push_back(temp);
 	}
 	return true;

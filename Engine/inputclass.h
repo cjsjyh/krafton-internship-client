@@ -33,6 +33,7 @@ public:
 	static bool MouseNotClicked(bool* mouseInput);
 	static bool RightMouseClicked(bool* mouseInput);
 	static bool LeftMouseClicked(bool* mouseInput);
+	static bool IsAnyKeyPressed(int*);
 
 	int prevMouseX;
 	int prevMouseY;

@@ -28,6 +28,7 @@ uimanagerclass::uimanagerclass(vector<UIinfo*> _input, D3DClass* _device, HWND _
 	camera = 0;
 	blindAlpha = 1;
 	timer = 0;
+	startScreenOn = true;
 
 	device = _device;
 	parameters = _input;
@@ -251,48 +252,64 @@ void uimanagerclass::RenderUI(vector<BitmapClass*> UIComp, vector<UIinfo*> UIpar
 
 	for (int i = 0; i < UIComp.size(); i++)
 	{
-		D3DXMATRIX temp;
-		D3DXMatrixIdentity(&worldMatrix);
-		int x = UIparam[i]->pos_x;
-		int y = UIparam[i]->pos_y;
-
-		if (UIparam[i]->uiname == "BOSS_HPBAR_FRONT")
+		if (UIparam[i]->toShow)
 		{
-			float bossHp = boss->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, bossHp, 1, 1);
-		}
-		else if (UIparam[i]->uiname == "PLAYER_HPBAR_FRONT")
-		{
-			float playerHp = player[0]->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
-		}
-		else if (UIparam[i]->uiname == "PLAYER2_HPBAR_FRONT")
-		{
-			float playerHp = player[1]->GetHpPercent();
-			D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
-		}
-		else if (UIparam[i]->uiname == "PLAYER_ULTI_FRONT")
-		{
-			float playerUlti = player[socketInterface::playerId]->GetUltiPercent();
-			D3DXMatrixScaling(&worldMatrix, playerUlti, 1, 1);
-		}
+			D3DXMATRIX temp;
+			D3DXMatrixIdentity(&worldMatrix);
+			int x = UIparam[i]->pos_x;
+			int y = UIparam[i]->pos_y;
 
-		result = UIComp[i]->Render(device->GetDeviceContext(), 0, 0);
+			if (UIparam[i]->uiname == "BOSS_HPBAR_FRONT")
+			{
+				float bossHp = boss->GetHpPercent();
+				D3DXMatrixScaling(&worldMatrix, bossHp, 1, 1);
+			}
+			else if (UIparam[i]->uiname == "PLAYER_HPBAR_FRONT")
+			{
+				float playerHp = player[0]->GetHpPercent();
+				D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
+			}
+			else if (UIparam[i]->uiname == "PLAYER2_HPBAR_FRONT")
+			{
+				float playerHp = player[1]->GetHpPercent();
+				D3DXMatrixScaling(&worldMatrix, playerHp, 1, 1);
+			}
+			else if (UIparam[i]->uiname == "PLAYER_ULTI_FRONT")
+			{
+				float playerUlti = player[socketInterface::playerId]->GetUltiPercent();
+				D3DXMatrixScaling(&worldMatrix, playerUlti, 1, 1);
+			}
 
-		D3DXMatrixTranslation(&temp, -screenWidth / 2, screenHeight / 2, 0);
-		worldMatrix *= temp;
-		D3DXMatrixTranslation(&temp, x, -y, 0);
-		worldMatrix *= temp;
+			result = UIComp[i]->Render(device->GetDeviceContext(), 0, 0);
 
-		// Render the bitmap with the texture shader.
-		if(UIparam[i]->uiname != "blackscreen")
-			result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
-				baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture());
-		else
-			result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
-				baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture(), D3DXVECTOR4(1,1,1,blindAlpha));
+			D3DXMatrixTranslation(&temp, -screenWidth / 2, screenHeight / 2, 0);
+			worldMatrix *= temp;
+			D3DXMatrixTranslation(&temp, x, -y, 0);
+			worldMatrix *= temp;
+
+			// Render the bitmap with the texture shader.
+			if (UIparam[i]->uiname != "blackscreen")
+				result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
+					baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture());
+			else
+				result = m_TextureShader->Render(device->GetDeviceContext(), UIComp[i]->GetIndexCount(), worldMatrix,
+					baseViewMatrix, orthoMatrix, UIComp[i]->GetTexture(), D3DXVECTOR4(1, 1, 1, blindAlpha));
+		}
 	}
 }
+
+void uimanagerclass::ToggleStartScreen()
+{
+	for (auto iter = parameters.begin(); iter != parameters.end(); iter++)
+	{
+		if ((*iter)->uiname != "START_SCREEN")
+			(*iter)->toShow = startScreenOn;
+		else
+			(*iter)->toShow = !startScreenOn;
+	}
+	startScreenOn = !startScreenOn;
+}
+
 
 bool uimanagerclass::SetUI(int mouseX, int mouseY, int fps, int cpu)
 {
