@@ -271,8 +271,8 @@ public:
 
 private:
 	void ListenToServer();
-	MsgBundle* receiveMessage(int,SOCKET);
-	int sendMessage(int,SOCKET, void*, DataType);
+	MsgBundle* receiveMessage(SOCKET);
+	int sendMessage(SOCKET, void*, DataType);
 
 	void CopyPlayerInfo(playerInput*, playerInput*);
 	void CopyHpInfo(hpInfo*, hpInfo*);
@@ -283,8 +283,8 @@ private:
 
 
 private:
-	char sendBuffer[2][BUFFER_SIZE];
-	char recvBuffer[2][BUFFER_SIZE];
+	char sendBuffer[BUFFER_SIZE];
+	char recvBuffer[BUFFER_SIZE];
 	std::vector<int> delimiterIndex;
 	
 	std::mutex* threadLock;
