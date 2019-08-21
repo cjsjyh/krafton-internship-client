@@ -128,6 +128,7 @@ void bossclass::Frame(int frame)
 
 void bossclass::ActivatePattern(BossPatternFile pat, int targetId)
 {
+	
 	vector<D3DXVECTOR3> dirVectors;
 	for (int i = 0; i < pat.repeat; i++)
 	{
@@ -141,7 +142,7 @@ void bossclass::ActivatePattern(BossPatternFile pat, int targetId)
 		dirVectors = skillpatternclass::FireInFan(pat.dirCount, pat.angleBetw, dirVec);
 		FireDirections(dirVectors, pat.delay * i, pat.life, pat.bullet_slow_frame, pat.bullet_speed, pat.bullet_type);
 	}
-
+	
 }
 
 void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int fireDelay, int distance, int slowFrame, float bulletSpeed, int bulletType)

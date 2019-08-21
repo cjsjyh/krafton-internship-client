@@ -20,7 +20,7 @@ public:
 	bool CheckMovable(D3DXVECTOR3, D3DXVECTOR3);
 	gameObject* InteractionManager(D3DXVECTOR3, int);
 
-	bool IsInsideMap(D3DXVECTOR3, D3DXVECTOR3, D3DXVECTOR3);
+	int IsInsideMap(D3DXVECTOR3, D3DXVECTOR3, D3DXVECTOR3);
 	CameraClass* m_Camera;
 
 private:

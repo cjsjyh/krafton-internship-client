@@ -299,12 +299,22 @@ bool collisionManager::SimpleBoxCollision(D3DXVECTOR3 pos, D3DXVECTOR3 len,gameO
 	return false;
 }
 
-bool collisionManager::IsInsideMap(D3DXVECTOR3 pos, D3DXVECTOR3 pos2, D3DXVECTOR3 len2)
+int collisionManager::IsInsideMap(D3DXVECTOR3 pos, D3DXVECTOR3 floorPos, D3DXVECTOR3 floorLen)
 {
-	if ((pos2.x - len2.x <= pos.x - 3 && pos2.x + len2.x >= pos.x) &&
-		(pos2.z - len2.z <= pos.z && pos2.z + len2.z >= pos.z + 3))
-		return true;
-	return false;
+	//left wall
+	if (floorPos.x - floorLen.x >= pos.x - 4)
+		return 1;
+	//right wall
+	else if (floorPos.x + floorLen.x <= pos.x)
+		return 3;
+	//bottom wall
+	else if (floorPos.z - floorLen.z >= pos.z)
+		return 4;
+	//top wall
+	else if (floorPos.z + floorLen.z <= pos.z + 4)
+		return 2;
+	//inside map
+	return 0;
 }
 
 bool collisionManager::CheckMovable(D3DXVECTOR3 pos, D3DXVECTOR3 len)

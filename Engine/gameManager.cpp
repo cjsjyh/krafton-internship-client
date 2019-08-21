@@ -254,6 +254,43 @@ void gameManager::AutoMove()
 		{
 			projectileclass* bullet = (projectileclass*)temp;
 
+			if (temp->GetName() == "bossbullet")
+			{
+				int wall = CheckMapOut(temp->GetPosition());
+				if (wall != 0)
+				{
+					D3DXMATRIX temp;
+					D3DXVECTOR3 tempDirVec = bullet->GetDirVector();
+					D3DXMatrixRotationY(&temp, -floor->GetRotation().y * 0.0174532925f);
+					D3DXVec3TransformCoord(&tempDirVec, &tempDirVec, &temp);
+					
+
+					switch (wall)
+					{
+					case 1:
+						tempDirVec.x *= -1;
+						break;
+					case 2:
+						tempDirVec.z *= -1;
+						break;
+					case 3:
+						tempDirVec.x *= -1;
+						break;
+					case 4:
+						tempDirVec.z *= -1;
+						break;
+					}
+
+					D3DXMatrixRotationY(&temp, floor->GetRotation().y * 0.0174532925f);
+					D3DXVec3TransformCoord(&tempDirVec, &tempDirVec, &temp);
+
+					tempDirVec = stdafx::normalizeVec3(tempDirVec);
+					bullet->SetDirVector(tempDirVec);
+					bullet->Move(4);
+				}
+			}
+
+
 			//Move slow
 			if (bullet->delay > 0)
 			{
@@ -291,29 +328,6 @@ void gameManager::AutoMove()
 						RemoveObjectToRender(temp, scene);
 					}
 				}
-				else
-				{
-					if (temp->GetName() == "bossbullet" && bullet->GetFrame() < 50)
-					{
-						if (!CheckMapOut(temp->GetPosition()))
-						{
-							if (temp->GetName() == "bossbullet")
-							{
-								UnregisterObjectToRender(temp, scene);
-								RegisterToBossPool((projectileclass*)temp);
-							}
-							else if (temp->GetName() == "playerbullet")
-							{
-								UnregisterObjectToRender(temp, scene);
-								RegisterToPlayerPool((projectileclass*)temp);
-							}
-							else
-							{
-								RemoveObjectToRender(temp, scene);
-							}
-						}
-					}
-				}
 			}
 		}
 	}
@@ -325,7 +339,7 @@ gameObject* gameManager::CheckInteraction(D3DXVECTOR3 point, int range)
 	return m_CM->InteractionManager(point, range);
 }
 
-bool gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
+int gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
 {
 	D3DXMATRIX temp;
 	//find floor and set
@@ -335,8 +349,10 @@ bool gameManager::CheckMapOut(D3DXVECTOR3 playerPos)
 			if ((*iter)->GetName() == "floor")
 				floor = *iter;
 	}
+	
 	D3DXMatrixRotationY(&temp, -floor->GetRotation().y *0.0174532925f);
 	D3DXVec3TransformCoord(&playerPos, &playerPos, &temp);
+	
 	return m_CM->IsInsideMap(playerPos, floor->GetPosition(), floor->GetScale());
 }
 

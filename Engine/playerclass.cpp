@@ -226,7 +226,7 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 
 			D3DXVECTOR3 nextPos = GetPosition() + GetDirectionVector(direction) * PLAYER_SPEED;
 			if (GM->CheckMovable(nextPos, GetCollSize()))
-				if (GM->CheckMapOut(nextPos))
+				if (GM->CheckMapOut(nextPos) == 0)
 					AdjustPosition(GetDirectionVector(direction) * PLAYER_SPEED);
 		}
 
@@ -290,7 +290,7 @@ bool playerclass::Dash(int* keys, int frame)
 				if (dashPauseFrame == -1)
 				{
 					dashPauseFrame = frame;
-					channel = gameObject::PLAYER;
+ 					channel = gameObject::PLAYER;
 				}
 				else
 				{

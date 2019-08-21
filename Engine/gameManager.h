@@ -36,7 +36,7 @@ public:
 	void CheckCollision();
 	bool CheckCollisionObjects(string, string, vector<gameObject*>, vector<gameObject*>);
 	bool CheckMovable(D3DXVECTOR3, D3DXVECTOR3);
-	bool CheckMapOut(D3DXVECTOR3);
+	int CheckMapOut(D3DXVECTOR3);
 	void AutoMove();
 
 	void RemoveAllBullets();
