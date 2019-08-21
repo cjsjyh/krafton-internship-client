@@ -181,7 +181,7 @@ void CameraClass::GetBillBoardMatrix(D3DXMATRIX& billBoardMatrix)
 	D3DXMatrixRotationY(&rot_yaw, rad_yaw);
 	D3DXMatrixRotationX(&rot_pitch, rad_pitch);
 
-	billBoardMatrix = rot_yaw * rot_pitch;
+	billBoardMatrix = rot_pitch;
 }
 
 D3DXVECTOR3 CameraClass::normalizeVec3(D3DXVECTOR3 vec)

@@ -1,13 +1,17 @@
 #undef UNICODE
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #define WIN32_LEAN_AND_MEAN
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
-//#define IP_ADDRESS "10.99.1.93"
-#define IP_ADDRESS "192.168.55.136"
+#define IP_ADDRESS "10.99.1.93"
+//#define IP_ADDRESS "192.168.55.136"
 
 #include <iostream>
 #include <sstream>
+
+#include <chrono>
 
 #include <winsock2.h>
 #include <windows.h>
@@ -97,6 +101,10 @@ int socketManager::Initialize()
 		WSACleanup();
 		return 1;
 	}
+	int opt_val = TRUE;
+	setsockopt(ConnectSocket, IPPROTO_TCP, TCP_NODELAY, (const char*)& opt_val, sizeof(opt_val));
+
+
 	//SET CLIENT ID
 	iResult = recv(ConnectSocket, recvBuffer, sizeof(int), 0);
 	socketInterface::playerId = std::stoi(recvBuffer);
@@ -149,7 +157,6 @@ bool socketManager::Frame(bool IsKeyChanged, playerInput* playerInput)
 
 	while (frame != 0)
 	{
-		std::cout << "Frame: " + std::to_string(frame) << std::endl;
 		if (frameTo > frame)
 			break;
 		while (frameCount.size() > 0) 
@@ -371,28 +378,41 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 		break;
 	}
 
+	//Message Type
 	iSendResult = 0;
-	while (!iSendResult)
+	while (iSendResult == 0)
 	{
 		std::string msgType = std::to_string(type);
 		const char* msgTypeChar = msgType.c_str();
 		iSendResult = send(ClientSocket, msgTypeChar, sizeof(int), 0);
 		if (!iSendResult)
 			printf("[ERROR] Send Type Failed\n");
+		printf("[MsgType] Sent %s\n",msgTypeChar);
 	}
 
+	//Message Size
 	iSendResult = 0;
-	while (!iSendResult)
+	while (iSendResult == 0)
 	{
 		std::string msgLen = std::to_string(strlen(sendBuffer));
 		const char* msgLenChar = msgLen.c_str();
 		iSendResult = send(ClientSocket, msgLenChar, sizeof(int), 0);
 		if (!iSendResult)
 			printf("[ERROR] Send Len Failed\n");
+		printf("[msgLen] Sent %s\n", msgLenChar);
 	}
 
+	//Message Content
 	iSendResult = send(ClientSocket, sendBuffer, strlen(sendBuffer), 0);
+	printf("[Content] Sent %s\n", sendBuffer);
 	if (iSendResult == SOCKET_ERROR) {
+		
+		using namespace std::chrono;
+		milliseconds ms = duration_cast<milliseconds>(
+			system_clock::now().time_since_epoch()
+			);
+		std::cout << "Time: " + std::to_string(ms.count()) << std::endl;
+
 		printf("[ERROR] Send Msg Failed with error: %d\n", WSAGetLastError());
 		closesocket(ClientSocket);
 		WSACleanup();

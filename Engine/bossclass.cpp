@@ -52,6 +52,11 @@ void bossclass::InitializeModels()
 		model_list.push_back(temp);
 	}
 	m_model = model_list[0];
+
+	BulletModelBasic = new ModelClass();
+	BulletModelBasic->Initialize(device->GetDevice(), "./data/plane.txt", L"./data/gameobject/blt.png");
+	BulletModelFollow = new ModelClass();
+	BulletModelFollow->Initialize(device->GetDevice(), "./data/plane.txt", L"./data/gameobject/blt_follow.png");
 }
 
 void bossclass::SetGameManager(gameManager* _GM)
@@ -95,11 +100,8 @@ void bossclass::Frame(int frame)
 	while (socketInterface::bossPatternQueue.size() > 0){
 		if (socketInterface::bossPatternFrame.front() > socketInterface::frame)
 		{
-			printf("Frame not ready yet! PatterFrame: %d CurrentFrame: %d\n",socketInterface::bossPatternFrame.front(),socketInterface::frame);
-			printf("bullet queue size: %d\n", bossBullets.size());
 			break;
 		}
-		printf("Handling Pattern id: %d\n",socketInterface::bossPatternQueue.front());
 		socketInterface::bossPatternFrame.pop();
 
 		int ChosenIndex = socketInterface::bossPatternQueue.front();
@@ -149,9 +151,16 @@ void bossclass::FireDirections(vector<D3DXVECTOR3> dirVectors, int fireDelay, in
 		projectileclass* temp = GM->GetFromBossPool();
 		if (!temp)
 		{
-			temp = new projectileclass("bossbullet", GetPosition() + 1.5*(*iter), bulletSpeed, 3, device, gameObject::BOSS_BULLET, distance,slowFrame);
+			if(bulletType == 0)
+				temp = new projectileclass("bossbullet", GetPosition() + 1.5*(*iter), bulletSpeed, 3, device, gameObject::BOSS_BULLET, distance,slowFrame);
+			else
+				temp = new projectileclass("bossbullet", GetPosition() + 1.5 * (*iter), bulletSpeed, 3, device, gameObject::BOSS_BULLET_FOLLOW, distance, slowFrame);
 			temp->type = bulletType;
 			temp->SetDirVector(*iter);
+			if (bulletType == 0)
+				temp->SetModel(BulletModelBasic);
+			else
+				temp->SetModel(BulletModelFollow);
 		}
 		else
 		{
@@ -169,6 +178,16 @@ void bossclass::SetBullet(projectileclass* bullet, D3DXVECTOR3 dirVec, int dista
 	bullet->SetDirVector(dirVec);
 	bullet->SetDistance(distance);
 	bullet->type = bulletType;
+	if (bulletType == 0)
+	{
+		bullet->SetModel(BulletModelBasic);
+		bullet->channel = gameObject::BOSS_BULLET;
+	}
+	else
+	{
+		bullet->SetModel(BulletModelFollow);
+		bullet->channel = gameObject::BOSS_BULLET_FOLLOW;
+	}
 }
 
 

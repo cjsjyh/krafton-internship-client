@@ -68,6 +68,11 @@ ModelClass* gameObject::GetModel()
 	return m_model;
 }
 
+void gameObject::SetModel(ModelClass* _model)
+{
+	m_model = _model;
+}
+
 string gameObject::GetName()
 {
 	return name;

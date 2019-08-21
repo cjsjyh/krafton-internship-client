@@ -78,6 +78,8 @@ private:
 	string attackType;
 	gameManager* GM;
 	itemmanagerclass* IM;
+
+	ModelClass* BulletModel;
 };
 
 #endif

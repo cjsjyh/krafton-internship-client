@@ -55,6 +55,9 @@ void playerclass::InitializeModels()
 	}
 	m_model = model_list[1];
 	
+	BulletModel = new ModelClass();
+	BulletModel->Initialize(device->GetDevice(), "./data/plane.txt", L"./data/gameobject/blt_p.png");
+
 	maxHp = socketInterface::playerMaxHp;
 }
 
@@ -74,6 +77,7 @@ projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
 									PLAYER_BULLET_DISTANCE,PLAYER_BULLET_DELAY);
 		temp->SetDirVector(dirVec);
 		temp->tag = tag + "bullet";
+		temp->SetModel(BulletModel);
 	}
 	else
 	{

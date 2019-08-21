@@ -146,11 +146,11 @@ PATTERN_PHASE,2,int,"Phase 0, Phase 1, Phase2"
 BULLET_TYPE,1,int,"straight(0), follow player(1)"
 BULLET_SLOW_FRAME,20,int,frame before bullet accelerates
 BULLET_SPEED,0.7,float,
-PATTERN_DIRCOUNT,2,int,how many directions to fire at once
-PATTERN_ANGLE_BETW,200,int,angle between each directions
+PATTERN_DIRCOUNT,4,int,how many directions to fire at once
+PATTERN_ANGLE_BETW,90,int,angle between each directions
 PATTERN_LIFE_FRAME,50,int,how long will bullets exist
-PATTERN_REPEAT,1,int,number of waves
-PATTERN_DELAY,0,int,delay between waves
+PATTERN_REPEAT,2,int,number of waves
+PATTERN_DELAY,80,int,delay between waves
 PATTERN_ROTANGLE,0,int,rot angle between waves
 PATTERN_ID,15,int,Dummy
 PATTERN_PHASE,2,int,"Phase 0, Phase 1, Phase2"

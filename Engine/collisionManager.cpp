@@ -156,6 +156,12 @@ bool collisionManager::CheckCollisionChannel(gameObject* obj1, gameObject* obj2)
 	else if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET, gameObject::PLAYER_BULLET))
 		return false;
 
+	else if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET_FOLLOW, gameObject::PLAYER_BULLET))
+		return true;
+
+	else if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET_FOLLOW, gameObject::PLAYER))
+		return true;
+
 	else if (CheckMatch(obj1, obj2, gameObject::BOSS, gameObject::PLAYER_BULLET))
 		return true;
 
@@ -177,7 +183,7 @@ int collisionManager::CollisionHandler(gameObject* obj1, gameObject* obj2)
 	{
 		string myBulletName = "player" + to_string(socketInterface::playerId) + "bullet";
 		//BOTH ARE BULLETS
-		if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET, gameObject::PLAYER_BULLET))
+		if (CheckMatch(obj1, obj2, gameObject::BOSS_BULLET_FOLLOW, gameObject::PLAYER_BULLET))
 		{
 			if (obj1->tag == myBulletName || obj2->tag == myBulletName)
 			{

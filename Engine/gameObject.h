@@ -19,6 +19,7 @@ public:
 		PLAYER_BULLET,
 		BOSS,
 		BOSS_BULLET,
+		BOSS_BULLET_FOLLOW,
 		INTERACTION,
 		NO_COLLISION,
 	};
@@ -59,6 +60,7 @@ public:
 	string GetName();
 	ColliderType GetColliderType();
 	ModelClass* GetModel();
+	void SetModel(ModelClass*);
 
 public:
 	CollisionChannel channel;

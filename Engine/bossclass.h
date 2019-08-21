@@ -58,6 +58,8 @@ private:
 	vector<vector<BossPatternFile>> bossPatternPool;
 	vector<BulletQueue> bossBullets;
 	gameManager* GM;
+	ModelClass* BulletModelBasic;
+	ModelClass* BulletModelFollow;
 };
 
 #endif
