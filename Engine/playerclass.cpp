@@ -8,6 +8,7 @@
 #include "inputclass.h"
 #include "itemmanagerclass.h"
 #include "skillpatternclass.h"
+#include "uimanagerclass.h"
 
 #include "socketInterface.h"
 
@@ -61,10 +62,11 @@ void playerclass::InitializeModels()
 	maxHp = socketInterface::playerMaxHp;
 }
 
-void playerclass::SetManager(gameManager* _GM, itemmanagerclass* _IM)
+void playerclass::SetManager(gameManager* _GM, itemmanagerclass* _IM, uimanagerclass* _UIM)
 {
 	GM = _GM;
 	IM = _IM;
+	UIM = _UIM;
 }
 
 projectileclass* playerclass::Fire(D3DXVECTOR3 dirVec)
@@ -239,9 +241,16 @@ void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int
 			{
 				if (resurrectionCount > 0)
 				{
-					--resurrectionCount;
-					lastFPress = frame;
-					ObjectInteraction();
+					//실제로 살렸으면
+					if (ObjectInteraction() == 2)
+					{
+						--resurrectionCount;
+						if (resurrectionCount == 1)
+							UIM->TurnUIOff("RESURRECTION_COUNT2");
+						else if (resurrectionCount == 0)
+							UIM->TurnUIOff("RESURRECTION_COUNT1");
+							lastFPress = frame;
+					}
 				}
 			}
 		}
@@ -331,6 +340,7 @@ int playerclass::ObjectInteraction()
 			{
 				printf("Resurrection!\n");
 				socketInterface::playerHeal[deadPlayerId] = socketInterface::playerMaxHp;
+				return 2;
 			}
 			else
 				printf("Player Not Dead!\n");

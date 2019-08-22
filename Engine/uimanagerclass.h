@@ -29,6 +29,7 @@ public:
 	void ReplaceUI(string, string);
 	void ScreenFade(float, float, int);
 	void ToggleStartScreen();
+	void TurnUIOff(string);
 
 	vector<BitmapClass*> m_UI;
 	vector<UIinfo*> parameters;

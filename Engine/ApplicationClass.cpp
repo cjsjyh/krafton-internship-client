@@ -257,7 +257,7 @@ void ApplicationClass::InitializeMap()
 	{
 		playerclass* player = new playerclass(10, m_D3D);
 		player->tag = "player" + to_string(i);
-		player->SetManager(m_GM, m_IM);
+		player->SetManager(m_GM, m_IM, m_UIM);
 		m_GM->RegisterObjectToRender(player);
 		m_IM->SetManagers(m_GM, m_UIM, m_D3D);
 		players.push_back(player);
@@ -428,6 +428,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 	bool result;
 	blockInputFrame++;
 	
+	cout << "Frame: " + to_string(socketInterface::frame) << endl;
 	if (m_UIM->startScreenOn)
 	{
 		bool flag = false;
@@ -494,7 +495,6 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 
 		//PLAYER DEAD
 		result = false;
-		cout << "PLAYERHP: " + to_string(socketInterface::playerHp[0]) << endl;
 		for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 			if (socketInterface::playerHp[i] > 0)
 				result = true;

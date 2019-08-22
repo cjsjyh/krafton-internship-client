@@ -10,6 +10,7 @@ class ModelClass;
 class gameObject;
 class gameManager;
 class itemmanagerclass;
+class uimanagerclass;
 
 #define PLAYER_IMAGE_NUM 8
 
@@ -23,7 +24,7 @@ public:
 	
 	void Frame(int*, bool*, D3DXVECTOR3, int);
 
-	void SetManager(gameManager*, itemmanagerclass*);
+	void SetManager(gameManager*, itemmanagerclass*, uimanagerclass*);
 	void SetDirection(int*);
 	void SetDirection(int);
 	int GetDirection();
@@ -77,6 +78,7 @@ private:
 	vector<string> playerItems;
 	string attackType;
 	gameManager* GM;
+	uimanagerclass* UIM;
 	itemmanagerclass* IM;
 
 	ModelClass* BulletModel;

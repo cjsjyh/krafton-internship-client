@@ -310,6 +310,15 @@ void uimanagerclass::ToggleStartScreen()
 	startScreenOn = !startScreenOn;
 }
 
+void uimanagerclass::TurnUIOff(string name)
+{
+	for (auto iter = parameters.begin(); iter != parameters.end(); iter++)
+	{
+		if ((*iter)->uiname == name)
+			(*iter)->toShow = false;
+	}
+}
+
 
 bool uimanagerclass::SetUI(int mouseX, int mouseY, int fps, int cpu)
 {
