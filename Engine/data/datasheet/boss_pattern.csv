@@ -56,11 +56,11 @@ PATTERN_ROTANGLE,0,int,rot angle between waves
 PATTERN_ID,6,int,Dummy
 PATTERN_PHASE,1,int,"Phase 0, Phase 1, Phase2"
 BULLET_TYPE,1,int,"straight(0), follow player(1)"
-BULLET_SLOW_FRAME,100,int,frame before bullet accelerates
+BULLET_SLOW_FRAME,300,int,frame before bullet accelerates
 BULLET_SPEED,0.1,float,
 PATTERN_DIRCOUNT,1,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,120,int,angle between each directions
-PATTERN_LIFE_FRAME,200,int,how long will bullets exist
+PATTERN_LIFE_FRAME,700,int,how long will bullets exist
 PATTERN_REPEAT,2,int,number of waves
 PATTERN_DELAY,100,int,delay between waves
 PATTERN_ROTANGLE,30,int,rot angle between waves
@@ -116,7 +116,7 @@ BULLET_SPEED,0.3,float,
 PATTERN_DIRCOUNT,8,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,45,int,angle between each directions
 PATTERN_LIFE_FRAME,300,int,how long will bullets exist
-PATTERN_REPEAT,3,int,number of waves
+PATTERN_REPEAT,2,int,number of waves
 PATTERN_DELAY,10,int,delay between waves
 PATTERN_ROTANGLE,20,int,rot angle between waves
 PATTERN_ID,12,int,Dummy
@@ -135,8 +135,8 @@ PATTERN_PHASE,2,int,"Phase 0, Phase 1, Phase2"
 BULLET_TYPE,0,int,"straight(0), follow player(1)"
 BULLET_SLOW_FRAME,100,int,frame before bullet accelerates
 BULLET_SPEED,0.5,float,
-PATTERN_DIRCOUNT,12,int,how many directions to fire at once
-PATTERN_ANGLE_BETW,30,int,angle between each directions
+PATTERN_DIRCOUNT,10,int,how many directions to fire at once
+PATTERN_ANGLE_BETW,36,int,angle between each directions
 PATTERN_LIFE_FRAME,150,int,how long will bullets exist
 PATTERN_REPEAT,2,int,number of waves
 PATTERN_DELAY,30,int,delay between waves
@@ -148,7 +148,7 @@ BULLET_SLOW_FRAME,300,int,frame before bullet accelerates
 BULLET_SPEED,0.3,float,
 PATTERN_DIRCOUNT,4,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,180,int,angle between each directions
-PATTERN_LIFE_FRAME,500,int,how long will bullets exist
+PATTERN_LIFE_FRAME,1000,int,how long will bullets exist
 PATTERN_REPEAT,1,int,number of waves
 PATTERN_DELAY,0,int,delay between waves
 PATTERN_ROTANGLE,0,int,rot angle between waves
@@ -160,6 +160,6 @@ BULLET_SPEED,0.5,float,
 PATTERN_DIRCOUNT,6,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,60,int,angle between each directions
 PATTERN_LIFE_FRAME,300,int,how long will bullets exist
-PATTERN_REPEAT,4,int,number of waves
+PATTERN_REPEAT,3,int,number of waves
 PATTERN_DELAY,50,int,delay between waves
 PATTERN_ROTANGLE,30,int,rot angle between waves

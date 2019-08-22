@@ -513,6 +513,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 			ClearQueue(socketInterface::bossPatternFrame);
 			ClearQueue(socketInterface::bossPatternQueue);
 			ClearQueue(socketInterface::bossPatternTarget);
+			boss->ClearBullet();
 
 			players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
 			players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
