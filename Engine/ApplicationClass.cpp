@@ -196,6 +196,7 @@ void ApplicationClass::InitializePlayerParameters()
 		player->PLAYER_BULLET_SPEED = m_filereader->paramFloat.find("PLAYER_BULLET_SPEED")->second;
 		player->PLAYER_BULLET_DISTANCE = m_filereader->paramInt.find("PLAYER_BULLET_DISTANCE")->second;
 		player->PLAYER_BULLET_DELAY = m_filereader->paramInt.find("PLAYER_BULLET_DELAY")->second;
+		player->PLAYER_BULLET_RELOAD = m_filereader->paramInt.find("PLAYER_BULLET_RELOAD")->second;
 
 		player->PLAYER_INTERACTION_RANGE = m_filereader->paramFloat.find("PLAYER_INTERACTION_RANGE")->second;
 		player->maxUltimateGauge = m_filereader->paramInt.find("PLAYER_MAX_ULTI_GAUGE")->second;
