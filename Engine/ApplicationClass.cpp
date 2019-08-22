@@ -415,17 +415,23 @@ D3DXVECTOR3 ApplicationClass::GetDirectionMouse(D3DXVECTOR3 playerPos, int mouse
 	return stdafx::normalizeVec3(projectedPt);
 }
 
+bool ApplicationClass::BlockInput()
+{
+	if (blockInputFrame > 180)
+		return false;
+	return true;
+}
+
 bool ApplicationClass::Frame(int mouseX, int mouseY)
 {
-	const int playerCount = 1;
+	const int playerCount = 2;
 	bool result;
-
+	blockInputFrame++;
 	
 	if (m_UIM->startScreenOn)
 	{
 		bool flag = false;
-		//stop user from passing startscreen too fast
-		if (blockInputFrame++ > 120)
+		if (!BlockInput())
 		{
 			flag = true;
 			for (int i = 0; i < playerCount; i++)
@@ -489,7 +495,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 		//PLAYER DEAD
 		result = false;
 		cout << "PLAYERHP: " + to_string(socketInterface::playerHp[0]) << endl;
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < MAX_PLAYER_COUNT; i++)
 			if (socketInterface::playerHp[i] > 0)
 				result = true;
 
@@ -501,6 +507,10 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 			m_UIM->ToggleStartScreen();
 			m_GM->RemoveAllBullets();
 			blockInputFrame = 0;
+
+			ClearQueue(socketInterface::bossPatternFrame);
+			ClearQueue(socketInterface::bossPatternQueue);
+			ClearQueue(socketInterface::bossPatternTarget);
 
 			players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
 			players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
@@ -636,4 +646,10 @@ void ApplicationClass::SetCamera(int scene)
 		m_Camera->SetPosition(D3DXVECTOR3(0, 30, -30));
 		m_Camera->SetViewPoint(D3DXVECTOR3(0, 0, 0));
 	}
+}
+
+void ApplicationClass::ClearQueue(queue<int>& someQueue)
+{
+	queue<int> empty;
+	swap(someQueue, empty);
 }

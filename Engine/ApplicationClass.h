@@ -68,12 +68,14 @@ public:
 	void Shutdown();
 	bool Frame(int, int);
 	bool Render();
+	bool BlockInput();
 
 	vector<playerclass*> players;
 
 private:
 	D3DXVECTOR3 GetDirectionMouse(D3DXVECTOR3, int, int);
 	void SetCamera(int);
+	void ClearQueue(queue<int>&);
 
 	textfilereader* m_filereader;
 	D3DClass* m_D3D;

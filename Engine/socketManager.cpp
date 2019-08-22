@@ -5,13 +5,11 @@
 #define WIN32_LEAN_AND_MEAN
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
-//#define IP_ADDRESS "10.99.1.93"
-#define IP_ADDRESS "192.168.55.136"
+#define IP_ADDRESS "10.99.1.93"
+//#define IP_ADDRESS "192.168.55.136"
 
 #include <iostream>
 #include <sstream>
-
-#include <chrono>
 
 #include <winsock2.h>
 #include <windows.h>
@@ -167,8 +165,6 @@ bool socketManager::Frame(bool IsKeyChanged, playerInput* playerInput)
 			if (tempFrame > frameTo)
 				frameTo = tempFrame;
 		}
-
-		
 	}
 
 	if (IsKeyChanged)
