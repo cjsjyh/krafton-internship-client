@@ -94,7 +94,7 @@ BULLET_SPEED,0.4,float,
 PATTERN_DIRCOUNT,5,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,10,int,angle between each directions
 PATTERN_LIFE_FRAME,200,int,how long will bullets exist
-PATTERN_REPEAT,3,int,number of waves
+PATTERN_REPEAT,2,int,number of waves
 PATTERN_DELAY,30,int,delay between waves
 PATTERN_ROTANGLE,-5,int,rot angle between waves
 PATTERN_ID,10,int,Dummy
@@ -105,7 +105,7 @@ BULLET_SPEED,0.4,float,
 PATTERN_DIRCOUNT,8,int,how many directions to fire at once
 PATTERN_ANGLE_BETW,45,int,angle between each directions
 PATTERN_LIFE_FRAME,200,int,how long will bullets exist
-PATTERN_REPEAT,5,int,number of waves
+PATTERN_REPEAT,3,int,number of waves
 PATTERN_DELAY,30,int,delay between waves
 PATTERN_ROTANGLE,20,int,rot angle between waves
 PATTERN_ID,11,int,Dummy
