@@ -428,7 +428,7 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 	bool result;
 	blockInputFrame++;
 	
-	cout << "Frame: " + to_string(socketInterface::frame) << endl;
+	//cout << "Frame: " + to_string(socketInterface::frame) << endl;
 	if (m_UIM->startScreenOn)
 	{
 		bool flag = false;
@@ -448,6 +448,8 @@ bool ApplicationClass::Frame(int mouseX, int mouseY)
 			for (int i = 0; i < playerCount; i++)
 				playerReady[i] = false;
 			m_UIM->ScreenFade(1, -1, 60);
+			players[0]->SetPosition(D3DXVECTOR3(0, 0, 0));
+			players[1]->SetPosition(D3DXVECTOR3(0, 0, -10));
 		}
 
 		for (int i = 0; i < playerCount; i++)
@@ -600,39 +602,7 @@ bool ApplicationClass::Render()
 
 	return true;
 }
-/*
-void ApplicationClass::Rewind(int count)
-{
-	int reverseKeyInput[sizeof(socketInterface::keyInput)/sizeof(int)];
-	bool dummyMouseInput[sizeof(socketInterface::mouseInput)];
 
-	for (int i = 0; i < MAX_PLAYER_COUNT; i++)
-	{
-		if (socketInterface::playerHp[i] <= 0)
-		{
-			players[i]->channel = gameObject::INTERACTION;
-		}
-		//Set reverse Key
-		for (int j = 0; j < sizeof(socketInterface::keyInput) / sizeof(int); j++)
-		{
-			//reverse if pressed
-			if(socketInterface::keyInput[i][j])
-				reverseKeyInput[j] = !socketInterface::keyInput[i][j];
-			//keep unpressed
-			else
-				reverseKeyInput[j] = socketInterface::keyInput[i][j];
-		}
-		//Reverse by count
-		for (int j = 0; j < count; j++)
-		{
-			players[i]->Frame(socketInterface::keyInput[i], socketInterface::mouseInput[i], D3DXVECTOR3(socketInterface::mouseDirVec[i][0], socketInterface::mouseDirVec[i][1], socketInterface::mouseDirVec[i][2]), socketInterface::frame);
-			players[i]->ChangeHp(socketInterface::playerHp[i]);
-		}
-	}
-	
-	//Rewind GameManager
-}
-*/
 void ApplicationClass::SetCamera(int scene)
 {
 	if (scene == 0)

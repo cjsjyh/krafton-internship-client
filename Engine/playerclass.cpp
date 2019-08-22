@@ -196,7 +196,7 @@ D3DXVECTOR3 playerclass::GetDirectionVector(int dir)
 
 void playerclass::Frame(int* keys, bool* mousePress, D3DXVECTOR3 vecToMouse, int frame)
 {
-	if (frame % 400 == 0 && frame != 0)
+	if (frame % 300 == 0 && frame != 0)
 		socketInterface::curPlayerUltiGauge++;
 
 	//CAN CLICK AGAIN!

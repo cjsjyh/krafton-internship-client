@@ -146,10 +146,10 @@ bool socketManager::Frame(bool IsKeyChanged, playerInput* playerInput)
 	int iResult = 0;
 	bool flag;
 
-	if (frame++ % 60 == 50 || frame == 1)
+	if (socketInterface::frame % 60 == 50 || socketInterface::frame == 1)
 	{
 		FrameInfo* fInfo;
-		fInfo = new FrameInfo(frame+10, socketInterface::playerId);
+		fInfo = new FrameInfo(socketInterface::frame+10, socketInterface::playerId);
 		sendMessage(ConnectSocket, fInfo, FRAME_INFO);
 	}
 
@@ -383,7 +383,6 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 		iSendResult = send(ClientSocket, msgTypeChar, sizeof(int), 0);
 		if (!iSendResult)
 			printf("[ERROR] Send Type Failed\n");
-		printf("[MsgType] Sent %s\n",msgTypeChar);
 	}
 
 	//Message Size
@@ -395,19 +394,16 @@ int socketManager::sendMessage(SOCKET ClientSocket, void* _input, DataType type)
 		iSendResult = send(ClientSocket, msgLenChar, sizeof(int), 0);
 		if (!iSendResult)
 			printf("[ERROR] Send Len Failed\n");
-		printf("[msgLen] Sent %s\n", msgLenChar);
 	}
 
 	//Message Content
 	iSendResult = send(ClientSocket, sendBuffer, strlen(sendBuffer), 0);
-	printf("[Content] Sent %s\n", sendBuffer);
 	if (iSendResult == SOCKET_ERROR) {
 		
 		using namespace std::chrono;
 		milliseconds ms = duration_cast<milliseconds>(
 			system_clock::now().time_since_epoch()
 			);
-		std::cout << "Time: " + std::to_string(ms.count()) << std::endl;
 
 		printf("[ERROR] Send Msg Failed with error: %d\n", WSAGetLastError());
 		closesocket(ClientSocket);
