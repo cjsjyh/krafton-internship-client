@@ -1,3 +1,8 @@
+Server: https://github.com/cjsjyh/krafton-internship-server
+Client: https://github.com/cjsjyh/krafton-internship-client
+
+
+
 DirectX 설치:
 https://www.microsoft.com/en-us/download/confirmation.aspx?id=6812
 
