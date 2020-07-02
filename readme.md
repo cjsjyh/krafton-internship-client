@@ -30,7 +30,5 @@ C:\Users\Junsoo\Downloads\boost_1_70_0
 
 VC++ Directory > Library Directory: <directX path>\Lib\(x86 or x64)
 
-
-
-Similar Project:
-https://www.youtube.com/watch?v=uk11zW8ha-Q
+### Play Video
+[![Watch the video](https://img.youtube.com/vi/ZSF2wm14bIU/maxresdefault.jpg)](https://www.youtube.com/watch?v=ZSF2wm14bIU&feature=youtu.be)
