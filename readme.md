@@ -1,5 +1,8 @@
-Server: https://github.com/cjsjyh/krafton-internship-server
-Client: https://github.com/cjsjyh/krafton-internship-client
+### Server: 
+https://github.com/cjsjyh/krafton-internship-server
+
+### Client: 
+https://github.com/cjsjyh/krafton-internship-client
 
 
 
