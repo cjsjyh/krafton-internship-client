@@ -5,7 +5,7 @@ https://github.com/cjsjyh/krafton-internship-server
 https://github.com/cjsjyh/krafton-internship-client
 
 
-
+### 설치법
 DirectX 설치:
 https://www.microsoft.com/en-us/download/confirmation.aspx?id=6812
 
